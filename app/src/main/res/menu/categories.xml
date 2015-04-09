@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/categories_trees"
+        android:title="@string/categories_trees" />
+    <item android:id="@+id/categories_signs"
+        android:title="@string/categories_signs" />
+    <item android:id="@+id/categories_trashcans"
+        android:title="@string/categories_trashcans" />
+</menu>
