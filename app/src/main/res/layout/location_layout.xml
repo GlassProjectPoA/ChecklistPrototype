@@ -49,7 +49,7 @@
             android:layout_below="@id/location_title"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:textColor="@color/text_blue"/>
+            android:textColor="@color/blue"/>
         <TextView
             android:id="@+id/instructions"
             android:text="@string/tap_hold_refresh"
