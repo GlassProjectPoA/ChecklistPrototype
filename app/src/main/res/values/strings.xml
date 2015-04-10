@@ -15,7 +15,7 @@
     <string name="dirt">Dirt</string>
     <string name="tilt">Tilt</string>
 
-    <!-- RATING -->
+    <!-- RATINGS -->
     <string name="rating_aa">A+</string>
     <string name="rating_a">A</string>
     <string name="rating_b">B</string>
@@ -46,8 +46,13 @@
     <string name="summary_title">Summary</string>
     <string name="location_title">Checklist for location</string>
 
-    <!-- NOT ORDERED -->
-    <string name="map_location_snapshot">map location snapshot</string>
+    <!-- IMAGE DESCRIPTIONS -->
+    <string name="map_location_description">map location snapshot</string>
+    <string name="warning_sign_description">Warning sign.</string>
 
+    <!-- WARNING TEXT -->
+    <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
+
+    <!-- NOT ORDERED -->
 
 </resources>

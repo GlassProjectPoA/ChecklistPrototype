@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/glass_card_footer_margin"
     android:layout_marginLeft="@dimen/glass_card_margin"
     android:layout_marginRight="@dimen/glass_card_margin"
     android:layout_marginTop="@dimen/glass_card_margin"
-    android:baselineAligned="false">
-
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp">
 
 
     <TextView
-        android:text="@string/grading_instructions"
+        android:id="@+id/instruction_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:layout_weight="1"
-        />
+        android:text="@string/instructions_title"
+        android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/instruction_content"
-        android:text="@string/swipe_to_grade"
+        android:id="@+id/instruction_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="38sp"
-        />
+        android:text="@string/swipe_two_to_grade"
+        android:textSize="38sp" />
+
     <TextView
         android:id="@+id/footer"
-        android:text="@string/tap_to_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
+        android:layout_gravity="bottom|left"
         android:layout_weight="0"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_gravity="bottom|left" />
+        android:singleLine="true"
+        android:text="@string/tap_to_continue"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
 </LinearLayout>
