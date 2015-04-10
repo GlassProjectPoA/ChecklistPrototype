@@ -32,7 +32,12 @@
     <string name="tap_to_grade">Tap to start grading</string>
     <string name="tap_to_continue">Tap to continue</string>
     <string name="tap_for_info">Tap for grading info</string>
-    <string name="swipe_to_grade">Swipe two fingers to change grade</string>
+    <string name="swipe_to_grade">Swipe two fingers to change the grade</string>
+    <string name="tap_to_confirm">Tap with two fingers to confirm the selected grade</string>
+
+
+    <!-- INSTRUCTIONS PAGE -->
+    <string name="grading_instructions">Grading instructions</string>
 
     <!-- UTILITIES -->
     <string name="random_time">12:34</string>
