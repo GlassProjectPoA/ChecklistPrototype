@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:gravity="center"
-            android:text="@string/signs_graffiti"
+            android:text="@string/graffiti"
             android:textSize="30sp" />
 
         <TextView

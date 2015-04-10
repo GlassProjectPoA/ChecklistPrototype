@@ -45,11 +45,11 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:maxLines="3"
-            android:maxWidth="250dp"
+            android:maxWidth="190dp"
             android:paddingLeft="40dp"
             android:paddingRight="20dp"
             android:singleLine="false"
-            android:text="No graffiti"
+            android:text="No graffiti in the sign. No graffiti in the sign."
             android:textSize="30sp" />
 
     </LinearLayout>
