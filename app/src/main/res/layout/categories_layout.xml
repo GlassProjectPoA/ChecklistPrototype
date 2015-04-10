@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/glass_card_footer_margin"
     android:layout_marginLeft="@dimen/glass_card_margin"
     android:layout_marginRight="@dimen/glass_card_margin"
     android:layout_marginTop="@dimen/glass_card_margin"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/left_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:id="@+id/left_container">
+        android:orientation="vertical">
 
         <Space
             android:layout_width="20px"
@@ -24,13 +23,13 @@
             android:layout_weight="2" />
 
         <TextView
+            android:id="@+id/left_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/left_arrow"
             android:textColor="@color/gray_dark"
-            android:textSize="45sp"
-            android:id="@+id/left_arrow"
-            android:layout_weight="1" />
+            android:textSize="45sp" />
 
         <Space
             android:layout_width="20px"
@@ -39,105 +38,104 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/center_container"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/bg_img_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:contentDescription="@string/map_location_snapshot"
-            android:background="@drawable/categories_background_slash"
-            android:layout_weight="2"
-            android:baselineAligned="false"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/bg_img_container">
+            android:layout_weight="2"
+            android:background="@drawable/categories_background_slash"
+            android:baselineAligned="false"
+            android:contentDescription="@string/map_location_snapshot"
+            android:orientation="horizontal"
+            android:scaleType="center">
 
             <RelativeLayout
-                android:layout_height="fill_parent"
+                android:id="@+id/numbers_container"
                 android:layout_width="0dp"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:id="@+id/numbers_container">
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/top_fraction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:singleLine="true"
-                    android:text="0"
-                    android:id="@+id/top_fraction"
                     android:layout_marginBottom="15dp"
                     android:layout_marginRight="15dp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="0"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bottom_fraction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@id/top_fraction"
                     android:singleLine="true"
                     android:text="4"
-                    android:id="@+id/bottom_fraction"
-                    android:layout_marginTop="15dp"
-                    android:layout_toEndOf="@id/top_fraction"/>
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
         </LinearLayout>
 
         <RelativeLayout
-            android:orientation="horizontal"
+            android:id="@+id/title_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:id="@+id/title_container">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/order"
-                android:text="1. "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/rating_title"
+                android:text="1. "
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:layout_toStartOf="@+id/rating_title" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/rating_title"
-                android:text="Trees"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Trees"
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:layout_centerHorizontal="true" />
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/footer"
-            android:text="@string/tap_to_grade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="bottom|center_horizontal" />
+            android:text="@string/tap_to_grade"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:id="@+id/right_container">
+        android:orientation="vertical">
 
         <Space
             android:layout_width="20px"
@@ -145,14 +143,14 @@
             android:layout_weight="2" />
 
         <TextView
+            android:id="@+id/right_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/right_arrow"
             android:textColor="@color/white"
-            android:textSize="45sp"
-            android:id="@+id/right_arrow"
-            android:layout_weight="1"
-            android:textIsSelectable="false" />
+            android:textIsSelectable="false"
+            android:textSize="45sp" />
 
         <Space
             android:layout_width="20px"

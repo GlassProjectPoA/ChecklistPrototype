@@ -1,181 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/glass_card_footer_margin"
     android:layout_marginLeft="@dimen/glass_card_margin"
     android:layout_marginRight="@dimen/glass_card_margin"
-    android:layout_marginTop="@dimen/glass_card_margin">
+    android:layout_marginTop="@dimen/glass_card_margin"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/title_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="top"
-        android:paddingTop="10dp"
-        android:id="@+id/title_container">
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/left_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/left_arrow"
-            android:textSize="45sp"
             android:layout_weight="1"
             android:gravity="left|center_vertical"
-            android:textColor="@color/gray_dark" />
+            android:text="@string/left_arrow"
+            android:textColor="@color/gray_dark"
+            android:textSize="45sp" />
 
         <TextView
             android:id="@+id/rating_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signs_graffiti"
-            android:textSize="30sp"
             android:layout_weight="5"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="@string/signs_graffiti"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/right_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/right_arrow"
-            android:textSize="45sp"
             android:layout_weight="1"
-            android:gravity="center_vertical|right" />
+            android:gravity="center_vertical|right"
+            android:text="@string/right_arrow"
+            android:textSize="45sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/rating_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="2"
         android:baselineAligned="false"
-        android:id="@+id/rating_container"
-        android:layout_gravity="center_vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/rating_text_aa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rating_aa"
-                android:textSize="25sp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:text="@string/rating_aa"
+                android:textSize="25sp" />
+
             <View
                 android:id="@+id/bar_aa"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:visibility="invisible"
-                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/white"
+                android:visibility="invisible" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/rating_text_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rating_a"
-                android:textSize="25sp"
-                android:layout_weight="1"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/green"/>
+                android:layout_weight="1"
+                android:text="@string/rating_a"
+                android:textColor="@color/green"
+                android:textSize="25sp" />
+
             <View
                 android:id="@+id/bar_a"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:visibility="visible"
-                android:background="@color/green"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/green"
+                android:visibility="visible" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/rating_text_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rating_b"
-                android:textSize="25sp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:text="@string/rating_b"
+                android:textSize="25sp" />
+
             <View
                 android:id="@+id/bar_b"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:visibility="invisible"
-                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/white"
+                android:visibility="invisible" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/rating_text_c"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rating_c"
-                android:textSize="25sp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:text="@string/rating_c"
+                android:textSize="25sp" />
+
             <View
                 android:id="@+id/bar_c"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:visibility="invisible"
-                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/white"
+                android:visibility="invisible" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/rating_text_d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rating_d"
-                android:textSize="25sp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:text="@string/rating_d"
+                android:textSize="25sp" />
+
             <View
                 android:id="@+id/bar_d"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
-                android:visibility="invisible"
-                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_gravity="center_horizontal" />
+                android:background="@color/white"
+                android:visibility="invisible" />
 
         </LinearLayout>
     </LinearLayout>
@@ -188,31 +197,30 @@
         android:layout_marginBottom="@dimen/glass_card_footer_margin"
         android:layout_marginLeft="@dimen/glass_card_two_column_margin"
         android:layout_marginRight="@dimen/glass_card_margin"
+        android:layout_weight="1"
         android:gravity="bottom"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
+        android:orientation="horizontal">
 
 
         <TextView
             android:id="@+id/category"
-            android:text="@string/categories_signs"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/blue"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="@string/categories_signs"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/blue" />
 
         <TextView
             android:id="@+id/tap_for_grading"
-            android:text="@string/tap_for_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/glass_card_margin"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="@string/tap_for_info"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 

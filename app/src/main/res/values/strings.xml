@@ -32,6 +32,7 @@
     <string name="tap_to_grade">Tap to start grading</string>
     <string name="tap_to_continue">Tap to continue</string>
     <string name="tap_for_info">Tap for grading info</string>
+    <string name="tap_to_submit">Tap to submit</string>
     <string name="swipe_to_grade">Swipe two fingers to change grade</string>
 
     <!-- UTILITIES -->
@@ -39,8 +40,13 @@
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
 
+    <!-- TITLES -->
+    <string name="resume_title">Resume</string>
+    <string name="location_title">Checklist for location</string>
+
     <!-- NOT ORDERED -->
     <string name="chk_list_loc">Checklist Location 82ZZ</string>
     <string name="map_location_snapshot">map location snapshot</string>
+
 
 </resources>
