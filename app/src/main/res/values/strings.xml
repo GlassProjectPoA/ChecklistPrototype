@@ -5,41 +5,36 @@
     <string name="voice_trigger">Load Checklist</string>
     <string name="title_activity_main">Load Checklist</string>
 
-    <!-- CATEGORIES MENU -->
+    <!-- CATEGORIES -->
     <string name="categories_trees">Trees</string>
     <string name="categories_signs">Signs</string>
     <string name="categories_trashcans">Trash</string>
 
-    <!-- SIGNS MENU -->
-    <string name="signs_graffiti">Graffiti</string>
-    <string name="signs_dirt">Dirt</string>
-    <string name="signs_tilt">Tilt</string>
+    <!-- PROBLEMS -->
+    <string name="graffiti">Graffiti</string>
+    <string name="dirt">Dirt</string>
+    <string name="tilt">Tilt</string>
 
-    <!-- RATING MENU -->
+    <!-- RATING -->
     <string name="rating_aa">A+</string>
     <string name="rating_a">A</string>
     <string name="rating_b">B</string>
     <string name="rating_c">C</string>
     <string name="rating_d">D</string>
 
-    <!-- SUBMIT MENU -->
+    <!-- SUBMIT -->
     <string name="submit_report">Submit Report</string>
     <string name="submit_rates">Submit Rates</string>
 
     <!-- INSTRUCTIONS -->
-    <string name="tap_hold_refresh">Tap and hold to refresh</string>
+    <string name="tap_to_submit">Tap to submit</string>
     <string name="tap_to_start">Tap to start</string>
     <string name="tap_to_grade">Tap to start grading</string>
     <string name="tap_to_continue">Tap to continue</string>
     <string name="tap_for_info">Tap for grading info</string>
-    <string name="tap_to_submit">Tap to submit</string>
-    <string name="swipe_to_grade">Swipe two fingers to change the grade</string>
-    <string name="tap_to_confirm">Tap with two fingers to confirm the selected grade</string>
-
-
-    <!-- INSTRUCTIONS PAGE -->
-    <string name="grading_instructions">Grading instructions</string>
-
+    <string name="tap_two_to_refresh">Tap with two fingers to refresh</string>
+    <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
+    <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
 
     <!-- UTILITIES -->
     <string name="random_time">12:34</string>
@@ -47,11 +42,11 @@
     <string name="right_arrow">›</string>
 
     <!-- TITLES -->
-    <string name="resume_title">Resume</string>
+    <string name="instructions_title">Grading Instructions</string>
+    <string name="summary_title">Summary</string>
     <string name="location_title">Checklist for location</string>
 
     <!-- NOT ORDERED -->
-    <string name="chk_list_loc">Checklist Location 82ZZ</string>
     <string name="map_location_snapshot">map location snapshot</string>
 
 
