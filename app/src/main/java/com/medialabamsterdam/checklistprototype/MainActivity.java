@@ -195,7 +195,7 @@ public class MainActivity extends Activity {
     private View createCards(){//List<ChecklistTask> tasks) {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
-        View card = inflater.inflate(R.layout.card_layout, null);
+        View card = inflater.inflate(R.layout.instruction_layout, null);
         mCards.add(card);
         return mCards.get(0);
     }
