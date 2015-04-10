@@ -16,10 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_gravity="top"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:id="@+id/title_container">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/left_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/left_arrow"
@@ -29,7 +30,7 @@
             android:textColor="@color/gray_dark" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/rating_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signs_graffiti"
@@ -38,7 +39,7 @@
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/right_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/right_arrow"
@@ -71,6 +72,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal" />
             <View
+                android:id="@+id/bar_aa"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:visibility="invisible"
@@ -95,6 +97,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/green"/>
             <View
+                android:id="@+id/bar_a"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:visibility="visible"
@@ -118,6 +121,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal" />
             <View
+                android:id="@+id/bar_b"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:visibility="invisible"
@@ -141,6 +145,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal" />
             <View
+                android:id="@+id/bar_c"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:visibility="invisible"
@@ -164,6 +169,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal" />
             <View
+                android:id="@+id/bar_d"
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:visibility="invisible"
@@ -200,7 +206,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
-            android:id="@+id/tapforgrading"
+            android:id="@+id/tap_for_grading"
             android:text="@string/tap_for_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
