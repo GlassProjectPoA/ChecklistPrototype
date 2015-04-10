@@ -15,7 +15,7 @@
             android:id="@+id/imageview1"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:contentDescription="@string/map_location_snapshot"
+            android:contentDescription="@string/map_location_description"
             android:scaleType="center"
             android:src="@drawable/map_picture"></ImageView>
         <!-- Put widgets for the left column inside this RelativeLayout. -->
