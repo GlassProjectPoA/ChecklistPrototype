@@ -1,47 +1,32 @@
 package com.medialabamsterdam.checklistprototype;
 
-import com.google.android.glass.media.Sounds;
-import com.google.android.glass.touchpad.Gesture;
-import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.view.WindowUtils;
-import com.google.android.glass.widget.CardBuilder;
-import com.google.android.glass.widget.CardScrollAdapter;
-import com.google.android.glass.widget.CardScrollView;
+        import com.google.android.glass.media.Sounds;
+        import com.google.android.glass.touchpad.Gesture;
+        import com.google.android.glass.touchpad.GestureDetector;
+        import com.google.android.glass.view.WindowUtils;
+        import com.google.android.glass.widget.CardBuilder;
+        import com.google.android.glass.widget.CardScrollAdapter;
+        import com.google.android.glass.widget.CardScrollView;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.media.AudioManager;
-import android.os.Bundle;
-import android.text.Spannable;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.TextView;
+        import android.app.Activity;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.media.AudioManager;
+        import android.os.Bundle;
+        import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.view.Window;
+        import android.view.WindowManager;
+        import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
 
-/**
- * An {@link Activity} showing a tuggable "Hello World!" card.
- * <p/>
- * The main content view is composed of a one-card {@link CardScrollView} that provides tugging
- * feedback to the user when swipe gestures are detected.
- * If your Glassware intends to intercept swipe gestures, you should set the content view directly
- * and use a {@link com.google.android.glass.touchpad.GestureDetector}.
- *
- * @see <a href="https://developers.google.com/glass/develop/gdk/touch">GDK Developer Guide</a>
- */
 public class MainActivity extends Activity {
 
+    public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
     private CardScrollView mCardScroller;
     private View mView;
     private GestureDetector mGestureDetector;
@@ -57,10 +42,11 @@ public class MainActivity extends Activity {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
-        mView = createCards();
+        mView = createLocationCard();
 
         Utils.ChangeTextColor(this, mView, R.id.footer, R.string.tap_to_start, "start", R.color.green);
         Utils.ChangeTextColor(this, mView, R.id.instructions, R.string.tap_two_to_refresh, "refresh", R.color.blue);
+
 
         mCardScroller = new CardScrollView(this);
         mCardScroller.setAdapter(new CardScrollAdapter() {
@@ -90,47 +76,9 @@ public class MainActivity extends Activity {
                 return mView; //return mViews.get(position);
             }
         });
-        // Handle the TAP event.
-        mCardScroller.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Plays disallowed sound to indicate that TAP actions are not supported.
-                openOptionsMenu();
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                am.playSoundEffect(Sounds.DISALLOWED);
-            }
-        });
 
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-    }
-
-    @Override
-    public boolean onCreatePanelMenu(int featureId, Menu menu){
-        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS || featureId ==  Window.FEATURE_OPTIONS_PANEL) {
-            getMenuInflater().inflate(R.menu.categories, menu);
-            return true;
-        }
-        return super.onCreatePanelMenu(featureId, menu);
-    }
-
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS || featureId ==  Window.FEATURE_OPTIONS_PANEL) {
-            switch (item.getItemId()) {
-                case R.id.categories_trees:
-                    //TODO go to right intent
-                    break;
-                case R.id.categories_signs:
-                    //TODO go to right intent
-                    break;
-                case R.id.categories_trashcans:
-                    //TODO go to right intent
-                    break;
-            }
-            return true;
-        }
-        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override
@@ -146,7 +94,7 @@ public class MainActivity extends Activity {
     }
 
     //region Gesture Detector
-    private GestureDetector createGestureDetector(Context context) {
+    private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
         //Create a base listener for generic gestures
@@ -154,7 +102,9 @@ public class MainActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
-                    openOptionsMenu();
+                    openCategories();
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(Sounds.TAP);
                     return true;
                 } else if (gesture == Gesture.TWO_TAP) {
                     // do something on two finger tap
@@ -199,7 +149,16 @@ public class MainActivity extends Activity {
     }
     //endregion
 
-    private View createCards(){//List<ChecklistTask> tasks) {
+
+    private void openCategories() {
+        Intent intent = new Intent(this, CategoriesActivity.class);
+        TextView tv = (TextView)this.findViewById(R.id.location_code);
+        String message = (String) tv.getText();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+    private View createLocationCard(){//List<ChecklistTask> tasks) {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);
