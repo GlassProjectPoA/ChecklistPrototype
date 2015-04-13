@@ -10,8 +10,11 @@ import com.google.android.glass.widget.CardScrollView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,33 +57,37 @@ public class MainActivity extends Activity {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
-        //Log.d("Loc", "==" + LocationUtils.getLatLon(this));
-
         mView = createCards();
 
-                mCardScroller = new CardScrollView(this);
+        Utils.ChangeTextColor(this, mView, R.id.footer, R.string.tap_to_start, "start", R.color.green);
+        Utils.ChangeTextColor(this, mView, R.id.instructions, R.string.tap_two_to_refresh, "refresh", R.color.blue);
+
+        mCardScroller = new CardScrollView(this);
         mCardScroller.setAdapter(new CardScrollAdapter() {
             @Override
+            public int getPosition(Object item) {
+                return mCards.indexOf(item);
+            }
+
+            @Override
             public int getCount() {
-                return 1;
+                return mCards.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return mView;
+                return mCards.get(position);
+            }
+
+
+            @Override
+            public int getViewTypeCount() {
+                return CardBuilder.getViewTypeCount();
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                return mView;
-            }
-
-            @Override
-            public int getPosition(Object item) {
-                if (mView.equals(item)) {
-                    return 0;
-                }
-                return AdapterView.INVALID_POSITION;
+                return mView; //return mViews.get(position);
             }
         });
         // Handle the TAP event.
@@ -195,7 +202,7 @@ public class MainActivity extends Activity {
     private View createCards(){//List<ChecklistTask> tasks) {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
-        View card = inflater.inflate(R.layout.instruction_layout, null);
+        View card = inflater.inflate(R.layout.location_layout, null);
         mCards.add(card);
         return mCards.get(0);
     }

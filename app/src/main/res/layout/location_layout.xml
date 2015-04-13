@@ -49,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/location_title"
             android:text="86Z"
-            android:textColor="@color/blue"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -80,23 +79,22 @@
 
 
         <TextView
-            android:id="@+id/footer"
+            android:id="@+id/footer_space"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/tap_to_start"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
-            android:id="@+id/timestamp"
+            android:id="@+id/footer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/glass_card_margin"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/random_time"
+            android:text="@string/tap_to_start"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
