@@ -13,7 +13,7 @@
         <activity
             android:name=".MainActivity"
             android:icon="@drawable/ic_glass_logo"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_location" >
             <intent-filter>
                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
             </intent-filter>
@@ -21,6 +21,21 @@
             <meta-data
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/voice_trigger" />
+        </activity>
+        <activity
+            android:name=".CategoriesActivity"
+            android:icon="@drawable/ic_glass_logo"
+            android:label="@string/title_categories" >
+        </activity>
+        <activity
+            android:name=".InstructionsActivity"
+            android:icon="@drawable/ic_glass_logo"
+            android:label="@string/title_instructions" >
+        </activity>
+        <activity
+            android:name=".RatingActivity"
+            android:icon="@drawable/ic_glass_logo"
+            android:label="@string/title_rating" >
         </activity>
     </application>
 
