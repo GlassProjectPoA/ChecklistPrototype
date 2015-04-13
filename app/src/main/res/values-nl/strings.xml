@@ -23,6 +23,9 @@
     </string-array>
 
     <!-- PROBLEMS -->
+    <string-array name="problems_404">
+        <item>ERROR!</item>
+    </string-array>
     <string-array name="problems_0">
         <item>Planter - Fine Litter</item>
         <item>Planter - Coarse Litter</item>
@@ -121,12 +124,15 @@
     <string name="random_time">12:34</string>
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
+    <string name="example_text">There are little stickers.</string>
 
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
     <string name="title_summary">Summary</string>
     <string name="title_location">Checklist for location</string>
     <string name="title_categories">Categories</string>
+    <string name="title_rating">Rating</string>
+    <string name="title_rating_detailed">Rating Detailed</string>
 
     <!-- IMAGE DESCRIPTIONS -->
     <string name="map_location_description">map location snapshot</string>
@@ -134,7 +140,6 @@
 
     <!-- WARNING TEXT -->
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
-    <string name="hello_world">Hello world!</string>
 
     <!-- NOT ORDERED -->
 

@@ -37,6 +37,11 @@
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_rating" >
         </activity>
+        <activity
+            android:name=".RatingDetailedActivity"
+            android:icon="@drawable/ic_glass_logo"
+            android:label="@string/title_rating_detailed" >
+        </activity>
     </application>
 
 </manifest>

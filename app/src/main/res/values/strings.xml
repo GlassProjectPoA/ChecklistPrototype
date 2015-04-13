@@ -124,6 +124,7 @@
     <string name="random_time">12:34</string>
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
+    <string name="example_text">There are little stickers.</string>
 
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
@@ -131,6 +132,7 @@
     <string name="title_location">Checklist for location</string>
     <string name="title_categories">Categories</string>
     <string name="title_rating">Rating</string>
+    <string name="title_rating_detailed">Rating Detailed</string>
 
     <!-- IMAGE DESCRIPTIONS -->
     <string name="map_location_description">map location snapshot</string>

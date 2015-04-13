@@ -17,14 +17,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingActivity extends Activity {
+public class RatingDetailedActivity extends Activity {
 
+    public final static String EXTRA_POSITION = "com.medialabamsterdam.checklistprototype.POSITION";
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private List<View> mCards;
@@ -42,7 +43,6 @@ public class RatingActivity extends Activity {
 
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.activate();
-
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
     }
@@ -69,9 +69,9 @@ public class RatingActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
-                    openRatingDetailed();
+                    //openInstructions();
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.TAP);
+                    am.playSoundEffect(Sounds.DISALLOWED);
                     return true;
                 } else if (gesture == Gesture.TWO_TAP) {
                     // do something on two finger tap
@@ -118,38 +118,21 @@ public class RatingActivity extends Activity {
 
     private void createCards(){
         mCards = new ArrayList<>();
-        Intent intent = getIntent();
-        int position = intent.getIntExtra(CategoriesActivity.EXTRA_POSITION,404);
         LayoutInflater inflater = LayoutInflater.from(this);
-        String[] strs = getResources().getStringArray(Utils.getResourceId(this, "problems_"+position, "array", getPackageName()));
-        for(String str : strs) {
-            View card = inflater.inflate(R.layout.rating_layout, null);
+//        String[] strs = getResources().getStringArray(R.array.categories_list);
+//        int i = 0;
+//        for(String str : strs) {
+            View card = inflater.inflate(R.layout.rating_detailed_layout, null);
             TextView tv = (TextView)card.findViewById(R.id.rating_title);
-            tv.setText(str);
-            String[] n = getResources().getStringArray(R.array.categories_list);
-            tv = (TextView)card.findViewById(R.id.category);
-            tv.setText(n[position]);
+//            tv.setText(str);
+//            tv = (TextView)card.findViewById(R.id.order);
+//            tv.setText((i+1)+". ");
+//            String[] n = getResources().getStringArray(Utils.getResourceId(this, "problems_"+i, "array", getPackageName()));
+//            tv = (TextView)card.findViewById(R.id.bottom_fraction);
+//            tv.setText(String.valueOf(n.length));
             mCards.add(card);
-        }
-        View card = inflater.inflate(R.layout.summary_layout, null);
-        LinearLayout ll = (LinearLayout)card.findViewById(R.id.list_container);
-        LayoutInflater inflater_summary = (LayoutInflater)this.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        int i =0;
-        for(String str2 : strs) {
-            i++;
-            //TODO Remove IF, create a scrollable list.
-            if (i < 5){
-                View view = inflater_summary.inflate(R.layout.summary_list_item_layout, null);
-            TextView tv = (TextView) view.findViewById(R.id.summary_order);
-            tv.setText(i + ". ");
-            tv = (TextView) view.findViewById(R.id.summary_category);
-            tv.setText(str2);
-            //tv = (TextView)view.findViewById(R.id.summary_rating);
-            ll.addView(view);
-            }
-        }
-        mCards.add(card);
-
+//            i++;
+//        }
     }
 
     private class MyCardScrollAdapter extends CardScrollAdapter {
@@ -187,10 +170,10 @@ public class RatingActivity extends Activity {
 
     }
 
-    private void openRatingDetailed() {
-        Intent intent = new Intent(this, RatingDetailedActivity.class);
+    private void openInstructions() {
+        Intent intent = new Intent(this, InstructionsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        //intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(EXTRA_POSITION, position);
         startActivity(intent);
     }
 
