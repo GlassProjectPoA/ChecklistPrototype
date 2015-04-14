@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class RatingActivity extends Activity {
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCatViews;
+    private SubCategoryCardScrollAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -35,9 +38,9 @@ public class RatingActivity extends Activity {
         createCards();
 
         mCardScroller = new CardScrollView(this);
-        SubCategoryCardScrollAdapter mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
-
+        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
         mCardScroller.setAdapter(mAdapter);
+        mCardScroller.setFocusable(false);
         mCardScroller.activate();
 
         mGestureDetector = createGestureDetector(this);
@@ -58,53 +61,50 @@ public class RatingActivity extends Activity {
     //endregion
 
     //region Gesture Detector
-    private GestureDetector createGestureDetector(final Context context) {
+        private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
         //Create a base listener for generic gestures
-        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                Log.e(TAG,"gesture = " + gesture);
+                Log.e(TAG, "gesture = " + gesture);
+                int pos;
                 switch (gesture) {
                     case TAP:
-                        Log.e(TAG,"TAP called.");
+                        Log.e(TAG, "TAP called.");
                         openRatingDetailed();
                         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                         am.playSoundEffect(Sounds.TAP);
                         break;
+                    case SWIPE_LEFT:
+                        Log.e(TAG, "SWIPE_LEFT called.");
+                        pos = mCardScroller.getSelectedItemPosition();
+                        mCardScroller.setSelection(pos-1);
+                        mCardScroller.startAnimation(AnimationUtils.makeInAnimation(mCardScroller.getContext(), true));
+                        return true;
+                    case SWIPE_RIGHT:
+                        Log.e(TAG, "SWIPE_RIGHT called.");
+                        pos = mCardScroller.getSelectedItemPosition();
+                        mCardScroller.setSelection(pos+1);
+                        mCardScroller.startAnimation(AnimationUtils.makeInAnimation(mCardScroller.getContext(), false));
+                        return true;
                     case SWIPE_DOWN:
+                        Log.e(TAG, "SWIPE_DOWN called.");
                         finish();
-                        Log.e(TAG,"SWIPE_DOWN called.");
                         return true;
                     case TWO_SWIPE_LEFT:
-                        Log.e(TAG,"TWO_SWIPE_LEFT called.");
+                        Log.e(TAG, "TWO_SWIPE_LEFT called.");
                         changeRating(false);
                         return true;
                     case TWO_SWIPE_RIGHT:
-                        Log.e(TAG,"TWO_SWIPE_RIGHT called.");
+                        Log.e(TAG, "TWO_SWIPE_RIGHT called.");
                         changeRating(true);
                         return true;
                 }
                 return false;
             }
         });
-
-        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-            @Override
-            public void onFingerCountChanged(int previousCount, int currentCount) {
-                // do something on finger count changes
-            }
-        });
-
-        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-            @Override
-            public boolean onScroll(float displacement, float delta, float velocity) {
-                // do something on scrolling
-                return true;
-            }
-        });
-
         return gestureDetector;
     }
 
@@ -161,8 +161,7 @@ public class RatingActivity extends Activity {
         else if(!add && rating>=-1){
             mSubCatViews.get(position).setCurrentRating(rating-1);
         }
-        SubCategoryCardScrollAdapter mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
-        mCardScroller.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void openRatingDetailed() {
