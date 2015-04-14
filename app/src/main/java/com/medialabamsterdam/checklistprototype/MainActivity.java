@@ -11,6 +11,7 @@ package com.medialabamsterdam.checklistprototype;
         import android.app.Activity;
         import android.content.Context;
         import android.content.Intent;
+        import android.content.res.Configuration;
         import android.media.AudioManager;
         import android.os.Bundle;
         import android.view.LayoutInflater;
@@ -23,30 +24,41 @@ package com.medialabamsterdam.checklistprototype;
         import android.widget.TextView;
 
         import java.util.ArrayList;
+        import java.util.Locale;
 
 public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
+    private final static String LANGUAGE_TO_LOAD = "nl";
+    private final static boolean LANGUAGE_ALTERNATE = false;
+    private final static boolean OK_GLASS = false;
+
     private CardScrollView mCardScroller;
     private View mView;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
-    private boolean okGlass = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        if(LANGUAGE_ALTERNATE) {
+            Locale locale = new Locale(LANGUAGE_TO_LOAD);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+        }
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(okGlass) {
+        if(OK_GLASS) {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
         mView = createLocationCard();
-
-        Utils.ChangeTextColor(this, mView, R.id.footer, R.string.tap_to_start, "start", R.color.green);
-        Utils.ChangeTextColor(this, mView, R.id.instructions, R.string.tap_two_to_refresh, "refresh", R.color.blue);
-
+        Utils.ChangeTextColor(this, mView, R.id.footer, R.array.tap_to_start, R.color.green);
+        Utils.ChangeTextColor(this, mView, R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
 
         mCardScroller = new CardScrollView(this);
         mCardScroller.setAdapter(new CardScrollAdapter() {

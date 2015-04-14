@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
+            android:configChanges="locale"
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_location" >
             <intent-filter>

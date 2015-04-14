@@ -119,20 +119,9 @@ public class RatingDetailedActivity extends Activity {
     private void createCards(){
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
-//        String[] strs = getResources().getStringArray(R.array.categories_list);
-//        int i = 0;
-//        for(String str : strs) {
             View card = inflater.inflate(R.layout.rating_detailed_layout, null);
             TextView tv = (TextView)card.findViewById(R.id.rating_title);
-//            tv.setText(str);
-//            tv = (TextView)card.findViewById(R.id.order);
-//            tv.setText((i+1)+". ");
-//            String[] n = getResources().getStringArray(Utils.getResourceId(this, "problems_"+i, "array", getPackageName()));
-//            tv = (TextView)card.findViewById(R.id.bottom_fraction);
-//            tv.setText(String.valueOf(n.length));
             mCards.add(card);
-//            i++;
-//        }
     }
 
     private class MyCardScrollAdapter extends CardScrollAdapter {

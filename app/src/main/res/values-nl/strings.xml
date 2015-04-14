@@ -112,11 +112,17 @@
 
     <!-- INSTRUCTIONS -->
     <string name="tap_to_submit">Tap om te verzenden</string>
-    <string name="tap_to_start">Tap om te starten</string>
+    <string-array name="tap_to_start">
+        <item>Tap om te starten</item>
+        <item>starten</item>
+    </string-array>
     <string name="tap_to_grade">Tap om beoordeling te starten</string>
     <string name="tap_to_continue">Tap om door te gaan</string>
     <string name="tap_for_info">Tap voor beoordeling info</string>
-    <string name="tap_two_to_refresh">Tap met twee vingers om opnieuw te laden</string>
+    <string-array name="tap_two_to_refresh">
+        <item>Tap met twee vingers om opnieuw te laden</item>
+        <item>opnieuw te laden</item>
+    </string-array>
     <string name="tap_two_to_confirm_grade">Tap met twee vingers om beoordeling te bevestigen</string>
     <string name="swipe_two_to_grade">Swipe met twee vingers om beoordeling aan te passen</string>
 
@@ -128,7 +134,7 @@
 
     <!-- TITLES -->
     <string name="title_instructions">Beoordelingsinstructies</string>
-    <string name="title_summary">Samenvatating</string>
+    <string name="title_summary">Samenvatting</string>
     <string name="title_location">Checklist voor locatie</string>
     <string name="title_categories">Categorieen</string>
     <string name="title_rating">Beoordeling</string>

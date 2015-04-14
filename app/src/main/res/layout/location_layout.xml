@@ -57,7 +57,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/location_code"
-            android:text="@string/tap_two_to_refresh"
+            android:text="@array/tap_two_to_refresh"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <!-- Put widgets for the right column inside this RelativeLayout. -->
@@ -94,7 +94,7 @@
             android:layout_marginLeft="@dimen/glass_card_margin"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/tap_to_start"
+            android:text="@array/tap_to_start"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 

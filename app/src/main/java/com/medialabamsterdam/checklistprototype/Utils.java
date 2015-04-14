@@ -60,4 +60,24 @@ public class Utils {
         int end = start+wordToChange.length();
         s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+
+    /**
+     * Method to change the color of a word or string inside a given TextView.
+     *
+     * @param context the context of the TextView.
+     * @param viewContainer the View of the TextView you wish to change.
+     * @param viewId the Android Resources Id of the TextView to change.
+     * @param stringId the Android String-Array Id of the TextView text containing the phrase on the first item and the "string" to be changed on the second item.
+     * @param colorId the Android Resource Color Id.
+     */
+    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int colorId){
+        String[] str_array = context.getResources().getStringArray(stringId);
+        TextView tv = (TextView)viewContainer.findViewById(viewId);
+        tv.setText(str_array[0], TextView.BufferType.SPANNABLE);
+        Spannable s = (Spannable)tv.getText();
+        String str = s.toString();
+        int start = str.indexOf(str_array[1]);
+        int end = start+str_array[1].length();
+        s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
 }
