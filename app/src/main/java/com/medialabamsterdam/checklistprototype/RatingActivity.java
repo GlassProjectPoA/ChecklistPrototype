@@ -1,24 +1,26 @@
 package com.medialabamsterdam.checklistprototype;
 
-import com.google.android.glass.media.Sounds;
-import com.google.android.glass.touchpad.Gesture;
-import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.widget.CardScrollView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
 
@@ -42,10 +44,10 @@ public class RatingActivity extends Activity {
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mCardScroller.activate();
-
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
     }
+
     //region Boring Stuff
     @Override
     protected void onResume() {
@@ -61,7 +63,7 @@ public class RatingActivity extends Activity {
     //endregion
 
     //region Gesture Detector
-        private GestureDetector createGestureDetector(final Context context) {
+    private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
         //Create a base listener for generic gestures
@@ -69,7 +71,8 @@ public class RatingActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-                int pos;
+
+
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
@@ -79,15 +82,11 @@ public class RatingActivity extends Activity {
                         break;
                     case SWIPE_LEFT:
                         Log.e(TAG, "SWIPE_LEFT called.");
-                        pos = mCardScroller.getSelectedItemPosition();
-                        mCardScroller.setSelection(pos-1);
-                        mCardScroller.startAnimation(AnimationUtils.makeInAnimation(mCardScroller.getContext(), true));
+                        animateScroll(false);
                         return true;
                     case SWIPE_RIGHT:
                         Log.e(TAG, "SWIPE_RIGHT called.");
-                        pos = mCardScroller.getSelectedItemPosition();
-                        mCardScroller.setSelection(pos+1);
-                        mCardScroller.startAnimation(AnimationUtils.makeInAnimation(mCardScroller.getContext(), false));
+                        animateScroll(true);
                         return true;
                     case SWIPE_DOWN:
                         Log.e(TAG, "SWIPE_DOWN called.");
@@ -152,16 +151,69 @@ public class RatingActivity extends Activity {
         //endregion
     }
 
-    private void changeRating(boolean add){
+    private void changeRating(boolean right){
         int position = mCardScroller.getSelectedItemPosition();
         int rating = mSubCatViews.get(position).getCurrentRating();
-        if(add && rating<=3){
+        if(right && rating<=3){
             mSubCatViews.get(position).setCurrentRating(rating+1);
         }
-        else if(!add && rating>=-1){
+        else if(!right && rating>=0){
             mSubCatViews.get(position).setCurrentRating(rating-1);
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void animateScroll(boolean right){
+        final int pos = mCardScroller.getSelectedItemPosition();
+        final long time = 100;
+        int size = mSubCatViews.size()-1;
+        if (right && pos<size){
+            final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
+            animOutRight.setDuration(time);
+            final Animation animInRight = new TranslateAnimation(640, 0, 0, 0);
+            animInRight.setDuration(time);
+
+            Animation.AnimationListener al = new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCardScroller.setSelection(pos + 1);
+                    mCardScroller.startAnimation(animInRight);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            };
+            animOutRight.setAnimationListener(al);
+            mCardScroller.startAnimation(animOutRight);
+        }else if(!right && pos>0){
+            Animation animOutLeft = new TranslateAnimation(0, 640, 0, 0);
+            animOutLeft.setDuration(time);
+            final Animation animInLeft = new TranslateAnimation(-640, 0, 0, 0);
+            animInLeft.setDuration(time);
+
+            Animation.AnimationListener al = new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCardScroller.setSelection(pos - 1);
+                    mCardScroller.startAnimation(animInLeft);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            };
+            animOutLeft.setAnimationListener(al);
+            mCardScroller.startAnimation(animOutLeft);
+        }
     }
 
     private void openRatingDetailed() {

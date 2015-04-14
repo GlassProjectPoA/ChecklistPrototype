@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
     private final static String LANGUAGE_TO_LOAD = "nl";
     public final static boolean LANGUAGE_ALTERNATE = false;
     private final static boolean OK_GLASS = false;
+    public final static boolean IGNORE_INSTRUCTIONS = true;
 
     private CardScrollView mCardScroller;
     private View mView;

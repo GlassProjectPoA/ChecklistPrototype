@@ -78,7 +78,11 @@ public class CategoriesActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
-                    openInstructions();
+                    if(MainActivity.IGNORE_INSTRUCTIONS){
+                        openRating();
+                    }else {
+                        openInstructions();
+                    }
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.TAP);
                     return true;
@@ -146,6 +150,13 @@ public class CategoriesActivity extends Activity {
 
     private void openInstructions() {
         Intent intent = new Intent(this, InstructionsActivity.class);
+        int position = mCardScroller.getSelectedItemPosition();
+        intent.putExtra(EXTRA_POSITION, position);
+        startActivity(intent);
+    }
+
+    private void openRating() {
+        Intent intent = new Intent(this, RatingActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         intent.putExtra(EXTRA_POSITION, position);
         startActivity(intent);

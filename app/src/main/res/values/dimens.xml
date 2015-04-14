@@ -19,6 +19,10 @@
     <!-- The width of the left column in the two-column layout. -->
     <dimen name="glass_card_left_column_width">180px</dimen>
 
+    <!-- Glass Native Resolution -->
+    <dimen name="glass_height">640px</dimen>
+    <dimen name="glass_width">360px</dimen>
+
     <!-- Margins used on the layouts. -->
     <dimen name="glass_card_left_margin">10dp</dimen>
     <dimen name="glass_card_right_margin">20dp</dimen>
