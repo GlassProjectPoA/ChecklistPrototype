@@ -6,97 +6,97 @@
 
     <!-- CATEGORIES -->
     <string-array name="categories_list">
-        <item>Vegetation</item>
-        <item>Treeline</item>
-        <item>Grass</item>
-        <item>Large Artwork</item>
-        <item>Furniture - Trashcan</item>
-        <item>Furniture - Signs</item>
-        <item>Furniture - Carriers</item>
-        <item>Furniture - Fences</item>
-        <item>Furniture - Poles</item>
-        <item>Furniture - Benches &amp; Tables</item>
-        <item>Sewerage</item>
-        <item>Hardening</item>
-        <item>Hardening Elements</item>
-        <item>Hardening Unbound</item>
+        <item>Beplanting</item>
+        <item>Boomspiegel</item>
+        <item>Gras</item>
+        <item>Kunstwerken Groot</item>
+        <item>Meubilair - Afvalbakken</item>
+        <item>Meubilair - Borden</item>
+        <item>Meubilair - Dragers</item>
+        <item>Meubilair - Hekken</item>
+        <item>Meubilair - Palen</item>
+        <item>Meubilair - Banken &amp; Tafels</item>
+        <item>Riolering</item>
+        <item>Verharding</item>
+        <item>Elementen Verharding</item>
+        <item>Ongebonden Verharding</item>
     </string-array>
 
     <!-- PROBLEMS -->
     <string-array name="problems_404">
-        <item>ERROR!</item>
+        <item>FOUT!</item>
     </string-array>
     <string-array name="problems_0">
-        <item>Planter - Fine Litter</item>
-        <item>Planter - Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
+        <item>Bloembakken - Zwerfafval Fijn</item>
+        <item>Bloembakken - Zwerfafval Grof</item>
+        <item>Grofvuil</item>
+        <item>Zwerfafval Fijn</item>
+        <item>Zwerfafval Grof</item>
     </string-array>
     <string-array name="problems_1">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
+        <item>Zwerfafval Fijn</item>
+        <item>Zwerfafval Grof</item>
     </string-array>
     <string-array name="problems_2">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Natural Waste</item>
+        <item>Zwerfafval Fijn</item>
+        <item>Zwerfafval Grof</item>
+        <item>Grofvuil</item>
+        <item>Natuurlijk Afval</item>
     </string-array>
     <string-array name="problems_3">
-        <item>Coverings</item>
+        <item>Beplakking</item>
         <item>Graffiti</item>
     </string-array>
     <string-array name="problems_4">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-        <item>Fill Level</item>
+        <item>Beplakking / Graffiti</item>
+        <item>Besmeuring</item>
+        <item>Natuurlijke Aanslag</item>
+        <item>Scheefstand</item>
+        <item>Vullingsgraad</item>
     </string-array>
     <string-array name="problems_5">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Warp</item>
+        <item>Beplakking / Graffiti</item>
+        <item>Natuurlijke Aanslag</item>
+        <item>Verdraaiing</item>
     </string-array>
     <string-array name="problems_6">
-        <item>Coverings / Graffiti</item>
-        <item>Tilt</item>
+        <item>Beplakking / Graffiti</item>
+        <item>Scheefstand</item>
     </string-array>
     <string-array name="problems_7">
-        <item>Tilt</item>
+        <item>Scheefstand</item>
     </string-array>
     <string-array name="problems_8">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
+        <item>Beplakking / Graffiti</item>
+        <item>Natuurlijke Aanslag</item>
+        <item>Scheefstand</item>
     </string-array>
     <string-array name="problems_9">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
+        <item>Beplakking / Graffiti</item>
+        <item>Besmeuring</item>
+        <item>Natuurlijke Aanslag</item>
+        <item>Scheefstand</item>
     </string-array>
     <string-array name="problems_10">
-        <item>Barrier Inlet</item>
+        <item>Belemmering Inlaat</item>
     </string-array>
     <string-array name="problems_11">
-        <item>Bulk Waste</item>
-        <item>Natural Dirt</item>
-        <item>Weed Gutters</item>
-        <item>Weed Around Obstacles</item>
-        <item>Excreta</item>
-        <item>Wipeable Fine Litter</item>
-        <item>Wipe Dirt Gutters</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
+        <item>Grofvuil</item>
+        <item>Natuurlijke Aanslag</item>
+        <item>Onkruid Goten</item>
+        <item>Onkruid Rondom Obstakels</item>
+        <item>Uitwerpselen</item>
+        <item>Veegbaar Zwerfafval Fijn</item>
+        <item>Veegvuil Goten</item>
+        <item>Zwerfafval Fijn</item>
+        <item>Zwerfafval Grof</item>
     </string-array>
     <string-array name="problems_12">
-        <item>Weed Pavers</item>
-        <item>Weet Tiles</item>
+        <item>Onkruid Klinkers</item>
+        <item>Onkruid Tegels</item>
     </string-array>
     <string-array name="problems_13">
-        <item>Weed</item>
+        <item>Onkruid</item>
     </string-array>
 
     <!-- RATINGS -->
@@ -107,39 +107,39 @@
     <string name="rating_d">D</string>
 
     <!-- SUBMIT -->
-    <string name="submit_report">Submit Report</string>
-    <string name="submit_rates">Submit Rates</string>
+    <string name="submit_report">Verzend Controle</string>
+    <string name="submit_rates">Bevestig Beoordeling</string>
 
     <!-- INSTRUCTIONS -->
-    <string name="tap_to_submit">Tap to submit</string>
-    <string name="tap_to_start">Tap to start</string>
-    <string name="tap_to_grade">Tap to start grading</string>
-    <string name="tap_to_continue">Tap to continue</string>
-    <string name="tap_for_info">Tap for grading info</string>
-    <string name="tap_two_to_refresh">Tap with two fingers to refresh</string>
-    <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
-    <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
+    <string name="tap_to_submit">Tap om te verzenden</string>
+    <string name="tap_to_start">Tap om te starten</string>
+    <string name="tap_to_grade">Tap om beoordeling te starten</string>
+    <string name="tap_to_continue">Tap om door te gaan</string>
+    <string name="tap_for_info">Tap voor beoordeling info</string>
+    <string name="tap_two_to_refresh">Tap met twee vingers om opnieuw te laden</string>
+    <string name="tap_two_to_confirm_grade">Tap met twee vingers om beoordeling te bevestigen</string>
+    <string name="swipe_two_to_grade">Swipe met twee vingers om beoordeling aan te passen</string>
 
     <!-- UTILITIES -->
     <string name="random_time">12:34</string>
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
-    <string name="example_text">There are little stickers.</string>
+    <string name="example_text">Er zijn kleine stickers.</string>
 
     <!-- TITLES -->
-    <string name="title_instructions">Grading Instructions</string>
-    <string name="title_summary">Summary</string>
-    <string name="title_location">Checklist for location</string>
-    <string name="title_categories">Categories</string>
-    <string name="title_rating">Rating</string>
-    <string name="title_rating_detailed">Rating Detailed</string>
+    <string name="title_instructions">Beoordelingsinstructies</string>
+    <string name="title_summary">Samenvatating</string>
+    <string name="title_location">Checklist voor locatie</string>
+    <string name="title_categories">Categorieen</string>
+    <string name="title_rating">Beoordeling</string>
+    <string name="title_rating_detailed">Beoordeling Detail</string>
 
     <!-- IMAGE DESCRIPTIONS -->
-    <string name="map_location_description">map location snapshot</string>
+    <string name="map_location_description">map locatie snapshot</string>
     <string name="warning_sign_description">Warning sign.</string>
 
     <!-- WARNING TEXT -->
-    <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
+    <string name="warning_text">De staat van deze post is lager dan toegestaan. Maak nu een foto van de post.</string>
 
     <!-- NOT ORDERED -->
 
