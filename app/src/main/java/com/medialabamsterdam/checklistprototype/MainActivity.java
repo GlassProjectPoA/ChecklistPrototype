@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
     private final static String LANGUAGE_TO_LOAD = "nl";
-    private final static boolean LANGUAGE_ALTERNATE = false;
+    public final static boolean LANGUAGE_ALTERNATE = false;
     private final static boolean OK_GLASS = false;
 
     private CardScrollView mCardScroller;

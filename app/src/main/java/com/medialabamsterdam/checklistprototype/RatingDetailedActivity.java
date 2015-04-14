@@ -10,6 +10,7 @@ import com.google.android.glass.widget.CardScrollView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -119,9 +120,56 @@ public class RatingDetailedActivity extends Activity {
     private void createCards(){
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
+        //TODO fix this entire method.. T_T
+        String[] percentage = new String[]{"0%", "<2%", "<5%", "<10%", "10%>"};
+        String[] detail;
+        if (MainActivity.LANGUAGE_ALTERNATE) {
+            detail = new String[]{"Geen Graffiti.", "Er zijn kleine stickers.", "Er zijn grote stickers.", "Er zijn posters of tekeningen.", "Rassistisch of aanstootgevend."};
+        }else{
+            detail = new String[]{"No Graffiti.", "There are little stickers.", "There are big stickers.", "There are posters or drawings.", "Racist or offensive"};
+        }
+        for(int i = 0; i < 5; i++) {
             View card = inflater.inflate(R.layout.rating_detailed_layout, null);
-            TextView tv = (TextView)card.findViewById(R.id.rating_title);
+            TextView tv = (TextView) card.findViewById(R.id.description_text);
+            tv.setText(detail[i]);
+            tv = (TextView) card.findViewById(R.id.percentage_text);
+            tv.setText(percentage[i]);
+            switch (i){
+                case 0:
+                    tv.setTextColor(getResources().getColor(R.color.green));
+                    card.findViewById(R.id.bar_aa).setVisibility(View.VISIBLE);
+                    tv = (TextView) card.findViewById(R.id.rating_text_aa);
+                    tv.setTextColor(getResources().getColor(R.color.green));
+                    break;
+                case 1:
+                    tv.setTextColor(getResources().getColor(R.color.green));
+                    card.findViewById(R.id.bar_a).setVisibility(View.VISIBLE);
+                    tv = (TextView) card.findViewById(R.id.rating_text_a);
+                    tv.setTextColor(getResources().getColor(R.color.green));
+                    break;
+                case 2:
+                    tv.setTextColor(getResources().getColor(R.color.blue));
+                    card.findViewById(R.id.bar_b).setVisibility(View.VISIBLE);
+                    tv = (TextView) card.findViewById(R.id.rating_text_b);
+                    tv.setTextColor(getResources().getColor(R.color.blue));
+                    break;
+                case 3:
+                    tv.setTextColor(getResources().getColor(R.color.yellow));
+                    card.findViewById(R.id.bar_c).setVisibility(View.VISIBLE);
+                    tv = (TextView) card.findViewById(R.id.rating_text_c);
+                    tv.setTextColor(getResources().getColor(R.color.yellow));
+                    break;
+                case 4:
+                    tv.setTextColor(getResources().getColor(R.color.red));
+                    card.findViewById(R.id.bar_d).setVisibility(View.VISIBLE);
+                    tv = (TextView) card.findViewById(R.id.rating_text_d);
+                    tv.setTextColor(getResources().getColor(R.color.red));
+                    break;
+            }
+
+
             mCards.add(card);
+        }
     }
 
     private class MyCardScrollAdapter extends CardScrollAdapter {
