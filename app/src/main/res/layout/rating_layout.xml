@@ -97,7 +97,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:text="@string/rating_a"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:textSize="25sp" />
 
             <View
@@ -107,7 +107,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:background="@color/green"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:layout_marginTop="7dp" />
 
         </LinearLayout>

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Quintas on 14/04/2015.
  */
-public class MyCardScrollAdapter extends CardScrollAdapter {
+public class MyCardScrollAdapter extends CardScrollAdapter{
     private List<View> mViews;
 
     public MyCardScrollAdapter(List<View> views) {
