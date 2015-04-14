@@ -144,41 +144,6 @@ public class CategoriesActivity extends Activity {
         }
     }
 
-    private class MyCardScrollAdapter extends CardScrollAdapter {
-        private List<View> mViews;
-
-        public MyCardScrollAdapter(List<View> views) {
-            mViews = views;
-        }
-
-        @Override
-        public int getPosition(Object item) {
-            return mCards.indexOf(item);
-        }
-
-        @Override
-        public int getCount() {
-            return mCards.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mCards.get(position);
-        }
-
-
-        @Override
-        public int getViewTypeCount() {
-            return CardBuilder.getViewTypeCount();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return mViews.get(position);
-        }
-
-    }
-
     private void openInstructions() {
         Intent intent = new Intent(this, InstructionsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
