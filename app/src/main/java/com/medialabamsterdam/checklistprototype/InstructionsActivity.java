@@ -160,9 +160,9 @@ public class InstructionsActivity extends Activity {
 
     private void openRating() {
         Intent intent = getIntent();
-        int position = intent.getIntExtra(CategoriesActivity.EXTRA_POSITION, 404);
+        int position = intent.getIntExtra(Constants.EXTRA_POSITION, 404);
         intent = new Intent(this, RatingActivity.class);
-        intent.putExtra(CategoriesActivity.EXTRA_POSITION, position);
+        intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CategoriesActivity extends Activity {
 
-    public final static String EXTRA_POSITION = "com.medialabamsterdam.checklistprototype.POSITION";
+
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private List<View> mCards;
@@ -151,14 +151,14 @@ public class CategoriesActivity extends Activity {
     private void openInstructions() {
         Intent intent = new Intent(this, InstructionsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);
     }
 
     private void openRating() {
         Intent intent = new Intent(this, RatingActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);
     }
 

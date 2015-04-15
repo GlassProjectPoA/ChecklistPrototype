@@ -28,11 +28,10 @@ package com.medialabamsterdam.checklistprototype;
 
 public class MainActivity extends Activity {
 
-    public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
     private final static String LANGUAGE_TO_LOAD = "nl";
     public final static boolean LANGUAGE_ALTERNATE = false;
     private final static boolean OK_GLASS = false;
-    public final static boolean IGNORE_INSTRUCTIONS = true;
+    public final static boolean IGNORE_INSTRUCTIONS = false;
 
     private CardScrollView mCardScroller;
     private View mView;
@@ -167,7 +166,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, CategoriesActivity.class);
         TextView tv = (TextView)this.findViewById(R.id.location_code);
         String message = (String) tv.getText();
-        intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra(Constants.EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 

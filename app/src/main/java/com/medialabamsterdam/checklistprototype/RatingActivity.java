@@ -3,8 +3,10 @@ package com.medialabamsterdam.checklistprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,14 +25,17 @@ import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 public class RatingActivity extends Activity {
 
     private static final String TAG = "THIS";
+    static final int SET_RATING_DETAIL = 1652;
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCatViews;
     private SubCategoryCardScrollAdapter mAdapter;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -46,6 +51,9 @@ public class RatingActivity extends Activity {
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+
+
+//        mPrefs = getSharedPreferences("Rates", Context.MODE_PRIVATE);
     }
 
     //region Boring Stuff
@@ -119,7 +127,7 @@ public class RatingActivity extends Activity {
     private void createCards(){
         mSubCatViews = new ArrayList<>();
         Intent intent = getIntent();
-        int position = intent.getIntExtra(CategoriesActivity.EXTRA_POSITION,404);
+        int position = intent.getIntExtra(Constants.EXTRA_POSITION,404);
         LayoutInflater inflater = LayoutInflater.from(this);
         String[] problems = getResources().getStringArray(Utils.getResourceId(this, "problems_"+position, "array", getPackageName()));
         String[] categories = getResources().getStringArray(R.array.categories_list);
@@ -218,9 +226,22 @@ public class RatingActivity extends Activity {
 
     private void openRatingDetailed() {
         Intent intent = new Intent(this, RatingDetailedActivity.class);
+//        SharedPreferences.Editor ed = mPrefs.edit();
+//        ed.putInt("ye",1);
         int position = mCardScroller.getSelectedItemPosition();
-        //intent.putExtra(EXTRA_POSITION, position);
-        startActivity(intent);
+        int rating = mSubCatViews.get(position).getCurrentRating();
+
+        intent.putExtra(Constants.EXTRA_POSITION, position);
+        intent.putExtra(Constants.EXTRA_RATING, rating);
+        startActivityForResult(intent, SET_RATING_DETAIL);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SET_RATING_DETAIL) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
     }
 
 }

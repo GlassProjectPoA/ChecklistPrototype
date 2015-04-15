@@ -70,9 +70,13 @@ public class RatingDetailedActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
-                    //openInstructions();
+                    // Create intent to deliver some kind of result data
+                    Intent result = new Intent();
+                    result.putExtra(Constants.EXTRA_RATING_DETAIL, mCardScroller.getSelectedItemPosition());
+                    setResult(Activity.RESULT_OK, result);
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.DISALLOWED);
+                    finish();
                     return true;
                 } else if (gesture == Gesture.TWO_TAP) {
                     // do something on two finger tap
