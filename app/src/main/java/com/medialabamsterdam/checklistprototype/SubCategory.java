@@ -1,9 +1,12 @@
 package com.medialabamsterdam.checklistprototype;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Quintas on 14/04/2015.
  */
-public class SubCategory {
+public class SubCategory implements Parcelable {
 
     public int parentCategoryId;
     public String parentCategoryName;
@@ -18,6 +21,15 @@ public class SubCategory {
         this.thisSubCategoryName = thisSubCategoryName;
         this.currentRating = currentRating;
     }
+
+    private SubCategory(Parcel in) {
+        parentCategoryId = in.readInt();
+        parentCategoryName = in.readString();
+        thisSubCategoryId = in.readInt();
+        thisSubCategoryName = in.readString();
+        currentRating = in.readInt();
+    }
+
 
     public int getParentCategoryId() {
         return parentCategoryId;
@@ -58,4 +70,28 @@ public class SubCategory {
     public void setCurrentRating(int currentRating) {
         this.currentRating = currentRating;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(parentCategoryId);
+        out.writeString(parentCategoryName);
+        out.writeInt(thisSubCategoryId);
+        out.writeString(thisSubCategoryName);
+        out.writeInt(currentRating);
+    }
+
+    public static final Parcelable.Creator<SubCategory> CREATOR = new Parcelable.Creator<SubCategory>() {
+        public SubCategory createFromParcel(Parcel in) {
+            return new SubCategory(in);
+        }
+
+        public SubCategory[] newArray(int size) {
+            return new SubCategory[size];
+        }
+    };
 }

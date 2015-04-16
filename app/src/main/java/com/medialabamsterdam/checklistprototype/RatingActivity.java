@@ -6,16 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.preference.Preference;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
+import java.util.concurrent.CompletionService;
 
 public class RatingActivity extends Activity {
 
@@ -42,7 +41,12 @@ public class RatingActivity extends Activity {
         super.onCreate(bundle);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        createCards();
+        if(bundle == null || !bundle.containsKey(Constants.PARCEABLE_SUBCATEGORY)) {
+            createCards();
+        }else{
+            mSubCatViews = bundle.getParcelableArrayList(Constants.PARCEABLE_SUBCATEGORY);
+        }
+
 
         mCardScroller = new CardScrollView(this);
         mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
@@ -53,7 +57,7 @@ public class RatingActivity extends Activity {
         setContentView(mCardScroller);
 
 
-//        mPrefs = getSharedPreferences("Rates", Context.MODE_PRIVATE);
+        mPrefs = getSharedPreferences("Rates", Context.MODE_PRIVATE);
     }
 
     //region Boring Stuff
@@ -168,13 +172,28 @@ public class RatingActivity extends Activity {
         else if(!right && rating>=0){
             mSubCatViews.get(position).setCurrentRating(rating-1);
         }
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putInt(Constants.CURRENT_RATING, 1);
+
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(Constants.PARCEABLE_SUBCATEGORY, mSubCatViews);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void animateScroll(boolean right){
         final int pos = mCardScroller.getSelectedItemPosition();
         final long time = 100;
         int size = mSubCatViews.size()-1;
+        final SharedPreferences.Editor ed = mPrefs.edit();
         if (right && pos<size){
             final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
             animOutRight.setDuration(time);
@@ -189,6 +208,7 @@ public class RatingActivity extends Activity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mCardScroller.setSelection(pos + 1);
+                    ed.putInt(Constants.CURRENT_POSITION, pos + 1);
                     mCardScroller.startAnimation(animInRight);
                 }
 
@@ -212,6 +232,7 @@ public class RatingActivity extends Activity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mCardScroller.setSelection(pos - 1);
+                    ed.putInt(Constants.CURRENT_POSITION, pos - 1);
                     mCardScroller.startAnimation(animInLeft);
                 }
 
@@ -221,16 +242,14 @@ public class RatingActivity extends Activity {
             };
             animOutLeft.setAnimationListener(al);
             mCardScroller.startAnimation(animOutLeft);
+            ed.apply();
         }
     }
 
     private void openRatingDetailed() {
         Intent intent = new Intent(this, RatingDetailedActivity.class);
-//        SharedPreferences.Editor ed = mPrefs.edit();
-//        ed.putInt("ye",1);
         int position = mCardScroller.getSelectedItemPosition();
         int rating = mSubCatViews.get(position).getCurrentRating();
-
         intent.putExtra(Constants.EXTRA_POSITION, position);
         intent.putExtra(Constants.EXTRA_RATING, rating);
         startActivityForResult(intent, SET_RATING_DETAIL);
@@ -239,7 +258,11 @@ public class RatingActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SET_RATING_DETAIL) {
             if (resultCode == RESULT_OK) {
-
+                int position = data.getIntExtra(Constants.EXTRA_POSITION, 1);
+                int rating = data.getIntExtra(Constants.EXTRA_RATING_DETAIL, 0);
+                mSubCatViews.get(position).setCurrentRating(rating);
+                mCardScroller.setSelection(position);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

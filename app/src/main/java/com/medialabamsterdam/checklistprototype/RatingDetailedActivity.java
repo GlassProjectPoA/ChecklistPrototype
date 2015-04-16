@@ -31,10 +31,14 @@ public class RatingDetailedActivity extends Activity {
     private GestureDetector mGestureDetector;
     private List<View> mCards;
     private MyCardScrollAdapter mAdapter;
+    private int subCategory;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        Intent intent = getIntent();
+        subCategory = intent.getIntExtra(Constants.EXTRA_POSITION, 0);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         createCards();
@@ -46,6 +50,7 @@ public class RatingDetailedActivity extends Activity {
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+        mCardScroller.setSelection(intent.getIntExtra(Constants.EXTRA_RATING,0)-1);
     }
     //region Boring Stuff
     @Override
@@ -72,7 +77,8 @@ public class RatingDetailedActivity extends Activity {
                 if (gesture == Gesture.TAP) {
                     // Create intent to deliver some kind of result data
                     Intent result = new Intent();
-                    result.putExtra(Constants.EXTRA_RATING_DETAIL, mCardScroller.getSelectedItemPosition());
+                    result.putExtra(Constants.EXTRA_RATING_DETAIL, mCardScroller.getSelectedItemPosition()-1);
+                    result.putExtra(Constants.EXTRA_POSITION, subCategory);
                     setResult(Activity.RESULT_OK, result);
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.DISALLOWED);
@@ -125,45 +131,45 @@ public class RatingDetailedActivity extends Activity {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         //TODO fix this entire method.. T_T
-        String[] percentage = new String[]{"0%", "<2%", "<5%", "<10%", "10%>"};
+        String[] percentage = new String[]{"", "0%", "<2%", "<5%", "<10%", "10%>"};
         String[] detail;
         if (MainActivity.LANGUAGE_ALTERNATE) {
-            detail = new String[]{"Geen Graffiti.", "Er zijn kleine stickers.", "Er zijn grote stickers.", "Er zijn posters of tekeningen.", "Rassistisch of aanstootgevend."};
+            detail = new String[]{"NO RATING", "Geen Graffiti.", "Er zijn kleine stickers.", "Er zijn grote stickers.", "Er zijn posters of tekeningen.", "Rassistisch of aanstootgevend."};
         }else{
-            detail = new String[]{"No Graffiti.", "There are little stickers.", "There are big stickers.", "There are posters or drawings.", "Racist or offensive"};
+            detail = new String[]{"NO RATING", "No Graffiti.", "There are little stickers.", "There are big stickers.", "There are posters or drawings.", "Racist or offensive"};
         }
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 6; i++) {
             View card = inflater.inflate(R.layout.rating_detailed_layout, null);
             TextView tv = (TextView) card.findViewById(R.id.description_text);
             tv.setText(detail[i]);
             tv = (TextView) card.findViewById(R.id.percentage_text);
             tv.setText(percentage[i]);
             switch (i){
-                case 0:
+                case 1:
                     tv.setTextColor(getResources().getColor(R.color.green));
                     card.findViewById(R.id.bar_aa).setVisibility(View.VISIBLE);
                     tv = (TextView) card.findViewById(R.id.rating_text_aa);
                     tv.setTextColor(getResources().getColor(R.color.green));
                     break;
-                case 1:
+                case 2:
                     tv.setTextColor(getResources().getColor(R.color.green));
                     card.findViewById(R.id.bar_a).setVisibility(View.VISIBLE);
                     tv = (TextView) card.findViewById(R.id.rating_text_a);
                     tv.setTextColor(getResources().getColor(R.color.green));
                     break;
-                case 2:
+                case 3:
                     tv.setTextColor(getResources().getColor(R.color.blue));
                     card.findViewById(R.id.bar_b).setVisibility(View.VISIBLE);
                     tv = (TextView) card.findViewById(R.id.rating_text_b);
                     tv.setTextColor(getResources().getColor(R.color.blue));
                     break;
-                case 3:
+                case 4:
                     tv.setTextColor(getResources().getColor(R.color.yellow));
                     card.findViewById(R.id.bar_c).setVisibility(View.VISIBLE);
                     tv = (TextView) card.findViewById(R.id.rating_text_c);
                     tv.setTextColor(getResources().getColor(R.color.yellow));
                     break;
-                case 4:
+                case 5:
                     tv.setTextColor(getResources().getColor(R.color.red));
                     card.findViewById(R.id.bar_d).setVisibility(View.VISIBLE);
                     tv = (TextView) card.findViewById(R.id.rating_text_d);
