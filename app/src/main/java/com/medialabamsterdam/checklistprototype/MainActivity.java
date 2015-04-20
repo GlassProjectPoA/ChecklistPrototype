@@ -12,14 +12,15 @@ package com.medialabamsterdam.checklistprototype;
         import android.content.Context;
         import android.content.Intent;
         import android.content.res.Configuration;
+        import android.location.Location;
         import android.media.AudioManager;
         import android.os.Bundle;
+        import android.os.CountDownTimer;
+        import android.util.Log;
         import android.view.LayoutInflater;
-        import android.view.Menu;
         import android.view.MotionEvent;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.view.Window;
         import android.view.WindowManager;
         import android.widget.TextView;
 
@@ -37,11 +38,13 @@ public class MainActivity extends Activity {
     private View mView;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
+    private Location mActualLocation;
+    private LocationUtils mLocationUtils;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        handleLocationUtils();
         if(LANGUAGE_ALTERNATE) {
             Locale locale = new Locale(LANGUAGE_TO_LOAD);
             Locale.setDefault(locale);
@@ -88,20 +91,46 @@ public class MainActivity extends Activity {
                 return mView; //return mViews.get(position);
             }
         });
-
+        mCardScroller.setFocusable(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+        new CountDownTimer(1500, 500) {
+
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                handleLocationUtils();
+            }
+
+        }.start();
+    }
+
+    private boolean handleLocationUtils() {
+        if(mLocationUtils == null) {
+            mLocationUtils = new LocationUtils(this);
+        }
+        mActualLocation = mLocationUtils.getLocation();
+        if (mActualLocation != null){
+            Log.e("WORKS!", mActualLocation.toString());
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mCardScroller.activate();
+        mLocationUtils.restart();
+        handleLocationUtils();
     }
 
     @Override
     protected void onPause() {
         mCardScroller.deactivate();
+        mLocationUtils.stop();
         super.onPause();
     }
 
@@ -118,8 +147,14 @@ public class MainActivity extends Activity {
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.TAP);
                     return true;
-                } else if (gesture == Gesture.TWO_TAP) {
-                    // do something on two finger tap
+                } else if (gesture == Gesture.TWO_LONG_PRESS) {
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    boolean ok = handleLocationUtils();
+                    if(ok) {
+                        am.playSoundEffect(Sounds.SUCCESS);
+                    }else{
+                        am.playSoundEffect(Sounds.ERROR);
+                    }
                     return true;
                 } else if (gesture == Gesture.SWIPE_RIGHT) {
                     // do something on right (forward) swipe
