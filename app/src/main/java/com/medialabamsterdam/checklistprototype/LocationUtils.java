@@ -20,7 +20,7 @@ public class LocationUtils {
     private Location mLocation;
     private LocationListener mLocationListener;
 
-    public LocationUtils(Context context){
+    public LocationUtils(Context context) {
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         mContext = context;
@@ -52,15 +52,15 @@ public class LocationUtils {
         }
     }
 
-    public void restart(){
+    public void restart() {
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, mLocationListener);
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         return mLocation;
     }
 
-    public void stop(){
+    public void stop() {
         mLocationManager.removeUpdates(mLocationListener);
     }
 }

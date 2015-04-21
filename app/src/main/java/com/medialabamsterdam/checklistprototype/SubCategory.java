@@ -8,11 +8,20 @@ import android.os.Parcelable;
  */
 public class SubCategory implements Parcelable {
 
-    public int parentCategoryId;
-    public String parentCategoryName;
-    public int thisSubCategoryId;
-    public String thisSubCategoryName;
-    public int currentRating;
+    public static final Parcelable.Creator<SubCategory> CREATOR = new Parcelable.Creator<SubCategory>() {
+        public SubCategory createFromParcel(Parcel in) {
+            return new SubCategory(in);
+        }
+
+        public SubCategory[] newArray(int size) {
+            return new SubCategory[size];
+        }
+    };
+    private int parentCategoryId;
+    private String parentCategoryName;
+    private int thisSubCategoryId;
+    private String thisSubCategoryName;
+    private int currentRating;
 
     public SubCategory(int parentCategoryId, String parentCategoryName, int thisSubCategoryId, String thisSubCategoryName, int currentRating) {
         this.parentCategoryId = parentCategoryId;
@@ -22,6 +31,7 @@ public class SubCategory implements Parcelable {
         this.currentRating = currentRating;
     }
 
+
     private SubCategory(Parcel in) {
         parentCategoryId = in.readInt();
         parentCategoryName = in.readString();
@@ -29,7 +39,6 @@ public class SubCategory implements Parcelable {
         thisSubCategoryName = in.readString();
         currentRating = in.readInt();
     }
-
 
     public int getParentCategoryId() {
         return parentCategoryId;
@@ -84,14 +93,4 @@ public class SubCategory implements Parcelable {
         out.writeString(thisSubCategoryName);
         out.writeInt(currentRating);
     }
-
-    public static final Parcelable.Creator<SubCategory> CREATOR = new Parcelable.Creator<SubCategory>() {
-        public SubCategory createFromParcel(Parcel in) {
-            return new SubCategory(in);
-        }
-
-        public SubCategory[] newArray(int size) {
-            return new SubCategory[size];
-        }
-    };
 }

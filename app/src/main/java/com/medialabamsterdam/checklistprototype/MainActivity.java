@@ -1,38 +1,35 @@
 package com.medialabamsterdam.checklistprototype;
 
-        import com.google.android.glass.media.Sounds;
-        import com.google.android.glass.touchpad.Gesture;
-        import com.google.android.glass.touchpad.GestureDetector;
-        import com.google.android.glass.view.WindowUtils;
-        import com.google.android.glass.widget.CardBuilder;
-        import com.google.android.glass.widget.CardScrollAdapter;
-        import com.google.android.glass.widget.CardScrollView;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.location.Location;
+import android.media.AudioManager;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.location.Location;
-        import android.media.AudioManager;
-        import android.os.Bundle;
-        import android.os.CountDownTimer;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import android.widget.TextView;
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.view.WindowUtils;
+import com.google.android.glass.widget.CardBuilder;
+import com.google.android.glass.widget.CardScrollAdapter;
+import com.google.android.glass.widget.CardScrollView;
 
-        import java.util.ArrayList;
-        import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
 
-    private final static String LANGUAGE_TO_LOAD = "nl";
-    public final static boolean LANGUAGE_ALTERNATE = false;
-    private final static boolean OK_GLASS = false;
-    public final static boolean IGNORE_INSTRUCTIONS = true;
+    public final static boolean OK_GLASS = false;
 
     private CardScrollView mCardScroller;
     private View mView;
@@ -45,8 +42,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         handleLocationUtils();
-        if(LANGUAGE_ALTERNATE) {
-            Locale locale = new Locale(LANGUAGE_TO_LOAD);
+        if (Constants.LOAD_ALTERNATE_LANGUAGE) {
+            Locale locale = new Locale(Constants.ALTERNATE_LANGUAGE);
             Locale.setDefault(locale);
             Configuration config = new Configuration();
             config.locale = locale;
@@ -55,7 +52,7 @@ public class MainActivity extends Activity {
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(OK_GLASS) {
+        if (OK_GLASS) {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
@@ -107,14 +104,14 @@ public class MainActivity extends Activity {
     }
 
     private boolean handleLocationUtils() {
-        if(mLocationUtils == null) {
+        if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
         }
         mActualLocation = mLocationUtils.getLocation();
-        if (mActualLocation != null){
+        if (mActualLocation != null) {
             Log.e("WORKS!", mActualLocation.toString());
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -139,7 +136,7 @@ public class MainActivity extends Activity {
         GestureDetector gestureDetector = new GestureDetector(context);
 
         //Create a base listener for generic gestures
-        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
@@ -150,9 +147,9 @@ public class MainActivity extends Activity {
                 } else if (gesture == Gesture.TWO_LONG_PRESS) {
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     boolean ok = handleLocationUtils();
-                    if(ok) {
+                    if (ok) {
                         am.playSoundEffect(Sounds.SUCCESS);
-                    }else{
+                    } else {
                         am.playSoundEffect(Sounds.ERROR);
                     }
                     return true;
@@ -162,7 +159,7 @@ public class MainActivity extends Activity {
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     // do something on left (backwards) swipe
                     return true;
-                } else if (gesture == Gesture.SWIPE_DOWN){
+                } else if (gesture == Gesture.SWIPE_DOWN) {
                     finish();
                 }
                 return false;
@@ -199,13 +196,13 @@ public class MainActivity extends Activity {
 
     private void openCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
-        TextView tv = (TextView)this.findViewById(R.id.location_code);
+        TextView tv = (TextView) this.findViewById(R.id.location_code);
         String message = (String) tv.getText();
         intent.putExtra(Constants.EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 
-    private View createLocationCard(){//List<ChecklistTask> tasks) {
+    private View createLocationCard() {//List<ChecklistTask> tasks) {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);

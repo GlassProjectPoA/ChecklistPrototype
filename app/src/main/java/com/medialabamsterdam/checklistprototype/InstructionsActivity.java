@@ -1,26 +1,23 @@
 package com.medialabamsterdam.checklistprototype;
 
-import com.google.android.glass.media.Sounds;
-import com.google.android.glass.touchpad.Gesture;
-import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.view.WindowUtils;
-import com.google.android.glass.widget.CardBuilder;
-import com.google.android.glass.widget.CardScrollAdapter;
-import com.google.android.glass.widget.CardScrollView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.TextView;
+
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.widget.CardBuilder;
+import com.google.android.glass.widget.CardScrollAdapter;
+import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
 
@@ -41,7 +38,7 @@ public class InstructionsActivity extends Activity {
 
         mView = createInstructionsCard();
 
-        if (tapCount==0) {
+        if (tapCount == 0) {
             Utils.ChangeTextColor(this, mView, R.id.instruction_text, R.string.swipe_two_to_grade, "Swipe", R.color.blue);
         }
 
@@ -146,14 +143,13 @@ public class InstructionsActivity extends Activity {
     }
     //endregion
 
-    private void updateView(){
+    private void updateView() {
         tapCount++;
-        if (tapCount==1){
-            TextView tv = (TextView)mView.findViewById(R.id.instruction_text);
+        if (tapCount == 1) {
+            TextView tv = (TextView) mView.findViewById(R.id.instruction_text);
             tv.setText(R.string.tap_two_to_confirm_grade);
             Utils.ChangeTextColor(this, mView, R.id.instruction_text, R.string.tap_two_to_confirm_grade, "Tap", R.color.green);
-        }
-        else{
+        } else {
             openRating();
         }
     }
@@ -161,7 +157,7 @@ public class InstructionsActivity extends Activity {
     private void openRating() {
         Intent intent = getIntent();
         int position = intent.getIntExtra(Constants.EXTRA_POSITION, 404);
-        intent = new Intent(this, RatingActivity.class);
+        intent = new Intent(this, SubCategoryActivity.class);
         intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);
     }

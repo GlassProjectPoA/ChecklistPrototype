@@ -1,12 +1,5 @@
 package com.medialabamsterdam.checklistprototype;
 
-import com.google.android.glass.media.Sounds;
-import com.google.android.glass.touchpad.Gesture;
-import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.widget.CardBuilder;
-import com.google.android.glass.widget.CardScrollAdapter;
-import com.google.android.glass.widget.CardScrollView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +52,7 @@ public class CategoriesActivity extends Activity {
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
     }
+
     //region Boring Stuff
     @Override
     protected void onResume() {
@@ -74,13 +72,13 @@ public class CategoriesActivity extends Activity {
         GestureDetector gestureDetector = new GestureDetector(context);
 
         //Create a base listener for generic gestures
-        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
-                    if(MainActivity.IGNORE_INSTRUCTIONS){
+                    if (Constants.IGNORE_INSTRUCTIONS) {
                         openRating();
-                    }else {
+                    } else {
                         openInstructions();
                     }
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -95,7 +93,7 @@ public class CategoriesActivity extends Activity {
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     // do something on left (backwards) swipe
                     return true;
-                } else if (gesture == Gesture.SWIPE_DOWN){
+                } else if (gesture == Gesture.SWIPE_DOWN) {
                     finish();
                 }
                 return false;
@@ -129,19 +127,19 @@ public class CategoriesActivity extends Activity {
     }
     //endregion
 
-    private void createCards(){
+    private void createCards() {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         String[] strs = getResources().getStringArray(R.array.categories_list);
         int i = 0;
-        for(String str : strs) {
+        for (String str : strs) {
             View card = inflater.inflate(R.layout.categories_layout, null);
-            TextView tv = (TextView)card.findViewById(R.id.rating_title);
+            TextView tv = (TextView) card.findViewById(R.id.rating_title);
             tv.setText(str);
-            tv = (TextView)card.findViewById(R.id.order);
-            tv.setText((i+1)+". ");
-            String[] n = getResources().getStringArray(Utils.getResourceId(this, "problems_"+i, "array", getPackageName()));
-            tv = (TextView)card.findViewById(R.id.bottom_fraction);
+            tv = (TextView) card.findViewById(R.id.order);
+            tv.setText((i + 1) + ". ");
+            String[] n = getResources().getStringArray(Utils.getResourceId(this, "problems_" + i, "array", getPackageName()));
+            tv = (TextView) card.findViewById(R.id.bottom_fraction);
             tv.setText(String.valueOf(n.length));
             mCards.add(card);
             i++;
@@ -156,7 +154,7 @@ public class CategoriesActivity extends Activity {
     }
 
     private void openRating() {
-        Intent intent = new Intent(this, RatingActivity.class);
+        Intent intent = new Intent(this, SubCategoryActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);

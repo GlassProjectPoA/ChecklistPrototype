@@ -6,17 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Quintas on 14/04/2015.
  */
-public class SubCategoryCardScrollAdapter extends CardScrollAdapter{
+public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
     private List<SubCategory> mCards;
     private Context mContext;
 
@@ -57,7 +55,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter{
         tv = (TextView) card.findViewById(R.id.category);
         tv.setText(sc.getParentCategoryName());
         int rate = sc.getCurrentRating();
-        switch(rate){
+        switch (rate) {
             case -1:
                 break;
             case 0:

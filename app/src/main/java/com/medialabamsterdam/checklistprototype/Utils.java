@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,8 +12,14 @@ import android.widget.TextView;
  */
 public class Utils {
 
-    public static int getResourceId(Context context, String pVariableName, String pResourcename, String pPackageName)
-    {
+    /**
+     * @param context       the context of the Resource you want to retrieve the Id.
+     * @param pVariableName the name property of the Resource you want to retrieve the Id.
+     * @param pResourcename the type of Resource you want to retrieve. (Ex: "string", "array", "layout")
+     * @param pPackageName  the package the Resource belongs to. (Use getPackageName() in most cases)
+     * @return the ID of the given resource. Returns -1 if Resource not found.
+     */
+    public static int getResourceId(Context context, String pVariableName, String pResourcename, String pPackageName) {
         try {
             return context.getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
         } catch (Exception e) {
@@ -26,58 +31,58 @@ public class Utils {
     /**
      * Method to change the color of a word or string inside a given TextView.
      *
-     * @param context the context of the TextView.
+     * @param context       the context of the TextView.
      * @param viewContainer the View of the TextView you wish to change.
-     * @param viewId the Android Resources Id of the TextView to change.
-     * @param stringId the Android String Id of the TextView text.
-     * @param start the start of the region to change color.
-     * @param end the end of the region to change color.
-     * @param colorId the Android Resource Color Id.
+     * @param viewId        the Android Resources Id of the TextView to change.
+     * @param stringId      the Android String Id of the TextView text.
+     * @param start         the start of the region to change color.
+     * @param end           the end of the region to change color.
+     * @param colorId       the Android Resource Color Id.
      */
-    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int start, int end, int colorId){
-        TextView tv = (TextView)viewContainer.findViewById(viewId);
+    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int start, int end, int colorId) {
+        TextView tv = (TextView) viewContainer.findViewById(viewId);
         tv.setText(stringId, TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable)tv.getText();
+        Spannable s = (Spannable) tv.getText();
         s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     /**
      * Method to change the color of a word or string inside a given TextView.
      *
-     * @param context the context of the TextView.
+     * @param context       the context of the TextView.
      * @param viewContainer the View of the TextView you wish to change.
-     * @param viewId the Android Resources Id of the TextView to change.
-     * @param stringId the Android String Id of the TextView text.
-     * @param wordToChange the word to change the color.
-     * @param colorId the Android Resource Color Id.
+     * @param viewId        the Android Resources Id of the TextView to change.
+     * @param stringId      the Android String Id of the TextView text.
+     * @param wordToChange  the word to change the color.
+     * @param colorId       the Android Resource Color Id.
      */
-    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, String wordToChange, int colorId){
-        TextView tv = (TextView)viewContainer.findViewById(viewId);
+    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, String wordToChange, int colorId) {
+        TextView tv = (TextView) viewContainer.findViewById(viewId);
         tv.setText(stringId, TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable)tv.getText();
+        Spannable s = (Spannable) tv.getText();
         String str = s.toString();
         int start = str.indexOf(wordToChange);
-        int end = start+wordToChange.length();
+        int end = start + wordToChange.length();
         s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     /**
      * Method to change the color of a word or string inside a given TextView.
      *
-     * @param context the context of the TextView.
+     * @param context       the context of the TextView.
      * @param viewContainer the View of the TextView you wish to change.
-     * @param viewId the Android Resources Id of the TextView to change.
-     * @param stringId the Android String-Array Id of the TextView text containing the phrase on the first item and the "string" to be changed on the second item.
-     * @param colorId the Android Resource Color Id.
+     * @param viewId        the Android Resources Id of the TextView to change.
+     * @param stringId      the Android String-Array Id of the TextView text containing the phrase on the first item and the "string" to be changed on the second item.
+     * @param colorId       the Android Resource Color Id.
      */
-    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int colorId){
+    public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int colorId) {
         String[] str_array = context.getResources().getStringArray(stringId);
-        TextView tv = (TextView)viewContainer.findViewById(viewId);
+        TextView tv = (TextView) viewContainer.findViewById(viewId);
         tv.setText(str_array[0], TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable)tv.getText();
+        Spannable s = (Spannable) tv.getText();
         String str = s.toString();
         int start = str.indexOf(str_array[1]);
-        int end = start+str_array[1].length();
+        int end = start + str_array[1].length();
         s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }

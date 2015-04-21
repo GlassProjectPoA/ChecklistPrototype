@@ -11,5 +11,9 @@ public interface Constants {
 
     public final static String CURRENT_POSITION = "CURRENT_POSITION";
     public final static String CURRENT_RATING = "CURRENT_RATING";
-    public final static String PARCEABLE_SUBCATEGORY = "PARCEABLE_SUBCATEGORY";
+    public final static String PARCELABLE_SUBCATEGORY = "PARCELABLE_SUBCATEGORY";
+
+    public final static String ALTERNATE_LANGUAGE = "nl";
+    public final static boolean LOAD_ALTERNATE_LANGUAGE = false;
+    public final static boolean IGNORE_INSTRUCTIONS = true;
 }
