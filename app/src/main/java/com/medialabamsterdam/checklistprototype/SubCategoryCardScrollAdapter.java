@@ -85,6 +85,19 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
                 break;
         }
 
+        if(position == 0 && mCards.size() == 1){
+            tv = (TextView) card.findViewById(R.id.left_arrow);
+            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+            tv = (TextView) card.findViewById(R.id.right_arrow);
+            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+        } else if(position == 0){
+            tv = (TextView) card.findViewById(R.id.left_arrow);
+            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+        } else if (position == mCards.size()-1){
+            tv = (TextView) card.findViewById(R.id.right_arrow);
+            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+        }
+
         return card;
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,19 +37,9 @@ public class CategoriesActivity extends Activity {
 
         mCardScroller = new CardScrollView(this);
         mAdapter = new MyCardScrollAdapter(mCards);
-
-//        // Handle the TAP event.
-//        mCardScroller.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // Plays disallowed sound to indicate that TAP actions are not supported.
-//                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//                am.playSoundEffect(Sounds.DISALLOWED);
-//            }
-//        });
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.activate();
-        //mCardScroller.setSelection(currentSelect);
+        mCardScroller.setHorizontalScrollBarEnabled(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
     }
@@ -133,16 +124,25 @@ public class CategoriesActivity extends Activity {
         String[] strs = getResources().getStringArray(R.array.categories_list);
         int i = 0;
         for (String str : strs) {
+            i++;
             View card = inflater.inflate(R.layout.categories_layout, null);
             TextView tv = (TextView) card.findViewById(R.id.rating_title);
             tv.setText(str);
             tv = (TextView) card.findViewById(R.id.order);
-            tv.setText((i + 1) + ". ");
-            String[] n = getResources().getStringArray(Utils.getResourceId(this, "problems_" + i, "array", getPackageName()));
-            tv = (TextView) card.findViewById(R.id.bottom_fraction);
-            tv.setText(String.valueOf(n.length));
+            tv.setText(Integer.toString(i));
             mCards.add(card);
-            i++;
+            if(i == 1 && strs.length == 1){
+                tv = (TextView) card.findViewById(R.id.left_arrow);
+                tv.setTextColor(getResources().getColor(R.color.gray_dark));
+                tv = (TextView) card.findViewById(R.id.right_arrow);
+                tv.setTextColor(getResources().getColor(R.color.gray_dark));
+            } else if(i == 1){
+                tv = (TextView) card.findViewById(R.id.left_arrow);
+                tv.setTextColor(getResources().getColor(R.color.gray_dark));
+            } else if (strs.length == i){
+                tv = (TextView) card.findViewById(R.id.right_arrow);
+                tv.setTextColor(getResources().getColor(R.color.gray_dark));
+            }
         }
     }
 

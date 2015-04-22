@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:gravity="left|center_vertical"
             android:text="@string/left_arrow"
-            android:textColor="@color/gray_dark"
+            android:textColor="@color/white"
             android:textSize="45sp" />
 
         <TextView
@@ -44,7 +44,8 @@
             android:layout_weight="1"
             android:gravity="center_vertical|right"
             android:text="@string/right_arrow"
-            android:textSize="45sp" />
+            android:textSize="45sp"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +98,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:text="@string/rating_a"
-                android:textColor="@color/white"
                 android:textSize="25sp" />
 
             <View

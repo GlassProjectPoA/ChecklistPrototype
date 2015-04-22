@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +12,26 @@ import android.widget.TextView;
  * Created by Quintas on 13/04/2015.
  */
 public class Utils {
+
+    /**
+     * Utility class to convert a formatted string to an array.
+     *
+     *
+     * @param string String to convert.
+     * @param separator String to look for when splitting the string.
+     * @return String[], containing the separated strings.
+     */
+    public static String[] stringToArray(String string, String separator) {
+        if(string.contains(separator)){
+            //string = string.replace("[", "").replace("]","");
+            return string.split(separator);
+        }
+        else
+        {
+            Log.e("StringToArray", "String '" + string + "' does not contain " + separator);
+            return new String[]{"Unable to decode string"};
+        }
+    }
 
     /**
      * @param context       the context of the Resource you want to retrieve the Id.

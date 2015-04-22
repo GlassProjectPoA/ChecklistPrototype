@@ -129,7 +129,6 @@ public class SubCategoryActivity extends Activity {
         mSubCatViews = new ArrayList<>();
         Intent intent = getIntent();
         int position = intent.getIntExtra(Constants.EXTRA_POSITION, 404);
-        LayoutInflater inflater = LayoutInflater.from(this);
         String[] problems = getResources().getStringArray(Utils.getResourceId(this, "problems_" + position, "array", getPackageName()));
         String[] categories = getResources().getStringArray(R.array.categories_list);
         int index = 0;
@@ -138,26 +137,6 @@ public class SubCategoryActivity extends Activity {
             index++;
             mSubCatViews.add(subCategory);
         }
-        //region TODO remember to check
-        View card = inflater.inflate(R.layout.summary_layout, null);
-        LinearLayout ll = (LinearLayout) card.findViewById(R.id.list_container);
-        LayoutInflater inflater_summary = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int i = 0;
-        for (String str2 : problems) {
-            i++;
-            //TODO Remove IF, create a scrollable list.
-            if (i < 5) {
-                View view = inflater_summary.inflate(R.layout.summary_list_item_layout, null);
-                TextView tv = (TextView) view.findViewById(R.id.summary_order);
-                tv.setText(i + ". ");
-                tv = (TextView) view.findViewById(R.id.summary_category);
-                tv.setText(str2);
-                //tv = (TextView)view.findViewById(R.id.summary_rating);
-                ll.addView(view);
-            }
-        }
-        //mSubCatViews.add(card);
-        //endregion
     }
 
     private void changeRating(boolean right) {
