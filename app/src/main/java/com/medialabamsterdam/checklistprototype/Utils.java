@@ -16,18 +16,15 @@ public class Utils {
     /**
      * Utility class to convert a formatted string to an array.
      *
-     *
-     * @param string String to convert.
+     * @param string    String to convert.
      * @param separator String to look for when splitting the string.
      * @return String[], containing the separated strings.
      */
     public static String[] stringToArray(String string, String separator) {
-        if(string.contains(separator)){
+        if (string.contains(separator)) {
             //string = string.replace("[", "").replace("]","");
             return string.split(separator);
-        }
-        else
-        {
+        } else {
             Log.e("StringToArray", "String '" + string + "' does not contain " + separator);
             return new String[]{"Unable to decode string"};
         }
@@ -61,10 +58,14 @@ public class Utils {
      * @param colorId       the Android Resource Color Id.
      */
     public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int start, int end, int colorId) {
-        TextView tv = (TextView) viewContainer.findViewById(viewId);
-        tv.setText(stringId, TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable) tv.getText();
-        s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        try {
+            TextView tv = (TextView) viewContainer.findViewById(viewId);
+            tv.setText(stringId, TextView.BufferType.SPANNABLE);
+            Spannable s = (Spannable) tv.getText();
+            s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -78,13 +79,17 @@ public class Utils {
      * @param colorId       the Android Resource Color Id.
      */
     public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, String wordToChange, int colorId) {
-        TextView tv = (TextView) viewContainer.findViewById(viewId);
-        tv.setText(stringId, TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable) tv.getText();
-        String str = s.toString();
-        int start = str.indexOf(wordToChange);
-        int end = start + wordToChange.length();
-        s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        try {
+            TextView tv = (TextView) viewContainer.findViewById(viewId);
+            tv.setText(stringId, TextView.BufferType.SPANNABLE);
+            Spannable s = (Spannable) tv.getText();
+            String str = s.toString();
+            int start = str.indexOf(wordToChange);
+            int end = start + wordToChange.length();
+            s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -97,13 +102,17 @@ public class Utils {
      * @param colorId       the Android Resource Color Id.
      */
     public static void ChangeTextColor(Context context, View viewContainer, int viewId, int stringId, int colorId) {
-        String[] str_array = context.getResources().getStringArray(stringId);
-        TextView tv = (TextView) viewContainer.findViewById(viewId);
-        tv.setText(str_array[0], TextView.BufferType.SPANNABLE);
-        Spannable s = (Spannable) tv.getText();
-        String str = s.toString();
-        int start = str.indexOf(str_array[1]);
-        int end = start + str_array[1].length();
-        s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        try {
+            String[] str_array = context.getResources().getStringArray(stringId);
+            TextView tv = (TextView) viewContainer.findViewById(viewId);
+            tv.setText(str_array[0], TextView.BufferType.SPANNABLE);
+            Spannable s = (Spannable) tv.getText();
+            String str = s.toString();
+            int start = str.indexOf(str_array[1]);
+            int end = start + str_array[1].length();
+            s.setSpan(new ForegroundColorSpan(Color.parseColor(context.getResources().getString(colorId))), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

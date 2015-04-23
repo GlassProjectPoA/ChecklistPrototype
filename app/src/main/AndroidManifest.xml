@@ -36,12 +36,12 @@
             android:label="@string/title_instructions" >
         </activity>
         <activity
-            android:name=".SubCategoryActivity"
+            android:name=".SubCategoriesActivity"
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_rating" >
         </activity>
         <activity
-            android:name=".SubCategoryDetailedActivity"
+            android:name=".SubCategoriesDetailedActivity"
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_rating_detailed" >
         </activity>

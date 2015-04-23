@@ -5,30 +5,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.widget.CardBuilder;
-import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
 
 
 public class InstructionsActivity extends Activity {
-
+    public final static String TAG = "INSTRUCTIONS";
     private CardScrollView mCardScroller;
     private View mView;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
     private int tapCount = 0;
+    private MyCardScrollAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -43,33 +42,8 @@ public class InstructionsActivity extends Activity {
         }
 
         mCardScroller = new CardScrollView(this);
-        mCardScroller.setAdapter(new CardScrollAdapter() {
-            @Override
-            public int getPosition(Object item) {
-                return mCards.indexOf(item);
-            }
-
-            @Override
-            public int getCount() {
-                return mCards.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return mCards.get(position);
-            }
-
-
-            @Override
-            public int getViewTypeCount() {
-                return CardBuilder.getViewTypeCount();
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return mView; //return mViews.get(position);
-            }
-        });
+        mAdapter = new MyCardScrollAdapter(mCards);
+        mCardScroller.setAdapter(mAdapter);
 
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
@@ -95,42 +69,18 @@ public class InstructionsActivity extends Activity {
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                if (gesture == Gesture.TAP) {
-                    updateView();
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.TAP);
-                    return true;
-                } else if (gesture == Gesture.TWO_TAP) {
-                    // do something on two finger tap
-                    return true;
-                } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    // do something on right (forward) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_LEFT) {
-                    // do something on left (backwards) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_DOWN) {
-                    finish();
+                Log.e(TAG, "gesture = " + gesture);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                switch (gesture) {
+                    case TAP:
+                        // Create intent to deliver some kind of result data
+                        updateView();
+                        am.playSoundEffect(Sounds.TAP);
+                        break;
                 }
                 return false;
             }
         });
-
-        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-            @Override
-            public void onFingerCountChanged(int previousCount, int currentCount) {
-                // do something on finger count changes
-            }
-        });
-
-        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-            @Override
-            public boolean onScroll(float displacement, float delta, float velocity) {
-                // do something on scrolling
-                return true;
-            }
-        });
-
         return gestureDetector;
     }
 
@@ -157,7 +107,7 @@ public class InstructionsActivity extends Activity {
     private void openRating() {
         Intent intent = getIntent();
         int position = intent.getIntExtra(Constants.EXTRA_POSITION, 404);
-        intent = new Intent(this, SubCategoryActivity.class);
+        intent = new Intent(this, SubCategoriesActivity.class);
         intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);
     }

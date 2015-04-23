@@ -16,7 +16,9 @@
         android:layout_gravity="top"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <TextView
             android:id="@+id/left_arrow"
@@ -29,7 +31,7 @@
             android:textSize="45sp" />
 
         <TextView
-            android:id="@+id/rating_title"
+            android:id="@+id/category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
@@ -133,7 +135,7 @@
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@color/blue"
+                android:background="@color/yellow"
                 android:visibility="invisible"
                 android:layout_marginTop="7dp" />
 
@@ -160,7 +162,7 @@
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@color/yellow"
+                android:background="@color/orange"
                 android:visibility="invisible"
                 android:layout_marginTop="7dp" />
 

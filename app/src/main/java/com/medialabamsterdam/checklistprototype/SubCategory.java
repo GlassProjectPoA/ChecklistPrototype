@@ -40,6 +40,10 @@ public class SubCategory implements Parcelable {
         currentRating = in.readInt();
     }
 
+    public SubCategory() {
+
+    }
+
     public int getParentCategoryId() {
         return parentCategoryId;
     }

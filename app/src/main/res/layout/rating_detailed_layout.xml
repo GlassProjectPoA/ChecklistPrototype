@@ -140,7 +140,7 @@
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@color/blue"
+                android:background="@color/yellow"
                 android:visibility="invisible"
                 android:layout_marginTop="7dp" />
 
@@ -167,7 +167,7 @@
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:background="@color/yellow"
+                android:background="@color/orange"
                 android:visibility="invisible"
                 android:layout_marginTop="7dp" />
 

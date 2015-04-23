@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -18,15 +15,14 @@ import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CategoriesActivity extends Activity {
 
-
+    public final static String TAG = "CATEGORIES";
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
-    private List<View> mCards;
-    private MyCardScrollAdapter mAdapter;
+    private ArrayList<Category> mCategoryViews;
+    private CategoryCardScrollAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -36,7 +32,7 @@ public class CategoriesActivity extends Activity {
         createCards();
 
         mCardScroller = new CardScrollView(this);
-        mAdapter = new MyCardScrollAdapter(mCards);
+        mAdapter = new CategoryCardScrollAdapter(this, mCategoryViews);
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.activate();
         mCardScroller.setHorizontalScrollBarEnabled(false);
@@ -66,46 +62,28 @@ public class CategoriesActivity extends Activity {
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                if (gesture == Gesture.TAP) {
-                    if (Constants.IGNORE_INSTRUCTIONS) {
-                        openRating();
-                    } else {
-                        openInstructions();
-                    }
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.TAP);
-                    return true;
-                } else if (gesture == Gesture.TWO_TAP) {
-                    // do something on two finger tap
-                    return true;
-                } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    // do something on right (forward) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_LEFT) {
-                    // do something on left (backwards) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_DOWN) {
-                    finish();
+                Log.e(TAG, "gesture = " + gesture);
+                int position = mCardScroller.getSelectedItemPosition();
+                int maxPositions = mAdapter.getCount() - 1;
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                switch (gesture) {
+                    case TAP:
+                        Log.e(TAG, "TAP called.");
+                        if (position == maxPositions) {
+                            //do nothing
+                        } else {
+                            if (Constants.IGNORE_INSTRUCTIONS) {
+                                openRating();
+                            } else {
+                                openInstructions();
+                            }
+                            am.playSoundEffect(Sounds.TAP);
+                        }
+                        break;
                 }
                 return false;
             }
         });
-
-        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-            @Override
-            public void onFingerCountChanged(int previousCount, int currentCount) {
-                // do something on finger count changes
-            }
-        });
-
-        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-            @Override
-            public boolean onScroll(float displacement, float delta, float velocity) {
-                // do something on scrolling
-                return true;
-            }
-        });
-
         return gestureDetector;
     }
 
@@ -119,30 +97,13 @@ public class CategoriesActivity extends Activity {
     //endregion
 
     private void createCards() {
-        mCards = new ArrayList<>();
-        LayoutInflater inflater = LayoutInflater.from(this);
+        mCategoryViews = new ArrayList<>();
         String[] strs = getResources().getStringArray(R.array.categories_list);
-        int i = 0;
+        int index = 0;
         for (String str : strs) {
-            i++;
-            View card = inflater.inflate(R.layout.categories_layout, null);
-            TextView tv = (TextView) card.findViewById(R.id.rating_title);
-            tv.setText(str);
-            tv = (TextView) card.findViewById(R.id.order);
-            tv.setText(Integer.toString(i));
-            mCards.add(card);
-            if(i == 1 && strs.length == 1){
-                tv = (TextView) card.findViewById(R.id.left_arrow);
-                tv.setTextColor(getResources().getColor(R.color.gray_dark));
-                tv = (TextView) card.findViewById(R.id.right_arrow);
-                tv.setTextColor(getResources().getColor(R.color.gray_dark));
-            } else if(i == 1){
-                tv = (TextView) card.findViewById(R.id.left_arrow);
-                tv.setTextColor(getResources().getColor(R.color.gray_dark));
-            } else if (strs.length == i){
-                tv = (TextView) card.findViewById(R.id.right_arrow);
-                tv.setTextColor(getResources().getColor(R.color.gray_dark));
-            }
+            Category category = new Category(index, str);
+            index++;
+            mCategoryViews.add(category);
         }
     }
 
@@ -154,7 +115,7 @@ public class CategoriesActivity extends Activity {
     }
 
     private void openRating() {
-        Intent intent = new Intent(this, SubCategoryActivity.class);
+        Intent intent = new Intent(this, SubCategoriesActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         intent.putExtra(Constants.EXTRA_POSITION, position);
         startActivity(intent);

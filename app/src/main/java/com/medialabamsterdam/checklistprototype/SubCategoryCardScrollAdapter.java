@@ -21,6 +21,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
     public SubCategoryCardScrollAdapter(Context context, List<SubCategory> views) {
         mCards = views;
         mContext = context;
+        mCards.add(new SubCategory());
     }
 
     @Override
@@ -47,56 +48,65 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View card = inflater.inflate(R.layout.rating_layout, null);
+        View card;
+        TextView tv;
         SubCategory sc = mCards.get(position);
-
-        TextView tv = (TextView) card.findViewById(R.id.rating_title);
-        tv.setText(sc.getThisSubCategoryName());
-        tv = (TextView) card.findViewById(R.id.category);
-        tv.setText(sc.getParentCategoryName());
-        int rate = sc.getCurrentRating();
-        switch (rate) {
-            case -1:
-                break;
-            case 0:
-                tv = (TextView) card.findViewById(R.id.rating_text_aa);
-                tv.setTextColor(mContext.getResources().getColor(R.color.green));
-                card.findViewById(R.id.bar_aa).setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                tv = (TextView) card.findViewById(R.id.rating_text_a);
-                tv.setTextColor(mContext.getResources().getColor(R.color.green));
-                card.findViewById(R.id.bar_a).setVisibility(View.VISIBLE);
-                break;
-            case 2:
-                tv = (TextView) card.findViewById(R.id.rating_text_b);
-                tv.setTextColor(mContext.getResources().getColor(R.color.blue));
-                card.findViewById(R.id.bar_b).setVisibility(View.VISIBLE);
-                break;
-            case 3:
-                tv = (TextView) card.findViewById(R.id.rating_text_c);
-                tv.setTextColor(mContext.getResources().getColor(R.color.yellow));
-                card.findViewById(R.id.bar_c).setVisibility(View.VISIBLE);
-                break;
-            case 4:
-                tv = (TextView) card.findViewById(R.id.rating_text_d);
-                tv.setTextColor(mContext.getResources().getColor(R.color.red));
-                card.findViewById(R.id.bar_d).setVisibility(View.VISIBLE);
-                break;
+        if (position == mCards.size() - 1) {
+            card = inflater.inflate(R.layout.card_layout, null);
+            tv = (TextView) card.findViewById(R.id.footer);
+            tv.setText(R.string.tap_to_save);
+            card.findViewById(R.id.layout).setBackgroundColor(mContext.getResources().getColor(R.color.blue));
+        } else {
+            card = inflater.inflate(R.layout.rating_layout, null);
+            tv = (TextView) card.findViewById(R.id.category_title);
+            tv.setText(sc.getThisSubCategoryName());
+            tv = (TextView) card.findViewById(R.id.category);
+            tv.setText(sc.getParentCategoryName());
+            int rate = sc.getCurrentRating();
+            switch (rate) {
+                case -1:
+                    break;
+                case 0:
+                    tv = (TextView) card.findViewById(R.id.rating_text_aa);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.green));
+                    card.findViewById(R.id.bar_aa).setVisibility(View.VISIBLE);
+                    break;
+                case 1:
+                    tv = (TextView) card.findViewById(R.id.rating_text_a);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.green));
+                    card.findViewById(R.id.bar_a).setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    tv = (TextView) card.findViewById(R.id.rating_text_b);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.yellow));
+                    card.findViewById(R.id.bar_b).setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    tv = (TextView) card.findViewById(R.id.rating_text_c);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.orange));
+                    card.findViewById(R.id.bar_c).setVisibility(View.VISIBLE);
+                    break;
+                case 4:
+                    tv = (TextView) card.findViewById(R.id.rating_text_d);
+                    tv.setTextColor(mContext.getResources().getColor(R.color.red));
+                    card.findViewById(R.id.bar_d).setVisibility(View.VISIBLE);
+                    break;
+            }
         }
 
-        if(position == 0 && mCards.size() == 1){
+        /*if(position == 0 && mCards.size() == 1){
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
             tv = (TextView) card.findViewById(R.id.right_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        } else if(position == 0){
+        } else*/
+        if (position == 0) {
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        } else if (position == mCards.size()-1){
+        } /*else if (position == mCards.size()-1){
             tv = (TextView) card.findViewById(R.id.right_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        }
+        }*/
 
         return card;
     }

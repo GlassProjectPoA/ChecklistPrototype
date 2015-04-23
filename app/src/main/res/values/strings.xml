@@ -111,7 +111,8 @@
     <string name="submit_rates">Submit Rates</string>
 
     <!-- INSTRUCTIONS -->
-    <string name="tap_to_submit">Tap to submit</string>
+    <string name="tap_to_save">Tap to save grades</string>
+    <string name="tap_to_send">Tap to send the list</string>
     <string-array name="tap_to_start">
         <item>Tap to start</item>
         <item>start</item>

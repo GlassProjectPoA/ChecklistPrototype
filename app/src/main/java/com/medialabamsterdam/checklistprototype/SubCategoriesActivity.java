@@ -7,14 +7,10 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -23,9 +19,9 @@ import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
 
-public class SubCategoryActivity extends Activity {
+public class SubCategoriesActivity extends Activity {
 
-    private static final String TAG = "THIS";
+    public final static String TAG = "SUBCATEGORIES";
     private static final int SET_RATING_DETAIL_CODE = 1652;
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -74,20 +70,23 @@ public class SubCategoryActivity extends Activity {
     //region Gesture Detector
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
-
         //Create a base listener for generic gestures
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-
-
+                int position = mCardScroller.getSelectedItemPosition();
+                int maxPositions = mAdapter.getCount() - 1;
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
-                        openRatingDetailed();
-                        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                        am.playSoundEffect(Sounds.TAP);
+                        if (position == maxPositions) {
+                            //do nothing
+                        } else {
+                            openRatingDetailed();
+                            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                            am.playSoundEffect(Sounds.TAP);
+                        }
                         break;
                     case SWIPE_LEFT:
                         Log.e(TAG, "SWIPE_LEFT called.");
@@ -103,11 +102,19 @@ public class SubCategoryActivity extends Activity {
                         return true;
                     case TWO_SWIPE_LEFT:
                         Log.e(TAG, "TWO_SWIPE_LEFT called.");
-                        changeRating(false);
+                        if (position == maxPositions) {
+                            //do nothing
+                        } else {
+                            changeRating(false);
+                        }
                         return true;
                     case TWO_SWIPE_RIGHT:
                         Log.e(TAG, "TWO_SWIPE_RIGHT called.");
-                        changeRating(true);
+                        if (position == maxPositions) {
+                            //do nothing
+                        } else {
+                            changeRating(true);
+                        }
                         return true;
                 }
                 return false;
@@ -222,7 +229,7 @@ public class SubCategoryActivity extends Activity {
     }
 
     private void openRatingDetailed() {
-        Intent intent = new Intent(this, SubCategoryDetailedActivity.class);
+        Intent intent = new Intent(this, SubCategoriesDetailedActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         int rating = mSubCatViews.get(position).getCurrentRating();
         intent.putExtra(Constants.EXTRA_POSITION, position);

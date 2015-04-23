@@ -40,6 +40,10 @@ public class Category implements Parcelable {
         this.subCategories = in.readArrayList(SubCategory.class.getClassLoader());
     }
 
+    public Category() {
+
+    }
+
     public int getCategoryId() {
         return categoryId;
     }

@@ -15,7 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
 
         <Space
             android:layout_width="20px"
@@ -103,13 +104,13 @@
                 android:id="@+id/order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/rating_title"
+                android:layout_toStartOf="@+id/category_title"
                 android:text="1. "
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/rating_title"
+                android:id="@+id/category_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -135,7 +136,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginRight="5dp">
 
         <Space
             android:layout_width="20px"

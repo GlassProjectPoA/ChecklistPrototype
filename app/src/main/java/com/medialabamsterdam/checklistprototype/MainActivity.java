@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -20,8 +19,6 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
-import com.google.android.glass.widget.CardBuilder;
-import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.ArrayList;
@@ -30,6 +27,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     public final static boolean OK_GLASS = false;
+    public final static String TAG = "MAIN";
 
     private CardScrollView mCardScroller;
     private View mView;
@@ -37,19 +35,14 @@ public class MainActivity extends Activity {
     private ArrayList<View> mCards;
     private Location mActualLocation;
     private LocationUtils mLocationUtils;
+    private MyCardScrollAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
         handleLocationUtils();
-        if (Constants.LOAD_ALTERNATE_LANGUAGE) {
-            Locale locale = new Locale(Constants.ALTERNATE_LANGUAGE);
-            Locale.setDefault(locale);
-            Configuration config = new Configuration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-        }
+        defineLocale();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (OK_GLASS) {
@@ -57,37 +50,13 @@ public class MainActivity extends Activity {
         }
 
         mView = createLocationCard();
+
         Utils.ChangeTextColor(this, mView, R.id.footer, R.array.tap_to_start, R.color.green);
         Utils.ChangeTextColor(this, mView, R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
 
         mCardScroller = new CardScrollView(this);
-        mCardScroller.setAdapter(new CardScrollAdapter() {
-            @Override
-            public int getPosition(Object item) {
-                return mCards.indexOf(item);
-            }
-
-            @Override
-            public int getCount() {
-                return mCards.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return mCards.get(position);
-            }
-
-
-            @Override
-            public int getViewTypeCount() {
-                return CardBuilder.getViewTypeCount();
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return mView; //return mViews.get(position);
-            }
-        });
+        mAdapter = new MyCardScrollAdapter(mCards);
+        mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
@@ -139,48 +108,26 @@ public class MainActivity extends Activity {
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                if (gesture == Gesture.TAP) {
-                    openCategories();
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.TAP);
-                    return true;
-                } else if (gesture == Gesture.TWO_LONG_PRESS) {
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    boolean ok = handleLocationUtils();
-                    if (ok) {
-                        am.playSoundEffect(Sounds.SUCCESS);
-                    } else {
-                        am.playSoundEffect(Sounds.ERROR);
-                    }
-                    return true;
-                } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    // do something on right (forward) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_LEFT) {
-                    // do something on left (backwards) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_DOWN) {
-                    finish();
+                Log.e(TAG, "gesture = " + gesture);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                switch (gesture) {
+                    case TAP:
+                        Log.e(TAG, "TAP called.");
+                        openCategories();
+                        am.playSoundEffect(Sounds.TAP);
+                        break;
+                    case TWO_LONG_PRESS:
+                        boolean ok = handleLocationUtils();
+                        if (ok) {
+                            am.playSoundEffect(Sounds.SUCCESS);
+                        } else {
+                            am.playSoundEffect(Sounds.ERROR);
+                        }
+                        return true;
                 }
                 return false;
             }
         });
-
-        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-            @Override
-            public void onFingerCountChanged(int previousCount, int currentCount) {
-                // do something on finger count changes
-            }
-        });
-
-        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-            @Override
-            public boolean onScroll(float displacement, float delta, float velocity) {
-                // do something on scrolling
-                return true;
-            }
-        });
-
         return gestureDetector;
     }
 
@@ -193,13 +140,23 @@ public class MainActivity extends Activity {
     }
     //endregion
 
-
     private void openCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         TextView tv = (TextView) this.findViewById(R.id.location_code);
         String message = (String) tv.getText();
         intent.putExtra(Constants.EXTRA_MESSAGE, message);
         startActivity(intent);
+    }
+
+    private void defineLocale() {
+        if (Constants.LOAD_ALTERNATE_LANGUAGE) {
+            Locale locale = new Locale(Constants.ALTERNATE_LANGUAGE);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+        }
     }
 
     private View createLocationCard() {//List<ChecklistTask> tasks) {
