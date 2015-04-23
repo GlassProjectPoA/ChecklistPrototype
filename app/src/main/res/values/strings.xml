@@ -106,9 +106,9 @@
     <string name="rating_c">C</string>
     <string name="rating_d">D</string>
 
-    <!-- SUBMIT -->
-    <string name="submit_report">Submit Report</string>
-    <string name="submit_rates">Submit Rates</string>
+    <!-- FINISH -->
+    <string name="checklist_finish">You finished the checklist!</string>
+    <string name="category_finish">You finished this category!</string>
 
     <!-- INSTRUCTIONS -->
     <string name="tap_to_save">Tap to save grades</string>
@@ -147,6 +147,7 @@
 
     <!-- WARNING TEXT -->
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
+
 
     <!-- NOT ORDERED -->
 

@@ -8,8 +8,7 @@
     android:layout_marginRight="@dimen/glass_card_margin"
     android:layout_marginTop="@dimen/glass_card_margin"
     android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:background="@color/green">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/left_container"
@@ -25,7 +24,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/left_arrow"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="45sp" />
 
     </LinearLayout>
@@ -38,16 +37,21 @@
         android:orientation="vertical">
 
 
-        <Space
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="3" />
+            android:text="@string/checklist_finish"
+            android:id="@+id/textView"
+            android:layout_weight="3"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="25sp"
+            android:paddingTop="15dp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/imageView"
-            android:src="@drawable/black_check"
+            android:src="@drawable/check_green"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="center"
@@ -63,8 +67,8 @@
             android:text="@string/tap_to_send"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_weight="3"
-            android:textColor="@color/black"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -82,7 +86,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/right_arrow"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textIsSelectable="false"
             android:textSize="45sp"
             android:visibility="invisible" />

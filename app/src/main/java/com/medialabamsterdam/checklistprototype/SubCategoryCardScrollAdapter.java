@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.glass.widget.CardBuilder;
@@ -52,10 +53,13 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
         TextView tv;
         SubCategory sc = mCards.get(position);
         if (position == mCards.size() - 1) {
-            card = inflater.inflate(R.layout.card_layout, null);
+            card = inflater.inflate(R.layout.check_layout, null);
             tv = (TextView) card.findViewById(R.id.footer);
             tv.setText(R.string.tap_to_save);
-            card.findViewById(R.id.layout).setBackgroundColor(mContext.getResources().getColor(R.color.blue));
+            tv = (TextView) card.findViewById(R.id.title);
+            tv.setText(R.string.category_finish);
+            ImageView iv = (ImageView)card.findViewById(R.id.check);
+            iv.setImageResource(R.drawable.check_blue);
         } else {
             card = inflater.inflate(R.layout.rating_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);

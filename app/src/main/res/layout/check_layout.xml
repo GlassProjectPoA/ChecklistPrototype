@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/glass_card_footer_margin"
+    android:layout_marginLeft="@dimen/glass_card_margin"
+    android:layout_marginRight="@dimen/glass_card_margin"
+    android:layout_marginTop="@dimen/glass_card_margin"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
+
+        <TextView
+            android:id="@+id/left_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/left_arrow"
+            android:textColor="@color/white"
+            android:textSize="45sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/center_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="15dp">
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/checklist_finish"
+            android:id="@+id/title"
+            android:layout_weight="3"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/check"
+            android:src="@drawable/check_green"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/footer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="bottom|center_horizontal"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/tap_to_send"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_weight="3"
+            android:gravity="center_horizontal"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:orientation="vertical"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/right_arrow"
+            android:textColor="@color/white"
+            android:textIsSelectable="false"
+            android:textSize="45sp"
+            android:visibility="invisible" />
+
+    </LinearLayout>
 
 </LinearLayout>

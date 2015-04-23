@@ -2,7 +2,7 @@
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:height="128px"
     android:width="128px"
-    android:src="@drawable/check_white"
+    android:src="@drawable/check_circle_white"
     android:tileMode="disabled"
     android:gravity="center" >
 </bitmap>

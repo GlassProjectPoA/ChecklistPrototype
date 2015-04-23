@@ -20,8 +20,8 @@
 
         <Space
             android:layout_width="20px"
-            android:layout_height="50dp"
-            android:layout_weight="1" />
+            android:layout_height="128px"
+            android:layout_weight="2" />
 
         <TextView
             android:id="@+id/left_arrow"
@@ -34,8 +34,7 @@
 
         <Space
             android:layout_width="20px"
-            android:layout_height="20px"
-            android:layout_weight="0" />
+            android:layout_height="20px" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,35 +45,51 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/top_check_container"
+            android:id="@+id/bg_img_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="2"
+            android:background="@drawable/categories_background_slash"
             android:baselineAligned="false"
             android:contentDescription="@string/map_location_description"
             android:orientation="horizontal"
             android:scaleType="center">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"
-                android:id="@+id/order"
-                android:textSize="35sp"
+            <RelativeLayout
+                android:id="@+id/numbers_container"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:paddingStart="10dp" />
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/check"
-                android:adjustViewBounds="true"
-                android:maxHeight="48dp"
-                android:maxWidth="48dp"
-                android:layout_weight="0"
-                android:src="@drawable/green_check"
-                android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/top_fraction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginRight="15dp"
+                    android:singleLine="true"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bottom_fraction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@id/top_fraction"
+                    android:singleLine="true"
+                    android:text="4"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
         <RelativeLayout
@@ -86,13 +101,22 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/category_title"
+                android:text="1. "
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/category_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="@array/categories_list"
-                android:textSize="40sp"
-                android:gravity="center" />
+                android:text="Trees"
+                android:textSize="25sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <TextView
@@ -103,8 +127,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@string/tap_to_grade"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_weight="0" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
@@ -118,8 +141,8 @@
 
         <Space
             android:layout_width="20px"
-            android:layout_height="50dp"
-            android:layout_weight="1" />
+            android:layout_height="128px"
+            android:layout_weight="2" />
 
         <TextView
             android:id="@+id/right_arrow"
