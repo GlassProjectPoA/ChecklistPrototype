@@ -1,28 +1,32 @@
 package com.medialabamsterdam.checklistprototype;
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.location.Location;
-        import android.media.AudioManager;
-        import android.os.Bundle;
-        import android.os.CountDownTimer;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.WindowManager;
-        import android.widget.TextView;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.location.Location;
+import android.media.AudioManager;
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
 
-        import com.google.android.glass.media.Sounds;
-        import com.google.android.glass.touchpad.Gesture;
-        import com.google.android.glass.touchpad.GestureDetector;
-        import com.google.android.glass.view.WindowUtils;
-        import com.google.android.glass.widget.CardScrollView;
+import com.google.android.glass.media.Sounds;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.view.WindowUtils;
+import com.google.android.glass.widget.CardScrollView;
+import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
+import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.LocationUtils;
+import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
-        import java.util.ArrayList;
-        import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
 
@@ -30,7 +34,6 @@ public class MainActivity extends Activity {
     public final static String TAG = "MAIN";
 
     private CardScrollView mCardScroller;
-    private View mView;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
     private Location mActualLocation;
@@ -49,10 +52,10 @@ public class MainActivity extends Activity {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
-        mView = createLocationCard();
+        createLocationCard();
 
-        Utils.ChangeTextColor(this, mView, R.id.footer, R.array.tap_to_start, R.color.green);
-        Utils.ChangeTextColor(this, mView, R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
+        Utils.ChangeTextColor(this, mCards.get(0), R.id.footer, R.array.tap_to_start, R.color.green);
+        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
 
         mCardScroller = new CardScrollView(this);
         mAdapter = new MyCardScrollAdapter(mCards);
@@ -79,10 +82,30 @@ public class MainActivity extends Activity {
         mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
             Log.e("WORKS!", mActualLocation.toString());
-            return true;
+            Point mLocationPoint = new Point((float)mActualLocation.getLongitude(), (float)mActualLocation.getLatitude());
+            Log.d(TAG, mLocationPoint.toString());
+            return true;//(findArea(mLocationPoint) && findLocation(mLocationPoint));
         } else {
             return false;
         }
+    }
+
+    private boolean findArea(Point point){
+/*
+        for (Point point : types) {
+            for (Type t : types2) {
+                if (some condition) {
+                    // Do something and break...
+                    return true;
+                }
+            }
+        }
+*/
+        return false;
+    }
+
+    private boolean findLocation(Point point){
+        return false;
     }
 
     @Override

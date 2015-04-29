@@ -16,6 +16,8 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
+import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
 

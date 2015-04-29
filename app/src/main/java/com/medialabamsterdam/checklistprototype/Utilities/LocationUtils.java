@@ -1,4 +1,4 @@
-package com.medialabamsterdam.checklistprototype;
+package com.medialabamsterdam.checklistprototype.Utilities;
 
 import android.content.Context;
 import android.location.Criteria;

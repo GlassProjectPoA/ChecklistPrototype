@@ -1,4 +1,4 @@
-package com.medialabamsterdam.checklistprototype;
+package com.medialabamsterdam.checklistprototype.Utilities;
 
 /**
  * Created by Quintas on 15/04/2015.

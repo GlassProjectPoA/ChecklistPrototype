@@ -3,10 +3,8 @@ package com.medialabamsterdam.checklistprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.FileObserver;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,10 +21,10 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardScrollView;
+import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class WarningActivity extends Activity {
 

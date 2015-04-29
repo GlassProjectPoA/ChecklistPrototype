@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 
 import java.util.List;
 

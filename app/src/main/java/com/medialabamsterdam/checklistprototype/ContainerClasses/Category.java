@@ -1,4 +1,4 @@
-package com.medialabamsterdam.checklistprototype;
+package com.medialabamsterdam.checklistprototype.ContainerClasses;
 
 import android.os.Parcel;
 import android.os.Parcelable;
