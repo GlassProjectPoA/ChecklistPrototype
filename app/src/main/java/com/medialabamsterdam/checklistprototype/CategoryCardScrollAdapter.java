@@ -53,13 +53,12 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         TextView tv;
         Category c = mCards.get(position);
         if (position == mCards.size() - 1) {
+            //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
             tv = (TextView) card.findViewById(R.id.footer);
             tv.setText(R.string.tap_to_send);
             tv = (TextView) card.findViewById(R.id.title);
             tv.setText(R.string.checklist_finish);
-            ImageView iv = (ImageView)card.findViewById(R.id.check);
-            iv.setImageResource(R.drawable.check_green);
         } else {
             card = inflater.inflate(R.layout.categories_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);

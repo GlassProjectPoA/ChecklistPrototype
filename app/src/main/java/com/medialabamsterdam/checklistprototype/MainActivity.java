@@ -1,28 +1,28 @@
 package com.medialabamsterdam.checklistprototype;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.location.Location;
-import android.media.AudioManager;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
+        import android.app.Activity;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.res.Configuration;
+        import android.location.Location;
+        import android.media.AudioManager;
+        import android.os.Bundle;
+        import android.os.CountDownTimer;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.view.WindowManager;
+        import android.widget.TextView;
 
-import com.google.android.glass.media.Sounds;
-import com.google.android.glass.touchpad.Gesture;
-import com.google.android.glass.touchpad.GestureDetector;
-import com.google.android.glass.view.WindowUtils;
-import com.google.android.glass.widget.CardScrollView;
+        import com.google.android.glass.media.Sounds;
+        import com.google.android.glass.touchpad.Gesture;
+        import com.google.android.glass.touchpad.GestureDetector;
+        import com.google.android.glass.view.WindowUtils;
+        import com.google.android.glass.widget.CardScrollView;
 
-import java.util.ArrayList;
-import java.util.Locale;
+        import java.util.ArrayList;
+        import java.util.Locale;
 
 public class MainActivity extends Activity {
 

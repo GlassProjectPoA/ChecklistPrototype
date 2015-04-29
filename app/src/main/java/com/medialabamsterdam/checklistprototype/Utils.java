@@ -2,6 +2,8 @@ package com.medialabamsterdam.checklistprototype;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -115,4 +117,15 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public boolean contains(Rect area, Point point){
+        return (area.top < point.x &&
+                area.right < point.y &&
+                area.top + area.height() > point.x &&
+                area.right + area.width() > point.y);/*(this.getLocation().getX() < p.getX() &&
+                this.getLocation().getY() < p.getY() &&
+                this.getLocation().getX() + this.getWidth() > p.getX()  &&
+                this.getLocation().getY() + this.getHeight() > p.getY());*/
+    }
+
 }

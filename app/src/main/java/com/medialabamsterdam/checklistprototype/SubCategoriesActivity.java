@@ -2,9 +2,7 @@ package com.medialabamsterdam.checklistprototype;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
+import android.content.Intent;import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -27,19 +25,18 @@ public class SubCategoriesActivity extends Activity {
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCatViews;
     private SubCategoryCardScrollAdapter mAdapter;
-    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
             createCards();
         } else {
             mSubCatViews = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
         }
-
 
         mCardScroller = new CardScrollView(this);
         mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
@@ -48,9 +45,6 @@ public class SubCategoriesActivity extends Activity {
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-
-
-        mPrefs = getSharedPreferences("Rates", Context.MODE_PRIVATE);
     }
 
     //region Boring Stuff
@@ -125,10 +119,7 @@ public class SubCategoriesActivity extends Activity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
 
@@ -154,8 +145,6 @@ public class SubCategoriesActivity extends Activity {
         } else if (!right && rating >= 0) {
             mSubCatViews.get(position).setCurrentRating(rating - 1);
         }
-        SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putInt(Constants.CURRENT_RATING, 1);
 
         mAdapter.notifyDataSetChanged();
     }
@@ -175,7 +164,6 @@ public class SubCategoriesActivity extends Activity {
         final int pos = mCardScroller.getSelectedItemPosition();
         final long time = 100;
         int size = mSubCatViews.size() - 1;
-        final SharedPreferences.Editor ed = mPrefs.edit();
         if (right && pos < size) {
             final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
             animOutRight.setDuration(time);
@@ -190,7 +178,6 @@ public class SubCategoriesActivity extends Activity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mCardScroller.setSelection(pos + 1);
-                    ed.putInt(Constants.CURRENT_POSITION, pos + 1);
                     mCardScroller.startAnimation(animInRight);
                 }
 
@@ -214,7 +201,6 @@ public class SubCategoriesActivity extends Activity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mCardScroller.setSelection(pos - 1);
-                    ed.putInt(Constants.CURRENT_POSITION, pos - 1);
                     mCardScroller.startAnimation(animInLeft);
                 }
 
@@ -224,7 +210,6 @@ public class SubCategoriesActivity extends Activity {
             };
             animOutLeft.setAnimationListener(al);
             mCardScroller.startAnimation(animOutLeft);
-            ed.apply();
         }
     }
 

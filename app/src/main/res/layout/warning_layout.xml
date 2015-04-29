@@ -28,7 +28,8 @@
             android:layout_weight="1"
             android:contentDescription="@string/warning_sign_description"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_warning" />
+            android:src="@drawable/ic_warning"
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/info_text_container"

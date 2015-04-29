@@ -129,9 +129,14 @@
 
     <!-- UTILITIES -->
     <string name="random_time">12:34</string>
+    <string name="random_number">2</string>
+    <string name="random_word">Trees</string>
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
     <string name="example_text">There are little stickers.</string>
+    <string name="saving_picture">Saving picture.</string>
+    <string name="please_wait">Please wait.</string>
+    <string name="upload_list">Uploading list.</string>
 
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
@@ -147,6 +152,8 @@
 
     <!-- WARNING TEXT -->
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
+    <string name="title_activity_warning">Warning Activity</string>
+    <string name="hello_world">Hello world!</string>
 
 
     <!-- NOT ORDERED -->

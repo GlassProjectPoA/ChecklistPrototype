@@ -7,7 +7,10 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -19,6 +22,8 @@ import java.util.ArrayList;
 public class CategoriesActivity extends Activity {
 
     public final static String TAG = "CATEGORIES";
+    private final static int WARNING_REQUEST = 9574;
+
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<Category> mCategoryViews;
@@ -70,7 +75,7 @@ public class CategoriesActivity extends Activity {
                     case TAP:
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
-                            //do nothing
+                            checkData();
                         } else {
                             if (Constants.IGNORE_INSTRUCTIONS) {
                                 openRating();
@@ -87,12 +92,16 @@ public class CategoriesActivity extends Activity {
         return gestureDetector;
     }
 
+    private void checkData() {
+        //TODO Check ratings if there is any that is below B, start intent.
+        Intent intent = new Intent(this, WarningActivity.class);
+        startActivityForResult(intent, WARNING_REQUEST);
+        sendData(null);
+    }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
 
@@ -106,6 +115,33 @@ public class CategoriesActivity extends Activity {
             mCategoryViews.add(category);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
+            sendData(data.getStringExtra(Constants.EXTRA_PICTURE));
+        }
+    }
+
+    private void sendData(String picturePath) {
+        if(picturePath == null){
+            //TODO send data without picture
+            Log.d(TAG, "null");
+        }else{
+            //TODO send data with picture
+            TextView tv = (TextView)mCardScroller.getSelectedView().findViewById(R.id.title);
+            tv.setText(R.string.upload_list);
+            tv = (TextView)mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv.setText(R.string.please_wait);
+            mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
+            ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar);
+            spinner.setVisibility(View.VISIBLE);
+            spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
+            mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+            Log.d(TAG, picturePath);
+        }
+    }
+
 
     private void openInstructions() {
         Intent intent = new Intent(this, InstructionsActivity.class);

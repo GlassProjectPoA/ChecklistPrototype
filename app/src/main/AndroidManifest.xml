@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.medialabamsterdam.checklistprototype" >
 
-    <uses-permission android:name="android.glass.permission.DEVELOPMENT"/>
+    <uses-permission android:name="com.google.android.glass.permission.DEVELOPMENT"  />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,7 +14,6 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:configChanges="locale"
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_location" >
             <intent-filter>
@@ -44,6 +43,11 @@
             android:name=".SubCategoriesDetailedActivity"
             android:icon="@drawable/ic_glass_logo"
             android:label="@string/title_rating_detailed" >
+        </activity>
+        <activity
+            android:name=".WarningActivity"
+            android:icon="@drawable/ic_glass_logo"
+            android:label="@string/title_activity_warning" >
         </activity>
     </application>
 

@@ -53,6 +53,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
         TextView tv;
         SubCategory sc = mCards.get(position);
         if (position == mCards.size() - 1) {
+            //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
             tv = (TextView) card.findViewById(R.id.footer);
             tv.setText(R.string.tap_to_save);
