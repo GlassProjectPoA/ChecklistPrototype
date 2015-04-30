@@ -1,4 +1,4 @@
-package com.medialabamsterdam.checklistprototype;
+package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.view.View;
 import android.view.ViewGroup;

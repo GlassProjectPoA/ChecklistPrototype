@@ -21,6 +21,7 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardScrollView;
+import com.medialabamsterdam.checklistprototype.Adapters.MyCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 import java.io.File;

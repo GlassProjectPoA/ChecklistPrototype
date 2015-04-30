@@ -217,22 +217,22 @@ public class Polygon
 				return false;
 			}
 
-			float x = ((side.getB() - ray.getB()) / (ray.getA() - side.getA())); // x = (b2-b1)/(a1-a2)
-			float y = side.getA() * x + side.getB(); // y = a2*x+b2
+            double x = ((side.getB() - ray.getB()) / (ray.getA() - side.getA())); // x = (b2-b1)/(a1-a2)
+            double y = side.getA() * x + side.getB(); // y = a2*x+b2
 			intersectPoint = new Point(x, y);
 		}
 
 		else if (ray.isVertical() && !side.isVertical())
 		{
-			float x = ray.getStart().x;
-			float y = side.getA() * x + side.getB();
+            double x = ray.getStart().x;
+            double y = side.getA() * x + side.getB();
 			intersectPoint = new Point(x, y);
 		}
 
 		else if (!ray.isVertical() && side.isVertical())
 		{
-			float x = side.getStart().x;
-			float y = ray.getA() * x + ray.getB();
+            double x = side.getStart().x;
+            double y = ray.getA() * x + ray.getB();
 			intersectPoint = new Point(x, y);
 		}
 
@@ -262,7 +262,7 @@ public class Polygon
 	private Line createRay(Point point)
 	{
 		// create outside point
-		float epsilon = (_boundingBox.xMax - _boundingBox.xMin) / 100f;
+        double epsilon = (_boundingBox.xMax - _boundingBox.xMin) / 100f;
 		Point outsidePoint = new Point(_boundingBox.xMin - epsilon, _boundingBox.yMin);
 
 		Line vector = new Line(outsidePoint, point);
@@ -286,9 +286,9 @@ public class Polygon
 
 	private static class BoundingBox
 	{
-		public float xMax = Float.NEGATIVE_INFINITY;
-		public float xMin = Float.NEGATIVE_INFINITY;
-		public float yMax = Float.NEGATIVE_INFINITY;
-		public float yMin = Float.NEGATIVE_INFINITY;
+		public double xMax = Double.NEGATIVE_INFINITY;
+		public double xMin = Double.NEGATIVE_INFINITY;
+		public double yMax = Double.NEGATIVE_INFINITY;
+		public double yMin = Double.NEGATIVE_INFINITY;
 	}
 }

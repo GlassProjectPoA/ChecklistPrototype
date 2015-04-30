@@ -7,18 +7,18 @@ package com.medialabamsterdam.checklistprototype.Polygon_contains_Point;
  */
 public class Point
 {
-	public Point(float x, float y)
+	public Point(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
-	public float x;
-	public float y;
+	public double x;
+	public double y;
 
 	@Override
 	public String toString()
 	{
-		return String.format("(%.2f,%.2f)", x, y);
+		return String.format("(%.6f,%.6f)", x, y);
 	}
 }

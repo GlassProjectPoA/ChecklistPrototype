@@ -20,6 +20,8 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardScrollView;
+import com.medialabamsterdam.checklistprototype.Adapters.MyCardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import com.medialabamsterdam.checklistprototype.Utilities.LocationUtils;
@@ -44,6 +46,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        DataBaseHelper.readArea(this);
         handleLocationUtils();
         defineLocale();
 
@@ -83,8 +86,7 @@ public class MainActivity extends Activity {
         if (mActualLocation != null) {
             Log.e("WORKS!", mActualLocation.toString());
             Point mLocationPoint = new Point((float)mActualLocation.getLongitude(), (float)mActualLocation.getLatitude());
-            Log.d(TAG, mLocationPoint.toString());
-            return true;//(findArea(mLocationPoint) && findLocation(mLocationPoint));
+            return findArea(mLocationPoint);
         } else {
             return false;
         }
@@ -101,7 +103,7 @@ public class MainActivity extends Activity {
             }
         }
 */
-        return false;
+        return findLocation(point);
     }
 
     private boolean findLocation(Point point){

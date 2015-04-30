@@ -1,4 +1,4 @@
-package com.medialabamsterdam.checklistprototype;
+package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
+import com.medialabamsterdam.checklistprototype.R;
 
 import java.util.List;
 
