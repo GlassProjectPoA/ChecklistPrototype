@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * Created by Quintas on 20/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 20/04/2015.
  */
 public class LocationUtils {
 

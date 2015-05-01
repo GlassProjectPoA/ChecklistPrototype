@@ -22,83 +22,6 @@
         <item>Hardening Unbound</item>
     </string-array>
 
-    <!-- PROBLEMS -->
-    <string-array name="problems_404">
-        <item>ERROR!</item>
-    </string-array>
-    <string-array name="problems_0">
-        <item>Planter - Fine Litter</item>
-        <item>Planter - Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_1">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_2">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Natural Waste</item>
-    </string-array>
-    <string-array name="problems_3">
-        <item>Coverings</item>
-        <item>Graffiti</item>
-    </string-array>
-    <string-array name="problems_4">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-        <item>Fill Level</item>
-    </string-array>
-    <string-array name="problems_5">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Warp</item>
-    </string-array>
-    <string-array name="problems_6">
-        <item>Coverings / Graffiti</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_7">
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_8">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_9">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_10">
-        <item>Barrier Inlet</item>
-    </string-array>
-    <string-array name="problems_11">
-        <item>Bulk Waste</item>
-        <item>Natural Dirt</item>
-        <item>Weed Gutters</item>
-        <item>Weed Around Obstacles</item>
-        <item>Excreta</item>
-        <item>Wipeable Fine Litter</item>
-        <item>Wipe Dirt Gutters</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_12">
-        <item>Weed Pavers</item>
-        <item>Weet Tiles</item>
-    </string-array>
-    <string-array name="problems_13">
-        <item>Weed</item>
-    </string-array>
-
     <!-- RATINGS -->
     <string name="rating_aa">A+</string>
     <string name="rating_a">A</string>
@@ -131,8 +54,10 @@
     <string name="random_time">12:34</string>
     <string name="random_number">2</string>
     <string name="random_word">Trees</string>
+    <string name="unknown">"?"</string>
     <string name="left_arrow">‹</string>
     <string name="right_arrow">›</string>
+    <string name="slash_divider">/</string>
     <string name="example_text">There are little stickers.</string>
     <string name="saving_picture">Saving picture.</string>
     <string name="please_wait">Please wait.</string>
@@ -141,7 +66,7 @@
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
     <string name="title_summary">Summary</string>
-    <string name="title_location">Checklist for location</string>
+    <string name="title_location">Checklist for area/location</string>
     <string name="title_categories">Categories</string>
     <string name="title_rating">Rating</string>
     <string name="title_rating_detailed">Rating Detailed</string>
@@ -154,6 +79,7 @@
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
     <string name="title_activity_warning">Warning Activity</string>
     <string name="hello_world">Hello world!</string>
+
 
 
     <!-- NOT ORDERED -->

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Area;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Locations;
 import com.medialabamsterdam.checklistprototype.R;
 
 import java.io.BufferedReader;
@@ -21,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Quintas on 29/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 29/04/2015.
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -29,14 +33,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.medialabamsterdam.checklistprototype/databases/";
     private static String DB_NAME = "CheckListDB";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 5;
     private SQLiteDatabase myDataBase;
     private final Context mContext;
 
     /**
      * Constructor
-     * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
-     * @param context
+     * Takes and keeps a reference of the passed context in order to access the application assets and resources.
+     * @param context the activity's context.
      */
     public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
@@ -46,10 +50,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /**
      * This reads a file from the given Resource-Id and calls every line of it as a SQL-Statement
      *
-     * @param context
-     *
-     * @param resourceId
-     *  e.g. R.raw.food_db
+     * @param context the activity's context.
+     * @param resourceId e.g. R.raw.food_db
      *
      * @return Number of SQL-Statements run
      * @throws IOException
@@ -197,17 +199,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-/*    public static void ReadTableWhereOrder(Context context, String table,  String[] columns, String where, String orderBy){
-        SQLiteDatabase db = new DataBaseHelper(context).getReadableDatabase();
-        Cursor cur = db.query(table, columns, where, null, null, null, orderBy);
-    }*/
-
-    public static ArrayList<Area> readArea(Context context){
-        ArrayList<Area> areaList = new ArrayList<>();
+    /**
+     * This function is used to query data from the Area Table, returns all Areas.
+     *
+     * @param context the activity's context.
+     * @return a List<Area>.
+     */
+    public static List<Area> readArea(Context context){
+        List<Area> areaList = new ArrayList<>();
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(context);
-        db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query(DataBaseContract.AreaEntry.TABLE_NAME, null, null, null, null, null, null);
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(DBContract.Area.TABLE_NAME, null, null, null, null, null, null);
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int i =0;
@@ -225,15 +228,57 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             areaList.add(area);
         }
         cursor.close();
-        for (Area a: areaList)
-        {
-            Log.e(TAG, a.toString());
-        }
+        db.close();
         return areaList;
     }
 
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
+    /**
+     * This function is used to query data from the Locations Table based on the Area_id related to a given location.
+     *
+     * @param context activity's context.
+     * @param areaIndex the _id of the Area that you want to query the locations.
+     * @return a List<Locations>.
+     */
+    public static List<Locations> readLocations(Context context, int areaIndex){
+        List<Locations> locationList = new ArrayList<>();
+        SQLiteDatabase db;
+        DataBaseHelper dbHelper = new DataBaseHelper(context);
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor;
+        String query =  "SELECT " + DBContract.Location.TABLE_NAME +"."+ DBContract.Location._ID +
+                        ", " + DBContract.Location.COLUMN_NAME +
+                        ", " + DBContract.Location.COLUMN_TOP_RIGHT +
+                        ", " + DBContract.Location.COLUMN_TOP_LEFT +
+                        ", " + DBContract.Location.COLUMN_BOT_LEFT +
+                        ", " + DBContract.Location.COLUMN_BOT_RIGHT +
+                        " FROM " + DBContract.Location.TABLE_NAME +
+                        ", " + DBContract.LocationsByArea.TABLE_NAME +
+                        " WHERE " + DBContract.LocationsByArea.COLUMN_AREA_ID +
+                        " =? AND " + DBContract.LocationsByArea.COLUMN_LOCATION_ID +
+                        " = " + DBContract.Location.TABLE_NAME + "." + DBContract.Location._ID;
 
+        cursor = db.rawQuery(query, new String [] {String.valueOf(areaIndex)});
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int i = 0;
+            List<String> cursorData = new ArrayList<>();
+            while (i < cursor.getColumnCount()) {
+                cursorData.add(cursor.getString(i));
+                i++;
+            }
+            Locations location = new Locations(
+                    Integer.parseInt(cursorData.get(0)),
+                    cursorData.get(1),
+                    cursorData.get(2),
+                    cursorData.get(3),
+                    cursorData.get(4),
+                    cursorData.get(5)
+            );
+            locationList.add(location);
+            Log.e(TAG, cursorData.toString());
+        }
+        cursor.close();
+        db.close();
+        return locationList;
+    }
 }

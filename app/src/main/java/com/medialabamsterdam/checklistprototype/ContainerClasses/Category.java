@@ -6,7 +6,10 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Quintas on 21/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 21/04/2015.
  */
 public class Category implements Parcelable {
 

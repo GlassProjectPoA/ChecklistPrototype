@@ -22,6 +22,12 @@ import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 01/03/2015.
+ */
 public class SubCategoriesDetailedActivity extends Activity {
     public final static String TAG = "DETAILED";
     private CardScrollView mCardScroller;

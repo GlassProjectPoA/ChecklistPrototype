@@ -27,6 +27,12 @@ import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 01/03/2015.
+ */
 public class WarningActivity extends Activity {
 
     private final static boolean OK_GLASS = true;

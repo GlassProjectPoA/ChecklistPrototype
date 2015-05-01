@@ -22,7 +22,12 @@ import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
 
-
+/**
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 01/04/2015.
+ */
 public class InstructionsActivity extends Activity {
     public final static String TAG = "INSTRUCTIONS";
     private CardScrollView mCardScroller;

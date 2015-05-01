@@ -21,15 +21,25 @@ import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardScrollView;
 import com.medialabamsterdam.checklistprototype.Adapters.MyCardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Area;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Locations;
 import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
+import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Polygon;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import com.medialabamsterdam.checklistprototype.Utilities.LocationUtils;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+/**
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 01/03/2015.
+ */
 public class MainActivity extends Activity {
 
     public final static boolean OK_GLASS = false;
@@ -38,15 +48,15 @@ public class MainActivity extends Activity {
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
-    private Location mActualLocation;
     private LocationUtils mLocationUtils;
     private MyCardScrollAdapter mAdapter;
+    private int areaIndex;
+    private int locationIndex;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        DataBaseHelper.readArea(this);
         handleLocationUtils();
         defineLocale();
 
@@ -82,10 +92,10 @@ public class MainActivity extends Activity {
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
         }
-        mActualLocation = mLocationUtils.getLocation();
+        Location mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
             Log.e("WORKS!", mActualLocation.toString());
-            Point mLocationPoint = new Point((float)mActualLocation.getLongitude(), (float)mActualLocation.getLatitude());
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
             return findArea(mLocationPoint);
         } else {
             return false;
@@ -93,20 +103,52 @@ public class MainActivity extends Activity {
     }
 
     private boolean findArea(Point point){
-/*
-        for (Point point : types) {
-            for (Type t : types2) {
-                if (some condition) {
-                    // Do something and break...
-                    return true;
-                }
+        List<Area> mAreas = DataBaseHelper.readArea(this);
+        TextView tv = (TextView)mCards.get(0).findViewById(R.id.area_code);
+        for (Area area: mAreas){
+
+            Point topLeft = Utils.stringToPoint(area.getTopLeft());
+            Point botRight = Utils.stringToPoint(area.getBotRight());
+            Point topRight = new Point(topLeft.x, botRight.y);
+            Point botLeft = new Point(botRight.x, topLeft.y);
+
+            Polygon polygon = Polygon.Builder()
+                    .addVertex(topRight)
+                    .addVertex(topLeft)
+                    .addVertex(botLeft)
+                    .addVertex(botRight)
+                    .build();
+            if (polygon.contains(point)){
+                areaIndex = area.getAreaId();
+                tv.setText(area.getAreaName());
+                return findLocation(point);
             }
         }
-*/
-        return findLocation(point);
+        tv.setText(R.string.unknown);
+        return false;
     }
 
     private boolean findLocation(Point point){
+        TextView tv = (TextView)mCards.get(0).findViewById(R.id.location_code);
+        List<Locations> mLocations = DataBaseHelper.readLocations(this, areaIndex);
+        for (Locations locations: mLocations){
+            Point topRight = Utils.stringToPoint(locations.getTopRight());
+            Point topLeft = Utils.stringToPoint(locations.getTopLeft());
+            Point botLeft = Utils.stringToPoint(locations.getBotLeft());
+            Point botRight = Utils.stringToPoint(locations.getBotRight());
+            Polygon polygon = Polygon.Builder()
+                    .addVertex(topRight)
+                    .addVertex(topLeft)
+                    .addVertex(botLeft)
+                    .addVertex(botRight)
+                    .build();
+            if (polygon.contains(point)){
+                locationIndex = locations.getLocationId();
+                tv.setText(locations.getLocationName());
+                return true;
+            }
+        }
+        tv.setText(R.string.unknown);
         return false;
     }
 
@@ -158,10 +200,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
 
@@ -184,7 +223,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private View createLocationCard() {//List<ChecklistTask> tasks) {
+    private View createLocationCard() {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);

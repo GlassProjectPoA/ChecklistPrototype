@@ -2,16 +2,19 @@ package com.medialabamsterdam.checklistprototype.Utilities;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
+
 /**
- * Created by Quintas on 13/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 13/04/2015.
  */
 public class Utils {
 
@@ -118,14 +121,15 @@ public class Utils {
         }
     }
 
-    public boolean contains(Rect area, Point point){
-        return (area.top < point.x &&
-                area.right < point.y &&
-                area.top + area.height() > point.x &&
-                area.right + area.width() > point.y);/*(this.getLocation().getX() < p.getX() &&
-                this.getLocation().getY() < p.getY() &&
-                this.getLocation().getX() + this.getWidth() > p.getX()  &&
-                this.getLocation().getY() + this.getHeight() > p.getY());*/
+    /**
+     * Method to transform a "Location" string into a Point.
+     *
+     * @param string a String formatted as "52.3588929,4.9081412"
+     * @return a Point object.
+     */
+    public static Point stringToPoint (String string){
+        String[] strArray = string.split(",");
+        return new Point(Double.parseDouble(strArray[0]), Double.parseDouble(strArray[1]));
     }
 
 }

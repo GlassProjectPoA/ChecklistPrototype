@@ -22,6 +22,12 @@ import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 import java.util.ArrayList;
 
+/**
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 01/04/2015.
+ */
 public class CategoriesActivity extends Activity {
 
     public final static String TAG = "CATEGORIES";

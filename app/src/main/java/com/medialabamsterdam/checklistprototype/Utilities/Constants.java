@@ -1,7 +1,10 @@
 package com.medialabamsterdam.checklistprototype.Utilities;
 
 /**
- * Created by Quintas on 15/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 15/04/2015.
  */
 public interface Constants {
     public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
