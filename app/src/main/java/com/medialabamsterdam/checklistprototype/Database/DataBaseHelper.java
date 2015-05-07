@@ -1,15 +1,19 @@
 package com.medialabamsterdam.checklistprototype.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Area;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Locations;
 import com.medialabamsterdam.checklistprototype.R;
+import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -19,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,10 +35,8 @@ import java.util.List;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DATABASEHELPER";
-    //The Android's default system path of your application database.
-    private static String DB_PATH = "/data/data/com.medialabamsterdam.checklistprototype/databases/";
     private static String DB_NAME = "CheckListDB";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 1;
     private SQLiteDatabase myDataBase;
     private final Context mContext;
 
@@ -78,102 +81,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    //<editor-fold desc="Description">
-    /**
-     * Creates a empty database on the system and rewrites it with your own database.
-     * */
-    public void createDataBase() throws IOException {
-        Log.d(TAG, "BEEN HERE");
-        boolean dbExist = checkDataBase();
-
-        if(dbExist){
-//            do nothing - database already exist
-        }else{
-
-//            By calling this method an empty database will be created into the default system path
-//            of your application so we are gonna be able to overwrite that database with our database.
-            this.getReadableDatabase();
-
-            try {
-
-                copyDataBase();
-
-            } catch (IOException e) {
-
-                throw new Error("Error copying database");
-
-            }
-        }
-        Log.d(TAG, DB_PATH);
-    }
-
-    /**
-     * Check if the database already exist to avoid re-copying the file each time you open the application.
-     * @return true if it exists, false if it doesn't
-     */
-    private boolean checkDataBase(){
-
-        SQLiteDatabase checkDB = null;
-
-        try{
-            String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
-        }catch(SQLiteException e){
-
-            //database does't exist yet.
-
-        }
-
-        if(checkDB != null){
-
-            checkDB.close();
-
-        }
-
-        return checkDB != null;
-    }
-
-    /**
-     * Copies your database from your local assets-folder to the just created empty database in the
-     * system folder, from where it can be accessed and handled.
-     * This is done by transfering bytestream.
-     * */
-    private void copyDataBase() throws IOException{
-
-        //Open your local db as the input stream
-        InputStream myInput = mContext.getAssets().open(DB_NAME);
-        Log.d(TAG, myInput.toString() + "=====" + myInput.available());
-
-        // Path to the just created empty db
-        String outFileName = DB_PATH + DB_NAME;
-
-        //Open the empty db as the output stream
-        OutputStream myOutput = new FileOutputStream(outFileName);
-
-        //transfer bytes from the inputfile to the outputfile
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer))>0){
-            myOutput.write(buffer, 0, length);
-        }
-
-        //Close the streams
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
-
-    }
-
-    public void openDataBase() throws SQLException {
-
-        //Open the database
-        String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
-    }
-    //</editor-fold>
-
     @Override
     public synchronized void close() {
 
@@ -186,10 +93,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         DataBaseHelper dbHelper = new DataBaseHelper(mContext);
         try {
             int insertCount = dbHelper.insertFromFile(mContext, R.raw.checklist_db, db);
@@ -197,6 +100,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
     /**
@@ -275,10 +182,85 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     cursorData.get(5)
             );
             locationList.add(location);
-            Log.e(TAG, cursorData.toString());
         }
         cursor.close();
         db.close();
         return locationList;
+    }
+
+    public static List<Category> writeCatByLocation(Context context, int areaIndex, int locationIndex) {
+        SQLiteDatabase db;
+        DataBaseHelper dbHelper = new DataBaseHelper(context);
+        db = dbHelper.getWritableDatabase();
+        String[] args = new String [] {String.valueOf(areaIndex)};
+        String where = DBContract.CatByArea.COLUMN_AREA_ID + " =? ";
+        Cursor cursor = db.query(DBContract.CatByArea.TABLE_NAME, null, where, args, null, null, null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            ContentValues values = new ContentValues();
+            values.put(DBContract.CatByLocation.COLUMN_CATEGORY_ID, cursor.getInt(cursor.getColumnIndex(DBContract.CatByArea.COLUMN_CATEGORY_ID)));
+            values.put(DBContract.CatByLocation.COLUMN_LOCATION_ID, locationIndex);
+            values.put(DBContract.CatByLocation.COLUMN_REMOVE, 0);
+            try {
+                db.insertOrThrow(
+                        DBContract.CatByLocation.TABLE_NAME,
+                        null,
+                        values);
+            } catch (SQLiteConstraintException e) {
+                Log.e("DB ERROR", e.toString());
+            }
+        }
+        cursor.close();
+        db.close();
+        return readCategory(context, areaIndex, locationIndex);
+    }
+
+    public static List<Category> readCategory(Context context, int areaIndex, int locationIndex){
+        List<Category> categoryList = new ArrayList<>();
+        SQLiteDatabase db;
+        DataBaseHelper dbHelper = new DataBaseHelper(context);
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor;
+        String columnName = DBContract.Category.COLUMN_NAME;
+        if (Constants.LOAD_ALTERNATE_LANGUAGE){
+            columnName = DBContract.Category.COLUMN_NAME_NL;
+        }
+        String query =  "SELECT " + DBContract.Category.TABLE_NAME +"."+ DBContract.Category._ID +
+                ", " + columnName +
+                ", " + DBContract.CatByLocation.COLUMN_REMOVE +
+                " FROM " + DBContract.CatByLocation.TABLE_NAME +
+                ", " + DBContract.Category.TABLE_NAME +
+                " WHERE " + DBContract.CatByLocation.COLUMN_LOCATION_ID +
+                " =? AND " + DBContract.CatByLocation.COLUMN_CATEGORY_ID +
+                " = " + DBContract.Category.TABLE_NAME + "." + DBContract.Category._ID;
+
+        cursor = db.rawQuery(query, new String [] {String.valueOf(locationIndex)});
+
+        if(cursor.getCount()==0){
+            cursor.close();
+            db.close();
+            return writeCatByLocation(context, areaIndex, locationIndex);
+        }
+
+        Log.e(TAG, Arrays.toString(cursor.getColumnNames()));
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int i = 0;
+            List<String> cursorData = new ArrayList<>();
+            while (i < cursor.getColumnCount()) {
+                cursorData.add(cursor.getString(i));
+                i++;
+            }
+            Log.e(TAG, cursorData.toString());
+            Category location = new Category(
+                    Integer.parseInt(cursorData.get(0)),
+                    cursorData.get(1),
+                    Boolean.parseBoolean(cursorData.get(2))
+            );
+            categoryList.add(location);
+        }
+        cursor.close();
+        db.close();
+        return categoryList;
     }
 }

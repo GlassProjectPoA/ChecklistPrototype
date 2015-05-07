@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
             if (polygon.contains(point)){
                 locationIndex = locations.getLocationId();
                 tv.setText(locations.getLocationName());
+                DataBaseHelper.readCategory(this, areaIndex, locationIndex);
                 return true;
             }
         }

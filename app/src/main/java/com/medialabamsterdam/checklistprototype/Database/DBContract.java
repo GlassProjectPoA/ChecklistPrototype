@@ -75,4 +75,16 @@ public class DBContract {
         public static final String COLUMN_SUBCATEGORY_ID = "SubCategory_id";
     }
 
+    public static abstract class CatByLocation implements BaseColumns {
+        public static final String TABLE_NAME = "Categories_by_Location";
+        public static final String COLUMN_CATEGORY_ID = "Category_id";
+        public static final String COLUMN_LOCATION_ID = "Location_id";
+        public static final String COLUMN_REMOVE = "Remove";
+    }
+
+    public static abstract class CatByArea implements BaseColumns {
+        public static final String TABLE_NAME = "Categories_by_Area";
+        public static final String COLUMN_CATEGORY_ID = "Category_id";
+        public static final String COLUMN_AREA_ID = "Area_id";
+    }
 }

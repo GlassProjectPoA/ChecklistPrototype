@@ -24,28 +24,36 @@ public class Category implements Parcelable {
     };
     private int categoryId;
     private String categoryName;
+    private boolean categoryRemove;
     private ArrayList subCategories;
 
     public Category(int categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.categoryRemove = false;
     }
 
-    public Category(int categoryId, String categoryName, ArrayList subCategories) {
+    public Category(int categoryId, String categoryName, boolean categoryRemove) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.categoryRemove = categoryRemove;
+    }
+
+    public Category(int categoryId, String categoryName, boolean categoryRemove, ArrayList subCategories) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.categoryRemove = categoryRemove;
         this.subCategories = subCategories;
     }
 
     public Category(Parcel in) {
         this.categoryId = in.readInt();
         this.categoryName = in.readString();
+        this.categoryRemove = in.readByte()!= 0;
         this.subCategories = in.readArrayList(SubCategory.class.getClassLoader());
     }
 
-    public Category() {
-
-    }
+    public Category(){}
 
     public int getCategoryId() {
         return categoryId;
@@ -71,6 +79,14 @@ public class Category implements Parcelable {
         this.subCategories = subCategories;
     }
 
+    public boolean isCategoryRemove() {
+        return categoryRemove;
+    }
+
+    public void setCategoryRemove(boolean categoryRemove) {
+        this.categoryRemove = categoryRemove;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -80,6 +96,16 @@ public class Category implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(categoryId);
         out.writeString(categoryName);
+        out.writeByte((byte) (categoryRemove ? 1 : 0));
         out.writeList(subCategories);
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryId= " + categoryId +
+                ", categoryName= '" + categoryName + '\'' +
+                ", categoryRemove= " + categoryRemove +
+                '}';
     }
 }
