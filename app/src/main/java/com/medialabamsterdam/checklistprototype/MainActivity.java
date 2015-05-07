@@ -8,6 +8,8 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,7 +24,9 @@ import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardScrollView;
 import com.medialabamsterdam.checklistprototype.Adapters.MyCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Area;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Locations;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Polygon;
@@ -43,15 +47,18 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     public final static boolean OK_GLASS = false;
-    public final static String TAG = "MAIN";
+    private final static String TAG = "MAIN";
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
     private LocationUtils mLocationUtils;
     private MyCardScrollAdapter mAdapter;
+    private Location mActualLocation;
     private int areaIndex;
     private int locationIndex;
+    private List<Category> mCategories;
+    private List<SubCategory> mSubCategories;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -77,14 +84,12 @@ public class MainActivity extends Activity {
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
         new CountDownTimer(1500, 500) {
-
             public void onTick(long millisUntilFinished) {
             }
 
             public void onFinish() {
                 handleLocationUtils();
             }
-
         }.start();
     }
 
@@ -92,7 +97,7 @@ public class MainActivity extends Activity {
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
         }
-        Location mActualLocation = mLocationUtils.getLocation();
+        mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
             Log.e("WORKS!", mActualLocation.toString());
             Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
@@ -102,10 +107,10 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean findArea(Point point){
+    private boolean findArea(Point point) {
         List<Area> mAreas = DataBaseHelper.readArea(this);
-        TextView tv = (TextView)mCards.get(0).findViewById(R.id.area_code);
-        for (Area area: mAreas){
+        TextView tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
+        for (Area area : mAreas) {
 
             Point topLeft = Utils.stringToPoint(area.getTopLeft());
             Point botRight = Utils.stringToPoint(area.getBotRight());
@@ -118,7 +123,7 @@ public class MainActivity extends Activity {
                     .addVertex(botLeft)
                     .addVertex(botRight)
                     .build();
-            if (polygon.contains(point)){
+            if (polygon.contains(point)) {
                 areaIndex = area.getAreaId();
                 tv.setText(area.getAreaName());
                 return findLocation(point);
@@ -128,24 +133,27 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    private boolean findLocation(Point point){
-        TextView tv = (TextView)mCards.get(0).findViewById(R.id.location_code);
+    private boolean findLocation(Point point) {
+        TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
         List<Locations> mLocations = DataBaseHelper.readLocations(this, areaIndex);
-        for (Locations locations: mLocations){
+        for (Locations locations : mLocations) {
+
             Point topRight = Utils.stringToPoint(locations.getTopRight());
             Point topLeft = Utils.stringToPoint(locations.getTopLeft());
             Point botLeft = Utils.stringToPoint(locations.getBotLeft());
             Point botRight = Utils.stringToPoint(locations.getBotRight());
+
             Polygon polygon = Polygon.Builder()
                     .addVertex(topRight)
                     .addVertex(topLeft)
                     .addVertex(botLeft)
                     .addVertex(botRight)
                     .build();
-            if (polygon.contains(point)){
+
+            if (polygon.contains(point)) {
                 locationIndex = locations.getLocationId();
                 tv.setText(locations.getLocationName());
-                DataBaseHelper.readCategory(this, areaIndex, locationIndex);
+                mCategories = DataBaseHelper.readCategory(this, areaIndex, locationIndex);
                 return true;
             }
         }
@@ -180,9 +188,13 @@ public class MainActivity extends Activity {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
-                        Log.e(TAG, "TAP called.");
-                        openCategories();
-                        am.playSoundEffect(Sounds.TAP);
+                        if (mActualLocation != null) {
+                            Log.e(TAG, "TAP called.");
+                            openCategories();
+                            am.playSoundEffect(Sounds.TAP);
+                        } else {
+                            am.playSoundEffect(Sounds.DISALLOWED);
+                        }
                         break;
                     case TWO_LONG_PRESS:
                         boolean ok = handleLocationUtils();
@@ -207,9 +219,8 @@ public class MainActivity extends Activity {
 
     private void openCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
-        TextView tv = (TextView) this.findViewById(R.id.location_code);
-        String message = (String) tv.getText();
-        intent.putExtra(Constants.EXTRA_MESSAGE, message);
+        ArrayList<Category> al = new ArrayList<>(mCategories);
+        intent.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, al);
         startActivity(intent);
     }
 
@@ -224,12 +235,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    private View createLocationCard() {
+    private void createLocationCard() {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);
         mCards.add(card);
-        return mCards.get(0);
     }
 
 }

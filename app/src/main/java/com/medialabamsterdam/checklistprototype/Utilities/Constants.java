@@ -7,17 +7,18 @@ package com.medialabamsterdam.checklistprototype.Utilities;
  * on 15/04/2015.
  */
 public interface Constants {
-    public final static String EXTRA_MESSAGE = "com.medialabamsterdam.checklistprototype.MESSAGE";
-    public final static String EXTRA_POSITION = "com.medialabamsterdam.checklistprototype.POSITION";
-    public final static String EXTRA_RATING = "com.medialabamsterdam.checklistprototype.RATING";
-    public final static String EXTRA_RATING_DETAIL = "com.medialabamsterdam.checklistprototype.RATING_DETAIL";
-    public final static String EXTRA_PICTURE = "com.medialabamsterdam.checklistprototype.PICTURE";
+    String EXTRA_POSITION = "com.medialabamsterdam.checklistprototype.POSITION";
+    String EXTRA_RATING = "com.medialabamsterdam.checklistprototype.RATING";
+    String EXTRA_RATING_DETAIL = "com.medialabamsterdam.checklistprototype.RATING_DETAIL";
+    String EXTRA_PICTURE = "com.medialabamsterdam.checklistprototype.PICTURE";
+    String EXTRA_CATEGORY = "com.medialabamsterdam.checklistprototype.CATEGORY";
 
-    public final static String CURRENT_POSITION = "CURRENT_POSITION";
-    public final static String CURRENT_RATING = "CURRENT_RATING";
-    public final static String PARCELABLE_SUBCATEGORY = "PARCELABLE_SUBCATEGORY";
+    String CURRENT_POSITION = "CURRENT_POSITION";
+    String CURRENT_RATING = "CURRENT_RATING";
+    String PARCELABLE_SUBCATEGORY = "PARCELABLE_SUBCATEGORY";
 
-    public final static String ALTERNATE_LANGUAGE = "nl";
-    public final static boolean LOAD_ALTERNATE_LANGUAGE = false;
-    public final static boolean IGNORE_INSTRUCTIONS = true;
+    String ALTERNATE_LANGUAGE = "nl";
+    boolean LOAD_ALTERNATE_LANGUAGE = false;
+    boolean IGNORE_INSTRUCTIONS = true;
+
 }

@@ -32,7 +32,7 @@ public class Area implements Parcelable {
         this.botRight = botRight;
     }
 
-    public Area(Parcel in) {
+    private Area(Parcel in) {
         this.areaId = in.readInt();
         this.areaName = in.readString();
         this.topLeft = in.readString();

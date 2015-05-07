@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
  * juniorquintas@gmail.com
  * on 30/04/2015.
  */
-public class DBContract {
+class DBContract {
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
     public DBContract() {}
@@ -86,5 +86,12 @@ public class DBContract {
         public static final String TABLE_NAME = "Categories_by_Area";
         public static final String COLUMN_CATEGORY_ID = "Category_id";
         public static final String COLUMN_AREA_ID = "Area_id";
+    }
+
+    public static abstract class SubCatByCatAndLoc implements BaseColumns {
+        public static final String TABLE_NAME = "SubCategories_by_Location_And_Categories";
+        public static final String COLUMN_SUBCATEGORY_ID = "SubCategory_id";
+        public static final String COLUMN_CATEGORYBYLOCATION_ID = "CategoryByLocation_id";
+        public static final String COLUMN_REMOVE = "Remove";
     }
 }

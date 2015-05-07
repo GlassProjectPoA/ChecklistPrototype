@@ -30,12 +30,12 @@ import java.util.ArrayList;
  */
 public class CategoriesActivity extends Activity {
 
-    public final static String TAG = "CATEGORIES";
+    private final static String TAG = "CATEGORIES";
     private final static int WARNING_REQUEST = 9574;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
-    private ArrayList<Category> mCategoryViews;
+    private ArrayList<Category> mCategories;
     private CategoryCardScrollAdapter mAdapter;
 
     @Override
@@ -43,10 +43,12 @@ public class CategoriesActivity extends Activity {
         super.onCreate(bundle);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        createCards();
+
+        Intent i = getIntent();
+        mCategories = i.getParcelableArrayListExtra(Constants.EXTRA_CATEGORY);
 
         mCardScroller = new CardScrollView(this);
-        mAdapter = new CategoryCardScrollAdapter(this, mCategoryViews);
+        mAdapter = new CategoryCardScrollAdapter(this, mCategories);
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.activate();
         mCardScroller.setHorizontalScrollBarEnabled(false);
@@ -79,17 +81,32 @@ public class CategoriesActivity extends Activity {
                 Log.e(TAG, "gesture = " + gesture);
                 int position = mCardScroller.getSelectedItemPosition();
                 int maxPositions = mAdapter.getCount() - 1;
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                int completion = 0;
+                for (Category category : mCategories) {
+                    if (category.isCategoryCompleted()) completion++;
+                }
+                AudioManager am = (AudioManager) CategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
-                            checkData();
+                            if(completion == mCategories.size()-1){
+                                CategoriesActivity.this.checkData();
+                            } else {
+                                int i = 0;
+                                for (Category category : mCategories) {
+                                    if (!category.isCategoryCompleted()){
+                                        mCardScroller.setSelection(i);
+                                        break;
+                                    }
+                                    i++;
+                                }
+                            }
                         } else {
                             if (Constants.IGNORE_INSTRUCTIONS) {
-                                openRating();
+                                CategoriesActivity.this.openRating();
                             } else {
-                                openInstructions();
+                                CategoriesActivity.this.openInstructions();
                             }
                             am.playSoundEffect(Sounds.TAP);
                         }
@@ -113,17 +130,6 @@ public class CategoriesActivity extends Activity {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
-
-    private void createCards() {
-        mCategoryViews = new ArrayList<>();
-        String[] strs = getResources().getStringArray(R.array.categories_list);
-        int index = 0;
-        for (String str : strs) {
-            Category category = new Category(index, str);
-            index++;
-            mCategoryViews.add(category);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){

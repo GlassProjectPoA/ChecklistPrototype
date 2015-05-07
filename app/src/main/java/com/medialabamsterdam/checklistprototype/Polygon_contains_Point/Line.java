@@ -5,7 +5,7 @@ package com.medialabamsterdam.checklistprototype.Polygon_contains_Point;
  * 
  * @author Roman Kushnarenko (sromku@gmail.com)
  */
-public class Line
+class Line
 {
 	private final Point _start;
 	private final Point _end;
@@ -44,11 +44,7 @@ public class Line
         double maxY = _start.y > _end.y ? _start.y : _end.y;
         double minY = _start.y < _end.y ? _start.y : _end.y;
 
-		if ((point.x >= minX && point.x <= maxX) && (point.y >= minY && point.y <= maxY))
-		{
-			return true;
-		}
-		return false;
+		return (point.x >= minX && point.x <= maxX) && (point.y >= minY && point.y <= maxY);
 	}
 
 	/**

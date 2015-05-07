@@ -49,7 +49,7 @@ public class Locations implements Parcelable {
         this.categories = categories;
     }
 
-    public Locations(Parcel in) {
+    private Locations(Parcel in) {
         this.locationId = in.readInt();
         this.locationName = in.readString();
         this.topRight = in.readString();

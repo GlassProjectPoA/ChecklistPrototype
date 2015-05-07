@@ -29,7 +29,8 @@ import java.util.List;
  * on 01/03/2015.
  */
 public class SubCategoriesDetailedActivity extends Activity {
-    public final static String TAG = "DETAILED";
+
+    private final static String TAG = "DETAILED";
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private List<View> mCards;
@@ -79,16 +80,16 @@ public class SubCategoriesDetailedActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                AudioManager am = (AudioManager) SubCategoriesDetailedActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
                         // Create intent to deliver some kind of result data
                         Intent result = new Intent();
                         result.putExtra(Constants.EXTRA_RATING_DETAIL, mCardScroller.getSelectedItemPosition());
                         result.putExtra(Constants.EXTRA_POSITION, subCategory);
-                        setResult(Activity.RESULT_OK, result);
+                        SubCategoriesDetailedActivity.this.setResult(Activity.RESULT_OK, result);
                         am.playSoundEffect(Sounds.DISALLOWED);
-                        finish();
+                        SubCategoriesDetailedActivity.this.finish();
                         break;
                 }
                 return false;
@@ -99,10 +100,7 @@ public class SubCategoriesDetailedActivity extends Activity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
 

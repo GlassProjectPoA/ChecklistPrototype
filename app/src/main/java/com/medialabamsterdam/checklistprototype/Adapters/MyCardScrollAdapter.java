@@ -9,10 +9,13 @@ import com.google.android.glass.widget.CardScrollAdapter;
 import java.util.List;
 
 /**
- * Created by Quintas on 14/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 14/04/2015.
  */
 public class MyCardScrollAdapter extends CardScrollAdapter {
-    private List<View> mViews;
+    private final List<View> mViews;
 
     public MyCardScrollAdapter(List<View> views) {
         mViews = views;

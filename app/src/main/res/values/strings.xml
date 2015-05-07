@@ -108,11 +108,13 @@
 
     <!-- FINISH -->
     <string name="checklist_finish">You finished the checklist!</string>
+    <string name="checklist_not_finish">The checklist is not complete!</string>
     <string name="category_finish">You finished this category!</string>
 
     <!-- INSTRUCTIONS -->
     <string name="tap_to_save">Tap to save grades</string>
     <string name="tap_to_send">Tap to send the list</string>
+    <string name="tap_to_not_complete">Tap to see missing category</string>
     <string-array name="tap_to_start">
         <item>Tap to start</item>
         <item>start</item>

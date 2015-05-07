@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * on 01/04/2015.
  */
 public class InstructionsActivity extends Activity {
-    public final static String TAG = "INSTRUCTIONS";
+    private final static String TAG = "INSTRUCTIONS";
     private CardScrollView mCardScroller;
     private View mView;
     private GestureDetector mGestureDetector;
@@ -78,11 +78,11 @@ public class InstructionsActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                AudioManager am = (AudioManager) InstructionsActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
                         // Create intent to deliver some kind of result data
-                        updateView();
+                        InstructionsActivity.this.updateView();
                         am.playSoundEffect(Sounds.TAP);
                         break;
                 }
@@ -94,10 +94,7 @@ public class InstructionsActivity extends Activity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
 

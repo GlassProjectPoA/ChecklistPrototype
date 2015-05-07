@@ -9,6 +9,7 @@
     android:layout_marginTop="@dimen/glass_card_margin"
     android:orientation="vertical"
     android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:paddingTop="20dp">
 
     <LinearLayout

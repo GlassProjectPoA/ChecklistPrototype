@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.glass.widget.CardBuilder;
@@ -14,11 +16,14 @@ import com.medialabamsterdam.checklistprototype.R;
 import java.util.List;
 
 /**
- * Created by Quintas on 23/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 23/04/2015.
  */
 public class CategoryCardScrollAdapter extends CardScrollAdapter {
-    private List<Category> mCards;
-    private Context mContext;
+    private final List<Category> mCards;
+    private final Context mContext;
 
     public CategoryCardScrollAdapter(Context context, List<Category> views) {
         mCards = views;
@@ -52,14 +57,28 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View card;
         TextView tv;
+        int completion = 0;
         Category c = mCards.get(position);
+        for (Category category : mCards){
+            if (category.isCategoryCompleted()) completion++;
+        }
         if (position == mCards.size() - 1) {
             //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
-            tv = (TextView) card.findViewById(R.id.footer);
-            tv.setText(R.string.tap_to_send);
-            tv = (TextView) card.findViewById(R.id.title);
-            tv.setText(R.string.checklist_finish);
+            ImageView iv = (ImageView) card.findViewById(R.id.check);
+            if (completion == mCards.size() - 1) {
+                iv.setColorFilter(mContext.getResources().getColor(R.color.green));
+                tv = (TextView) card.findViewById(R.id.footer);
+                tv.setText(R.string.tap_to_send);
+                tv = (TextView) card.findViewById(R.id.title);
+                tv.setText(R.string.checklist_finish);
+            } else {
+                iv.setColorFilter(mContext.getResources().getColor(R.color.red));
+                tv = (TextView) card.findViewById(R.id.footer);
+                tv.setText(R.string.tap_to_not_complete);
+                tv = (TextView) card.findViewById(R.id.title);
+                tv.setText(R.string.checklist_not_finish);
+            }
         } else {
             card = inflater.inflate(R.layout.categories_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
@@ -70,6 +89,12 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         if (position == 0) {
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+        }
+        if (c.isCategoryCompleted()){
+            LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
+            ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_green));
+            tv = (TextView) card.findViewById(R.id.order);
+            tv.setTextColor(mContext.getResources().getColor(R.color.green));
         }
         return card;
     }

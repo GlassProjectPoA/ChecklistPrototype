@@ -29,7 +29,7 @@ import java.util.ArrayList;
  */
 public class SubCategoriesActivity extends Activity {
 
-    public final static String TAG = "SUBCATEGORIES";
+    private final static String TAG = "SUBCATEGORIES";
     private static final int SET_RATING_DETAIL_CODE = 1652;
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -87,29 +87,29 @@ public class SubCategoriesActivity extends Activity {
                         if (position == maxPositions) {
                             //do nothing
                         } else {
-                            openRatingDetailed();
-                            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                            SubCategoriesActivity.this.openRatingDetailed();
+                            AudioManager am = (AudioManager) SubCategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
                             am.playSoundEffect(Sounds.TAP);
                         }
                         break;
                     case SWIPE_LEFT:
                         Log.e(TAG, "SWIPE_LEFT called.");
-                        animateScroll(false);
+                        SubCategoriesActivity.this.animateScroll(false);
                         return true;
                     case SWIPE_RIGHT:
                         Log.e(TAG, "SWIPE_RIGHT called.");
-                        animateScroll(true);
+                        SubCategoriesActivity.this.animateScroll(true);
                         return true;
                     case SWIPE_DOWN:
                         Log.e(TAG, "SWIPE_DOWN called.");
-                        finish();
+                        SubCategoriesActivity.this.finish();
                         return true;
                     case TWO_SWIPE_LEFT:
                         Log.e(TAG, "TWO_SWIPE_LEFT called.");
                         if (position == maxPositions) {
                             //do nothing
                         } else {
-                            changeRating(false);
+                            SubCategoriesActivity.this.changeRating(false);
                         }
                         return true;
                     case TWO_SWIPE_RIGHT:
@@ -117,7 +117,7 @@ public class SubCategoriesActivity extends Activity {
                         if (position == maxPositions) {
                             //do nothing
                         } else {
-                            changeRating(true);
+                            SubCategoriesActivity.this.changeRating(true);
                         }
                         return true;
                 }

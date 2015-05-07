@@ -15,11 +15,14 @@ import com.medialabamsterdam.checklistprototype.R;
 import java.util.List;
 
 /**
- * Created by Quintas on 14/04/2015.
+ * Created by
+ * Jose Carlos Quintas Junior
+ * juniorquintas@gmail.com
+ * on 14/04/2015.
  */
 public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
-    private List<SubCategory> mCards;
-    private Context mContext;
+    private final List<SubCategory> mCards;
+    private final Context mContext;
 
     public SubCategoryCardScrollAdapter(Context context, List<SubCategory> views) {
         mCards = views;
@@ -66,7 +69,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
         } else {
             card = inflater.inflate(R.layout.rating_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
-            tv.setText(sc.getThisSubCategoryName());
+            tv.setText(sc.getSubCategoryName());
             tv = (TextView) card.findViewById(R.id.category);
             tv.setText(sc.getParentCategoryName());
             int rate = sc.getCurrentRating();

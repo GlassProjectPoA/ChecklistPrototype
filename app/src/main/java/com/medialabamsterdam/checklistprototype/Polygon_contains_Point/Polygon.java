@@ -37,8 +37,8 @@ public class Polygon
 	 */
 	public static class Builder
 	{
-		private List<Point> _vertexes = new ArrayList<Point>();
-		private List<Line> _sides = new ArrayList<Line>();
+		private List<Point> _vertexes = new ArrayList<>();
+		private final List<Line> _sides = new ArrayList<>();
 		private BoundingBox _boundingBox = null;
 
 		private boolean _firstPoint = true;
@@ -57,7 +57,7 @@ public class Polygon
 			if (_isClosed)
 			{
 				// each hole we start with the new array of vertex points
-				_vertexes = new ArrayList<Point>();
+				_vertexes = new ArrayList<>();
 				_isClosed = false;
 			}
 
@@ -106,8 +106,7 @@ public class Polygon
 				_sides.add(new Line(_vertexes.get(_vertexes.size() - 1), _vertexes.get(0)));
 			}
 
-			Polygon polygon = new Polygon(_sides, _boundingBox);
-			return polygon;
+			return new Polygon(_sides, _boundingBox);
 		}
 
 		/**
@@ -244,12 +243,8 @@ public class Polygon
 		// System.out.println("Ray: " + ray.toString() + " ,Side: " + side);
 		// System.out.println("Intersect point: " + intersectPoint.toString());
 
-		if (side.isInside(intersectPoint) && ray.isInside(intersectPoint))
-		{
-			return true;
-		}
+		return side.isInside(intersectPoint) && ray.isInside(intersectPoint);
 
-		return false;
 	}
 
 	/**
@@ -265,8 +260,7 @@ public class Polygon
         double epsilon = (_boundingBox.xMax - _boundingBox.xMin) / 100f;
 		Point outsidePoint = new Point(_boundingBox.xMin - epsilon, _boundingBox.yMin);
 
-		Line vector = new Line(outsidePoint, point);
-		return vector;
+		return new Line(outsidePoint, point);
 	}
 
 	/**
@@ -277,11 +271,7 @@ public class Polygon
 	 */
 	private boolean inBoundingBox(Point point)
 	{
-		if (point.x < _boundingBox.xMin || point.x > _boundingBox.xMax || point.y < _boundingBox.yMin || point.y > _boundingBox.yMax)
-		{
-			return false;
-		}
-		return true;
+		return !(point.x < _boundingBox.xMin || point.x > _boundingBox.xMax || point.y < _boundingBox.yMin || point.y > _boundingBox.yMax);
 	}
 
 	private static class BoundingBox

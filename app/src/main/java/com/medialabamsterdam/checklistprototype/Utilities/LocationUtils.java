@@ -16,19 +16,15 @@ import android.util.Log;
  */
 public class LocationUtils {
 
-    private LocationManager mLocationManager;
-    private Criteria criteria;
-    private String provider;
-    private Context mContext;
+    private final LocationManager mLocationManager;
     private Location mLocation;
     private LocationListener mLocationListener;
 
     public LocationUtils(Context context) {
-        criteria = new Criteria();
+        Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        mContext = context;
-        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        provider = mLocationManager.getBestProvider(criteria, true);
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        String provider = mLocationManager.getBestProvider(criteria, true);
         boolean isEnabled = mLocationManager.isProviderEnabled(provider);
         if (isEnabled) {
             Log.e("SUCCESS:", " GPS is enabled on provider " + provider);

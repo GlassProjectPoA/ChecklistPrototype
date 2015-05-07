@@ -23,33 +23,33 @@ public class Category implements Parcelable {
         }
     };
     private int categoryId;
+    private int categoryByLocationId;
     private String categoryName;
     private boolean categoryRemove;
+    private boolean categoryCompleted;
     private ArrayList subCategories;
-
-    public Category(int categoryId, String categoryName) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.categoryRemove = false;
-    }
 
     public Category(int categoryId, String categoryName, boolean categoryRemove) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.categoryRemove = categoryRemove;
+        this.categoryCompleted = false;
     }
 
-    public Category(int categoryId, String categoryName, boolean categoryRemove, ArrayList subCategories) {
+    public Category(int categoryId, int categoryByLocationId, String categoryName, boolean categoryRemove) {
         this.categoryId = categoryId;
+        this.categoryByLocationId = categoryByLocationId;
         this.categoryName = categoryName;
         this.categoryRemove = categoryRemove;
-        this.subCategories = subCategories;
+        this.categoryCompleted = false;
     }
 
     public Category(Parcel in) {
         this.categoryId = in.readInt();
+        this.categoryByLocationId = in.readInt();
         this.categoryName = in.readString();
         this.categoryRemove = in.readByte()!= 0;
+        this.categoryCompleted = in.readByte()!= 0;
         this.subCategories = in.readArrayList(SubCategory.class.getClassLoader());
     }
 
@@ -87,6 +87,22 @@ public class Category implements Parcelable {
         this.categoryRemove = categoryRemove;
     }
 
+    public boolean isCategoryCompleted() {
+        return categoryCompleted;
+    }
+
+    public void setCategoryCompleted(boolean categoryCompleted) {
+        this.categoryCompleted = categoryCompleted;
+    }
+
+    public int getCategoryByLocationId() {
+        return categoryByLocationId;
+    }
+
+    public void setCategoryByLocationId(int categoryByLocationId) {
+        this.categoryByLocationId = categoryByLocationId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -95,8 +111,10 @@ public class Category implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(categoryId);
+        out.writeInt(categoryByLocationId);
         out.writeString(categoryName);
         out.writeByte((byte) (categoryRemove ? 1 : 0));
+        out.writeByte((byte) (categoryCompleted ? 1 : 0));
         out.writeList(subCategories);
     }
 
@@ -104,8 +122,10 @@ public class Category implements Parcelable {
     public String toString() {
         return "Category{" +
                 "categoryId= " + categoryId +
+                "categoryByLocationId= " + categoryByLocationId +
                 ", categoryName= '" + categoryName + '\'' +
                 ", categoryRemove= " + categoryRemove +
+                ", categoryCompleted= " + categoryCompleted +
                 '}';
     }
 }

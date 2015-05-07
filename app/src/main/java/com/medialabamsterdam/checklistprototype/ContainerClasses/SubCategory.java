@@ -20,17 +20,21 @@ public class SubCategory implements Parcelable {
             return new SubCategory[size];
         }
     };
+
     private int parentCategoryId;
     private String parentCategoryName;
-    private int thisSubCategoryId;
-    private String thisSubCategoryName;
+
+
+    private int subCategoryId;
+    private String subCategoryName;
+    private boolean subCategoryRemove;
     private int currentRating;
 
-    public SubCategory(int parentCategoryId, String parentCategoryName, int thisSubCategoryId, String thisSubCategoryName, int currentRating) {
+    public SubCategory(int parentCategoryId, String parentCategoryName, int subCategoryId, String subCategoryName, int currentRating) {
         this.parentCategoryId = parentCategoryId;
         this.parentCategoryName = parentCategoryName;
-        this.thisSubCategoryId = thisSubCategoryId;
-        this.thisSubCategoryName = thisSubCategoryName;
+        this.subCategoryId = subCategoryId;
+        this.subCategoryName = subCategoryName;
         this.currentRating = currentRating;
     }
 
@@ -38,8 +42,8 @@ public class SubCategory implements Parcelable {
     private SubCategory(Parcel in) {
         parentCategoryId = in.readInt();
         parentCategoryName = in.readString();
-        thisSubCategoryId = in.readInt();
-        thisSubCategoryName = in.readString();
+        subCategoryId = in.readInt();
+        subCategoryName = in.readString();
         currentRating = in.readInt();
     }
 
@@ -63,20 +67,20 @@ public class SubCategory implements Parcelable {
         this.parentCategoryName = parentCategoryName;
     }
 
-    public int getThisSubCategoryId() {
-        return thisSubCategoryId;
+    public int getSubCategoryId() {
+        return subCategoryId;
     }
 
-    public void setThisSubCategoryId(int thisSubCategoryId) {
-        this.thisSubCategoryId = thisSubCategoryId;
+    public void setSubCategoryId(int subCategoryId) {
+        this.subCategoryId = subCategoryId;
     }
 
-    public String getThisSubCategoryName() {
-        return thisSubCategoryName;
+    public String getSubCategoryName() {
+        return subCategoryName;
     }
 
-    public void setThisSubCategoryName(String thisSubCategoryName) {
-        this.thisSubCategoryName = thisSubCategoryName;
+    public void setSubCategoryName(String subCategoryName) {
+        this.subCategoryName = subCategoryName;
     }
 
     public int getCurrentRating() {
@@ -96,8 +100,8 @@ public class SubCategory implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(parentCategoryId);
         out.writeString(parentCategoryName);
-        out.writeInt(thisSubCategoryId);
-        out.writeString(thisSubCategoryName);
+        out.writeInt(subCategoryId);
+        out.writeString(subCategoryName);
         out.writeInt(currentRating);
     }
 }

@@ -87,11 +87,11 @@ public class WarningActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                AudioManager am = (AudioManager) WarningActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
-                        takePicture();
+                        WarningActivity.this.takePicture();
                         am.playSoundEffect(Sounds.TAP);
                         break;
                 }
