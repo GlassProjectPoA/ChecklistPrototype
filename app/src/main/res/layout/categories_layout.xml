@@ -14,9 +14,9 @@
         android:id="@+id/left_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
         android:layout_weight="0"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp">
+        android:orientation="vertical">
 
         <Space
             android:layout_width="20px"
@@ -60,9 +60,9 @@
                 android:id="@+id/order"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:gravity="center"
                 android:text="@string/random_number"
-                android:textSize="40sp"
-                android:gravity="center" />
+                android:textSize="40sp" />
 
         </LinearLayout>
 
@@ -100,9 +100,9 @@
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
         android:layout_weight="0"
-        android:orientation="vertical"
-        android:layout_marginRight="5dp">
+        android:orientation="vertical">
 
         <Space
             android:layout_width="20px"

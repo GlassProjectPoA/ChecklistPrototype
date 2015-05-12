@@ -5,13 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Detail;
-import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.R;
 
 import java.util.ArrayList;
@@ -32,8 +30,8 @@ public class DetailedCardScrollAdapter extends CardScrollAdapter {
         mCards = new ArrayList<>();
         mContext = context;
         mDetail = views;
-        for (int i = 0; i<5; i++) mCards.add(views);
-        Log.d("Check = ", ""+mCards.toString());
+        for (int i = 0; i < 5; i++) mCards.add(views);
+        Log.d("Check = ", "" + mCards.toString());
     }
 
     @Override

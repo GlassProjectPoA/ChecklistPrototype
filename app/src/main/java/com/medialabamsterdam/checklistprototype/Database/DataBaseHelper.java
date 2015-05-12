@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.EventLogTags;
 import android.util.Log;
 
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Area;
@@ -37,8 +36,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DATABASEHELPER";
     private static final String DB_NAME = "CheckListDB";
     private static final int DATABASE_VERSION = 1;
-    private SQLiteDatabase myDataBase;
     private final Context mContext;
+    private SQLiteDatabase myDataBase;
 
     /**
      * Constructor
@@ -52,64 +51,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     //<editor-fold desc="DB creation and management">
-
-    /**
-     * This reads a file from the given Resource-Id and calls every line of it as a SQL-Statement
-     *
-     * @param context    the activity's context.
-     * @param resourceId e.g. R.raw.food_db
-     * @return Number of SQL-Statements run
-     * @throws IOException
-     */
-    private int insertFromFile(Context context, int resourceId, SQLiteDatabase db) throws IOException {
-        // Resetting Counter
-        int result = 0;
-
-        // Open the resource
-        InputStream insertsStream = context.getResources().openRawResource(resourceId);
-        BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
-
-        // Iterate through lines (assuming each insert has its own line and theres no other stuff)
-        while (insertReader.ready()) {
-            Log.d(TAG, "Came here " + result);
-            String insertStmt = insertReader.readLine();
-            db.execSQL(insertStmt);
-            result++;
-            Log.d(TAG, "Rows loaded from file= " + result);
-        }
-        insertReader.close();
-
-        // returning number of inserted rows
-        return result;
-    }
-
-    @Override
-    public synchronized void close() {
-
-        if (myDataBase != null)
-            myDataBase.close();
-
-        super.close();
-
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        DataBaseHelper dbHelper = new DataBaseHelper(mContext);
-        try {
-            int insertCount = dbHelper.insertFromFile(mContext, R.raw.checklist_db, db);
-            Log.d(TAG, "Rows loaded from file= " + insertCount);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Area and Location queries">
 
     /**
      * This function is used to query data from the Area Table, returns all Areas.
@@ -192,9 +133,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return locationList;
     }
-    //</editor-fold>
-
-    //<editor-fold desc="Category queries">
 
     /**
      * Write entries on the Categories_by_Location table based on the Area the Location is in.
@@ -294,7 +232,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
     //</editor-fold>
 
-    //<editor-fold desc="SubCategory queries">
+    //<editor-fold desc="Area and Location queries">
 
     /**
      * Write entries on the SubCategories_by_Location_And_Categories table based on the Category and Location the SubCategory is in.
@@ -390,6 +328,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Category queries">
+
     public static Detail readDetails(Context context, int categoryID, int subCategoryID) {
         Detail detail = new Detail();
         SQLiteDatabase db;
@@ -470,5 +410,64 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return detail;
+    }
+
+    /**
+     * This reads a file from the given Resource-Id and calls every line of it as a SQL-Statement
+     *
+     * @param context    the activity's context.
+     * @param resourceId e.g. R.raw.food_db
+     * @return Number of SQL-Statements run
+     * @throws IOException
+     */
+    private int insertFromFile(Context context, int resourceId, SQLiteDatabase db) throws IOException {
+        // Resetting Counter
+        int result = 0;
+
+        // Open the resource
+        InputStream insertsStream = context.getResources().openRawResource(resourceId);
+        BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
+
+        // Iterate through lines (assuming each insert has its own line and theres no other stuff)
+        while (insertReader.ready()) {
+            Log.d(TAG, "Came here " + result);
+            String insertStmt = insertReader.readLine();
+            db.execSQL(insertStmt);
+            result++;
+            Log.d(TAG, "Rows loaded from file= " + result);
+        }
+        insertReader.close();
+
+        // returning number of inserted rows
+        return result;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="SubCategory queries">
+
+    @Override
+    public synchronized void close() {
+
+        if (myDataBase != null)
+            myDataBase.close();
+
+        super.close();
+
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        DataBaseHelper dbHelper = new DataBaseHelper(mContext);
+        try {
+            int insertCount = dbHelper.insertFromFile(mContext, R.raw.checklist_db, db);
+            Log.d(TAG, "Rows loaded from file= " + insertCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //</editor-fold>
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 }

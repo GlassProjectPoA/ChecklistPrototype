@@ -1,7 +1,6 @@
 package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.google.android.glass.widget.CardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Detail;
 import com.medialabamsterdam.checklistprototype.R;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
-import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
         mCards = new ArrayList<>();
         mContext = context;
         mDetail = views;
-        for (int i = 0; i<5; i++) mCards.add(views);
+        for (int i = 0; i < 5; i++) mCards.add(views);
         Log.d("Check = ", "" + mCards.toString());
     }
 
@@ -71,14 +69,14 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
         String rating1;
         String rating2 = null;
 
-        if (Constants.LOAD_ALTERNATE_LANGUAGE){
+        if (Constants.LOAD_ALTERNATE_LANGUAGE) {
             title1 = mDetail.getTitle_1_nl();
             rating1 = mDetail.getRating_1_nl()[position];
             if (mDetail.getTitle_2_nl() != null) {
                 title2 = mDetail.getTitle_2_nl();
                 rating2 = mDetail.getRating_2_nl()[position];
             }
-        }else{
+        } else {
             title1 = mDetail.getTitle_1();
             rating1 = mDetail.getRating_1()[position];
             if (mDetail.getTitle_2() != null) {
@@ -126,13 +124,13 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
         tv.setText(rating1);
         tv.setTextColor(color);
 
-        if (title2 != null && rating2 != null){
+        if (title2 != null && rating2 != null) {
             tv = (TextView) card.findViewById(R.id.title_text_2);
             tv.setText(title2);
             tv = (TextView) card.findViewById(R.id.rating_text_2);
             tv.setText(rating2);
             tv.setTextColor(color);
-        }else{
+        } else {
             tv = (TextView) card.findViewById(R.id.title_text_2);
             tv.setVisibility(View.GONE);
             tv = (TextView) card.findViewById(R.id.rating_text_2);

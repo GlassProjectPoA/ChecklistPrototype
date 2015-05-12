@@ -3,8 +3,6 @@ package com.medialabamsterdam.checklistprototype.ContainerClasses;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 /**
  * Created by
  * Jose Carlos Quintas Junior
@@ -22,77 +20,61 @@ public class Category implements Parcelable {
             return new Category[size];
         }
     };
-    private int categoryId;
+    private int id;
     private int categoryByLocationId;
-    private String categoryName;
-    private boolean categoryRemove;
-    private boolean categoryCompleted;
-    private ArrayList subCategories;
+    private String name;
+    private boolean remove;
+    private boolean completed;
 
-    public Category(int categoryId, String categoryName, boolean categoryRemove) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.categoryRemove = categoryRemove;
-        this.categoryCompleted = false;
-    }
-
-    public Category(int categoryId, int categoryByLocationId, String categoryName, boolean categoryRemove) {
-        this.categoryId = categoryId;
+    public Category(int id, int categoryByLocationId, String name, boolean remove) {
+        this.id = id;
         this.categoryByLocationId = categoryByLocationId;
-        this.categoryName = categoryName;
-        this.categoryRemove = categoryRemove;
-        this.categoryCompleted = false;
+        this.name = name;
+        this.remove = remove;
+        this.completed = false;
     }
 
     public Category(Parcel in) {
-        this.categoryId = in.readInt();
+        this.id = in.readInt();
         this.categoryByLocationId = in.readInt();
-        this.categoryName = in.readString();
-        this.categoryRemove = in.readByte()!= 0;
-        this.categoryCompleted = in.readByte()!= 0;
-        this.subCategories = in.readArrayList(SubCategory.class.getClassLoader());
+        this.name = in.readString();
+        this.remove = in.readByte() != 0;
+        this.completed = in.readByte() != 0;
     }
 
-    public Category(){}
-
-    public int getCategoryId() {
-        return categoryId;
+    public Category() {
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public int getId() {
+        return id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public String getName() {
+        return name;
     }
 
-    public ArrayList getSubCategories() {
-        return subCategories;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setSubCategories(ArrayList subCategories) {
-        this.subCategories = subCategories;
+    public boolean isRemove() {
+        return remove;
     }
 
-    public boolean isCategoryRemove() {
-        return categoryRemove;
+    public void setRemove(boolean remove) {
+        this.remove = remove;
     }
 
-    public void setCategoryRemove(boolean categoryRemove) {
-        this.categoryRemove = categoryRemove;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public boolean isCategoryCompleted() {
-        return categoryCompleted;
-    }
-
-    public void setCategoryCompleted(boolean categoryCompleted) {
-        this.categoryCompleted = categoryCompleted;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public int getCategoryByLocationId() {
@@ -110,22 +92,21 @@ public class Category implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(categoryId);
+        out.writeInt(id);
         out.writeInt(categoryByLocationId);
-        out.writeString(categoryName);
-        out.writeByte((byte) (categoryRemove ? 1 : 0));
-        out.writeByte((byte) (categoryCompleted ? 1 : 0));
-        out.writeList(subCategories);
+        out.writeString(name);
+        out.writeByte((byte) (remove ? 1 : 0));
+        out.writeByte((byte) (completed ? 1 : 0));
     }
 
     @Override
     public String toString() {
         return "Category{ " +
-                "categoryId= " + categoryId +
+                "id= " + id +
                 ", categoryByLocationId= " + categoryByLocationId +
-                ", categoryName= '" + categoryName + '\'' +
-                ", categoryRemove= " + categoryRemove +
-                ", categoryCompleted= " + categoryCompleted +
+                ", name= '" + name + '\'' +
+                ", remove= " + remove +
+                ", completed= " + completed +
                 '}';
     }
 }

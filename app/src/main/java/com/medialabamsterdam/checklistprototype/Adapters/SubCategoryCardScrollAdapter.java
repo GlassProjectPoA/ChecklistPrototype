@@ -66,15 +66,15 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             tv.setText(R.string.tap_to_save);
             tv = (TextView) card.findViewById(R.id.title);
             tv.setText(R.string.category_finish);
-            ImageView iv = (ImageView)card.findViewById(R.id.check);
+            ImageView iv = (ImageView) card.findViewById(R.id.check);
             iv.setImageResource(R.drawable.check_blue);
         } else {
             card = inflater.inflate(R.layout.subcategory_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
-            tv.setText(sc.getSubCategoryName());
+            tv.setText(sc.getName());
             tv = (TextView) card.findViewById(R.id.category);
             tv.setText(mParentCategoryName);
-            int rate = sc.getCurrentRating();
+            int rate = sc.getRating();
             switch (rate) {
                 case -1:
                     break;

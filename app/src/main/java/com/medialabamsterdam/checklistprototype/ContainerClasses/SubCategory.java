@@ -21,69 +21,70 @@ public class SubCategory implements Parcelable {
         }
     };
 
-    private int parentCategoryId;
-    private int subCategoryId;
-    private String subCategoryName;
-    private boolean subCategoryRemove;
-    private int currentRating;
+    private int parentId;
+    private int id;
+    private String name;
+    private boolean remove;
+    private int rating;
 
 
     private SubCategory(Parcel in) {
-        parentCategoryId = in.readInt();
-        subCategoryId = in.readInt();
-        subCategoryName = in.readString();
-        subCategoryRemove = in.readByte()!= 0;
-        currentRating = in.readInt();
+        parentId = in.readInt();
+        id = in.readInt();
+        name = in.readString();
+        remove = in.readByte() != 0;
+        rating = in.readInt();
     }
 
-    public SubCategory() {}
-
-    public SubCategory(int parentCategoryId, int subCategoryId, String subCategoryName, boolean subCategoryRemove) {
-        this.parentCategoryId = parentCategoryId;
-        this.subCategoryId = subCategoryId;
-        this.subCategoryName = subCategoryName;
-        this.subCategoryRemove = subCategoryRemove;
-        this.currentRating = 0;
+    public SubCategory() {
     }
 
-    public int getParentCategoryId() {
-        return parentCategoryId;
+    public SubCategory(int parentId, int id, String name, boolean remove) {
+        this.parentId = parentId;
+        this.id = id;
+        this.name = name;
+        this.remove = remove;
+        this.rating = 0;
     }
 
-    public void setParentCategoryId(int parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
+    public int getParentId() {
+        return parentId;
     }
 
-    public int getSubCategoryId() {
-        return subCategoryId;
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
     }
 
-    public void setSubCategoryId(int subCategoryId) {
-        this.subCategoryId = subCategoryId;
+    public int getId() {
+        return id;
     }
 
-    public String getSubCategoryName() {
-        return subCategoryName;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setSubCategoryName(String subCategoryName) {
-        this.subCategoryName = subCategoryName;
+    public String getName() {
+        return name;
     }
 
-    public int getCurrentRating() {
-        return currentRating;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setCurrentRating(int currentRating) {
-        this.currentRating = currentRating;
+    public int getRating() {
+        return rating;
     }
 
-    public boolean isSubCategoryRemove() {
-        return subCategoryRemove;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
-    public void setSubCategoryRemove(boolean subCategoryRemove) {
-        this.subCategoryRemove = subCategoryRemove;
+    public boolean isRemove() {
+        return remove;
+    }
+
+    public void setRemove(boolean remove) {
+        this.remove = remove;
     }
 
     @Override
@@ -93,21 +94,21 @@ public class SubCategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(parentCategoryId);
-        out.writeInt(subCategoryId);
-        out.writeString(subCategoryName);
-        out.writeByte((byte) (subCategoryRemove ? 1 : 0));
-        out.writeInt(currentRating);
+        out.writeInt(parentId);
+        out.writeInt(id);
+        out.writeString(name);
+        out.writeByte((byte) (remove ? 1 : 0));
+        out.writeInt(rating);
     }
 
     @Override
     public String toString() {
         return "SubCategory{ " +
-                ", ParentCategoryId=" + parentCategoryId +
-                ", subCategoryId=" + subCategoryId +
-                ", subCategoryName='" + subCategoryName + '\'' +
-                ", currentRating=" + currentRating +
-                ", subCategoryRemove=" + subCategoryRemove +
+                ", parentId=" + parentId +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", rating=" + rating +
+                ", remove=" + remove +
                 '}';
     }
 }

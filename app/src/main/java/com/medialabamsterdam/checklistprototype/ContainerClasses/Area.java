@@ -20,39 +20,39 @@ public class Area implements Parcelable {
             return new Area[size];
         }
     };
-    private int areaId;
-    private String areaName;
+    private int id;
+    private String name;
     private String topLeft;
     private String botRight;
 
-    public Area(int areaId, String areaName, String topLeft, String botRight) {
-        this.areaId = areaId;
-        this.areaName = areaName;
+    public Area(int id, String name, String topLeft, String botRight) {
+        this.id = id;
+        this.name = name;
         this.topLeft = topLeft;
         this.botRight = botRight;
     }
 
     private Area(Parcel in) {
-        this.areaId = in.readInt();
-        this.areaName = in.readString();
+        this.id = in.readInt();
+        this.name = in.readString();
         this.topLeft = in.readString();
         this.botRight = in.readString();
     }
 
-    public int getAreaId() {
-        return areaId;
+    public int getId() {
+        return id;
     }
 
-    public void setAreaId(int areaId) {
-        this.areaId = areaId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getAreaName() {
-        return areaName;
+    public String getName() {
+        return name;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBotRight() {
@@ -78,16 +78,16 @@ public class Area implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(areaId);
-        out.writeString(areaName);
+        out.writeInt(id);
+        out.writeString(name);
         out.writeString(topLeft);
         out.writeString(botRight);
     }
 
     @Override
-    public String toString(){
-        return "ID: " + getAreaId() +
-                "\nNAME: " + getAreaName() +
+    public String toString() {
+        return "\nID: " + getId() +
+                "\nNAME: " + getName() +
                 "\nTOP_L: " + getTopLeft() +
                 "\nBOT_R: " + getBotRight();
     }

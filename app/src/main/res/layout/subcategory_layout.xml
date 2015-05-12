@@ -14,11 +14,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/left_arrow"
@@ -46,8 +46,8 @@
             android:layout_weight="1"
             android:gravity="center_vertical|right"
             android:text="@string/right_arrow"
-            android:textSize="45sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="45sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,10 +80,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:background="@color/green"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -107,10 +107,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:background="@color/green"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -134,10 +134,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:background="@color/yellow"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -161,10 +161,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:background="@color/orange"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -188,10 +188,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:background="@color/red"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp" />
+                android:visibility="invisible" />
 
         </LinearLayout>
     </LinearLayout>

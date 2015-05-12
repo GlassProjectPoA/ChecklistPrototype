@@ -59,8 +59,8 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         TextView tv;
         int completion = 0;
         Category c = mCards.get(position);
-        for (Category category : mCards){
-            if (category.isCategoryCompleted()) completion++;
+        for (Category category : mCards) {
+            if (category.isCompleted()) completion++;
         }
         if (position == mCards.size() - 1) {
             //Create Check card at the end of the array
@@ -82,7 +82,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         } else {
             card = inflater.inflate(R.layout.categories_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
-            tv.setText(c.getCategoryName());
+            tv.setText(c.getName());
             tv = (TextView) card.findViewById(R.id.order);
             tv.setText(Integer.toString(position + 1));
         }
@@ -90,7 +90,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
         }
-        if (c.isCategoryCompleted()){
+        if (c.isCompleted()) {
             LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
             ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_green));
             tv = (TextView) card.findViewById(R.id.order);

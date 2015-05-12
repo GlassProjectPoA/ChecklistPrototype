@@ -14,9 +14,9 @@
         android:id="@+id/left_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
         android:layout_weight="0"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/left_arrow"
@@ -39,35 +39,35 @@
 
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="@string/checklist_finish"
-            android:id="@+id/title"
             android:layout_weight="3"
             android:gravity="center_vertical|center_horizontal"
+            android:text="@string/checklist_finish"
             android:textSize="25sp" />
 
         <ProgressBar
+            android:id="@+id/pictureProcessBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/pictureProcessBar"
-            android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_margin="30dp"
-            android:visibility="gone"
+            android:layout_weight="1"
             android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/progress_bar_yellow"/>
+            android:indeterminateDrawable="@drawable/progress_bar_yellow"
+            android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/check"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/check"
-            android:src="@drawable/upload"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="center"
-            android:layout_gravity="center"
+            android:src="@drawable/upload"
             android:tint="@color/green" />
 
         <TextView
@@ -75,12 +75,12 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="3"
             android:ellipsize="end"
+            android:gravity="center_horizontal"
             android:singleLine="true"
             android:text="@string/tap_to_send"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_weight="3"
-            android:gravity="center_horizontal"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -89,9 +89,9 @@
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
         android:layout_weight="0"
-        android:orientation="vertical"
-        android:layout_marginRight="5dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/right_arrow"

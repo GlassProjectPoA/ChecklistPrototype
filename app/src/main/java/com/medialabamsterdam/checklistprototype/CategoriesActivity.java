@@ -85,7 +85,7 @@ public class CategoriesActivity extends Activity {
                 int maxPositions = mAdapter.getCount() - 1;
                 int completion = 0;
                 for (Category category : mCategories) {
-                    if (category.isCategoryCompleted()) completion++;
+                    if (category.isCompleted()) completion++;
                 }
                 AudioManager am = (AudioManager) CategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
@@ -97,7 +97,7 @@ public class CategoriesActivity extends Activity {
                             } else {
                                 int i = 0;
                                 for (Category category : mCategories) {
-                                    if (!category.isCategoryCompleted()) {
+                                    if (!category.isCompleted()) {
                                         mCardScroller.setSelection(i);
                                         break;
                                     }
@@ -134,17 +134,17 @@ public class CategoriesActivity extends Activity {
     //endregion
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
             sendData(data.getStringExtra(Constants.EXTRA_PICTURE));
         }
         if (requestCode == SUBCATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
             ArrayList<SubCategory> sc = data.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
-            sc.remove(sc.size()-1);
+            sc.remove(sc.size() - 1);
             Category c = data.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
-            for (int i = 0; i<mCategories.size(); i++){
-                if (mCategories.get(i).getCategoryId() == c.getCategoryId()){
-                    mCategories.get(i).setCategoryCompleted(c.isCategoryCompleted());
+            for (int i = 0; i < mCategories.size(); i++) {
+                if (mCategories.get(i).getId() == c.getId()) {
+                    mCategories.get(i).setCompleted(c.isCompleted());
                 }
             }
 
@@ -152,22 +152,22 @@ public class CategoriesActivity extends Activity {
                 boolean hasInstance = false;
                 for (int i = 0; i < mSubCategories.size(); i++) {
                     for (int j = 0; j < sc.size(); j++) {
-                        if (mSubCategories.get(i).getParentCategoryId() == sc.get(j).getParentCategoryId() &&
-                                mSubCategories.get(i).getSubCategoryId() == sc.get(j).getSubCategoryId()) {
-                            mSubCategories.get(i).setCurrentRating(sc.get(j).getCurrentRating());
+                        if (mSubCategories.get(i).getParentId() == sc.get(j).getParentId() &&
+                                mSubCategories.get(i).getId() == sc.get(j).getId()) {
+                            mSubCategories.get(i).setRating(sc.get(j).getRating());
                             hasInstance = true;
                         }
                     }
                 }
-                if (!hasInstance){
-                    for (SubCategory subCategory : sc){
+                if (!hasInstance) {
+                    for (SubCategory subCategory : sc) {
                         mSubCategories.add(subCategory);
                     }
                 }
             } else {
                 mSubCategories = sc;
             }
-            for (SubCategory subc : mSubCategories){
+            for (SubCategory subc : mSubCategories) {
                 Log.d(TAG, subc.toString());
             }
             mAdapter.notifyDataSetChanged();
@@ -186,14 +186,14 @@ public class CategoriesActivity extends Activity {
     }
 
     private void sendData(String picturePath) {
-        if(picturePath == null){
+        if (picturePath == null) {
             //TODO send data without picture
             Log.d(TAG, "null");
-        }else{
+        } else {
             //TODO send data with picture
-            TextView tv = (TextView)mCardScroller.getSelectedView().findViewById(R.id.title);
+            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
             tv.setText(R.string.upload_list);
-            tv = (TextView)mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
             tv.setText(R.string.please_wait);
             mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
             ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar);
@@ -216,13 +216,13 @@ public class CategoriesActivity extends Activity {
         Intent intent = new Intent(this, SubCategoriesActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         ArrayList<SubCategory> subCategories = new ArrayList<>();
-        if (mSubCategories != null){
-            for (SubCategory sc : mSubCategories){
-                if (sc.getParentCategoryId() == mCategories.get(position).getCategoryId()){
+        if (mSubCategories != null) {
+            for (SubCategory sc : mSubCategories) {
+                if (sc.getParentId() == mCategories.get(position).getId()) {
                     subCategories.add(sc);
                 }
             }
-            if (subCategories.size() != 0){
+            if (subCategories.size() != 0) {
                 intent.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, subCategories);
             }
         }

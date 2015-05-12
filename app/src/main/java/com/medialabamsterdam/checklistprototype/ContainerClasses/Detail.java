@@ -53,7 +53,8 @@ public class Detail {
         this.rating_3_nl = rating_3_nl;
     }
 
-    public Detail(){}
+    public Detail() {
+    }
 
     public int getId() {
         return id;

@@ -8,8 +8,6 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -124,8 +122,8 @@ public class MainActivity extends Activity {
                     .addVertex(botRight)
                     .build();
             if (polygon.contains(point)) {
-                areaIndex = area.getAreaId();
-                tv.setText(area.getAreaName());
+                areaIndex = area.getId();
+                tv.setText(area.getName());
                 return findLocation(point);
             }
         }
@@ -152,7 +150,7 @@ public class MainActivity extends Activity {
 
             if (polygon.contains(point)) {
                 locationIndex = locations.getLocationId();
-                tv.setText(locations.getLocationName());
+                tv.setText(locations.getName());
                 mCategories = DataBaseHelper.readCategory(this, areaIndex, locationIndex);
                 return true;
             }

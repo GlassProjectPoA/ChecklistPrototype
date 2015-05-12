@@ -3,8 +3,6 @@ package com.medialabamsterdam.checklistprototype.ContainerClasses;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 /**
  * Created by
  * Jose Carlos Quintas Junior
@@ -23,41 +21,28 @@ public class Locations implements Parcelable {
         }
     };
     private int locationId;
-    private String locationName;
+    private String name;
     private String topRight;
     private String topLeft;
     private String botLeft;
     private String botRight;
-    private ArrayList categories;
 
-    public Locations(int locationId, String locationName, String topRight, String topLeft, String botLeft, String botRight) {
+    public Locations(int locationId, String name, String topRight, String topLeft, String botLeft, String botRight) {
         this.locationId = locationId;
-        this.locationName = locationName;
+        this.name = name;
         this.topRight = topRight;
         this.topLeft = topLeft;
         this.botLeft = botLeft;
         this.botRight = botRight;
-    }
-
-    public Locations(int locationId, String locationName, String topRight, String topLeft, String botLeft, String botRight, ArrayList categories) {
-        this.locationId = locationId;
-        this.locationName = locationName;
-        this.topRight = topRight;
-        this.topLeft = topLeft;
-        this.botLeft = botLeft;
-        this.botRight = botRight;
-        this.categories = categories;
     }
 
     private Locations(Parcel in) {
         this.locationId = in.readInt();
-        this.locationName = in.readString();
+        this.name = in.readString();
         this.topRight = in.readString();
         this.topLeft = in.readString();
         this.botLeft = in.readString();
         this.botRight = in.readString();
-        this.categories = in.readArrayList(Category.class.getClassLoader());
-
     }
 
     //<editor-fold desc="Getters and Setters">
@@ -69,12 +54,12 @@ public class Locations implements Parcelable {
         this.locationId = locationId;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public String getName() {
+        return name;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTopRight() {
@@ -108,14 +93,6 @@ public class Locations implements Parcelable {
     public void setBotRight(String botRight) {
         this.botRight = botRight;
     }
-
-    public ArrayList getCategories() {
-        return categories;
-    }
-
-    public void setCategories(ArrayList categories) {
-        this.categories = categories;
-    }
     //</editor-fold>
 
     @Override
@@ -126,11 +103,10 @@ public class Locations implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(locationId);
-        out.writeString(locationName);
+        out.writeString(name);
         out.writeString(topRight);
         out.writeString(topLeft);
         out.writeString(botLeft);
         out.writeString(botRight);
-        out.writeList(categories);
     }
 }

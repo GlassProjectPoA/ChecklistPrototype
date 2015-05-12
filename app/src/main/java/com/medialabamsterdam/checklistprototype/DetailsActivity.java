@@ -18,8 +18,6 @@ import com.medialabamsterdam.checklistprototype.ContainerClasses.Detail;
 import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
-import java.util.ArrayList;
-
 /**
  * Created by
  * Jose Carlos Quintas Junior

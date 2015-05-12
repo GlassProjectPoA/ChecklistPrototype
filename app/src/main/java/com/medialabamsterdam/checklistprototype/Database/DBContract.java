@@ -11,7 +11,8 @@ import android.provider.BaseColumns;
 class DBContract {
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    public DBContract() {}
+    public DBContract() {
+    }
 
     /* Inner class that defines the table contents */
     public static abstract class Area implements BaseColumns {

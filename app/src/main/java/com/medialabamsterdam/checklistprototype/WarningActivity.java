@@ -63,7 +63,7 @@ public class WarningActivity extends Activity {
         mCardScroller.setHorizontalScrollBarEnabled(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        spinner = (ProgressBar)mCards.get(1).findViewById(R.id.pictureProcessBar);
+        spinner = (ProgressBar) mCards.get(1).findViewById(R.id.pictureProcessBar);
     }
 
     @Override

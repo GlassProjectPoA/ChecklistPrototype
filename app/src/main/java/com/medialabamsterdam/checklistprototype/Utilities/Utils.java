@@ -128,7 +128,7 @@ public class Utils {
      * @param string a String formatted as "52.3588929,4.9081412"
      * @return a Point object.
      */
-    public static Point stringToPoint (String string){
+    public static Point stringToPoint(String string) {
         String[] strArray = string.split(",");
         return new Point(Double.parseDouble(strArray[0]), Double.parseDouble(strArray[1]));
     }

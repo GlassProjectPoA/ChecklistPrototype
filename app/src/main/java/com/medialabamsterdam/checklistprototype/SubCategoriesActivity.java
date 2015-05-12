@@ -51,13 +51,13 @@ public class SubCategoriesActivity extends Activity {
         if (i.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
             mSubCategories = i.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         } else if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
-            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getCategoryId(), mCategory.getCategoryByLocationId()));
+            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getId(), mCategory.getCategoryByLocationId()));
         } else {
             mSubCategories = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
         }
 
         mCardScroller = new CardScrollView(this);
-        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, mCategory.getCategoryName());
+        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, mCategory.getName());
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mCardScroller.activate();
@@ -94,7 +94,7 @@ public class SubCategoriesActivity extends Activity {
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
                             Intent result = new Intent();
-                            mCategory.setCategoryCompleted(true);
+                            mCategory.setCompleted(true);
                             result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
                             result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
                             setResult(Activity.RESULT_OK, result);
@@ -148,11 +148,11 @@ public class SubCategoriesActivity extends Activity {
 
     private void changeRating(boolean right) {
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCategories.get(position).getCurrentRating();
+        int rating = mSubCategories.get(position).getRating();
         if (right && rating <= 3) {
-            mSubCategories.get(position).setCurrentRating(rating + 1);
+            mSubCategories.get(position).setRating(rating + 1);
         } else if (!right && rating >= 0) {
-            mSubCategories.get(position).setCurrentRating(rating - 1);
+            mSubCategories.get(position).setRating(rating - 1);
         }
 
         mAdapter.notifyDataSetChanged();
@@ -225,9 +225,9 @@ public class SubCategoriesActivity extends Activity {
     private void openRatingDetailed() {
         Intent intent = new Intent(this, DetailsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCategories.get(position).getCurrentRating();
-        int categoryId = mSubCategories.get(position).getParentCategoryId();
-        int subCategoryId = mSubCategories.get(position).getSubCategoryId();
+        int rating = mSubCategories.get(position).getRating();
+        int categoryId = mSubCategories.get(position).getParentId();
+        int subCategoryId = mSubCategories.get(position).getId();
         intent.putExtra(Constants.EXTRA_POSITION, position);
         intent.putExtra(Constants.EXTRA_RATING, rating);
         intent.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
@@ -240,7 +240,7 @@ public class SubCategoriesActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 int position = data.getIntExtra(Constants.EXTRA_POSITION, 1);
                 int rating = data.getIntExtra(Constants.EXTRA_RATING_DETAIL, 0);
-                mSubCategories.get(position).setCurrentRating(rating);
+                mSubCategories.get(position).setRating(rating);
                 mCardScroller.setSelection(position);
                 mAdapter.notifyDataSetChanged();
             }
