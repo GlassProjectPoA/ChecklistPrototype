@@ -22,33 +22,28 @@ public class SubCategory implements Parcelable {
     };
 
     private int parentCategoryId;
-    private String parentCategoryName;
-
-
     private int subCategoryId;
     private String subCategoryName;
     private boolean subCategoryRemove;
     private int currentRating;
 
-    public SubCategory(int parentCategoryId, String parentCategoryName, int subCategoryId, String subCategoryName, int currentRating) {
-        this.parentCategoryId = parentCategoryId;
-        this.parentCategoryName = parentCategoryName;
-        this.subCategoryId = subCategoryId;
-        this.subCategoryName = subCategoryName;
-        this.currentRating = currentRating;
-    }
-
 
     private SubCategory(Parcel in) {
         parentCategoryId = in.readInt();
-        parentCategoryName = in.readString();
         subCategoryId = in.readInt();
         subCategoryName = in.readString();
+        subCategoryRemove = in.readByte()!= 0;
         currentRating = in.readInt();
     }
 
-    public SubCategory() {
+    public SubCategory() {}
 
+    public SubCategory(int parentCategoryId, int subCategoryId, String subCategoryName, boolean subCategoryRemove) {
+        this.parentCategoryId = parentCategoryId;
+        this.subCategoryId = subCategoryId;
+        this.subCategoryName = subCategoryName;
+        this.subCategoryRemove = subCategoryRemove;
+        this.currentRating = 0;
     }
 
     public int getParentCategoryId() {
@@ -57,14 +52,6 @@ public class SubCategory implements Parcelable {
 
     public void setParentCategoryId(int parentCategoryId) {
         this.parentCategoryId = parentCategoryId;
-    }
-
-    public String getParentCategoryName() {
-        return parentCategoryName;
-    }
-
-    public void setParentCategoryName(String parentCategoryName) {
-        this.parentCategoryName = parentCategoryName;
     }
 
     public int getSubCategoryId() {
@@ -91,6 +78,14 @@ public class SubCategory implements Parcelable {
         this.currentRating = currentRating;
     }
 
+    public boolean isSubCategoryRemove() {
+        return subCategoryRemove;
+    }
+
+    public void setSubCategoryRemove(boolean subCategoryRemove) {
+        this.subCategoryRemove = subCategoryRemove;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -99,9 +94,19 @@ public class SubCategory implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(parentCategoryId);
-        out.writeString(parentCategoryName);
         out.writeInt(subCategoryId);
         out.writeString(subCategoryName);
+        out.writeByte((byte) (subCategoryRemove ? 1 : 0));
         out.writeInt(currentRating);
+    }
+
+    @Override
+    public String toString() {
+        return "SubCategory{ " +
+                "subCategoryId=" + subCategoryId +
+                ", subCategoryName='" + subCategoryName + '\'' +
+                ", currentRating=" + currentRating +
+                ", subCategoryRemove=" + subCategoryRemove +
+                '}';
     }
 }

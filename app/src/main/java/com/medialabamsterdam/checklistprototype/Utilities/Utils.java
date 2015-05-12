@@ -26,6 +26,7 @@ public class Utils {
      * @return String[], containing the separated strings.
      */
     public static String[] stringToArray(String string, String separator) {
+        if (string == null) return null;
         if (string.contains(separator)) {
             //string = string.replace("[", "").replace("]","");
             return string.split(separator);

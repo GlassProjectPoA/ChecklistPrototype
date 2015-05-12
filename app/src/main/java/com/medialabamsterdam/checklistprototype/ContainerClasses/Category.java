@@ -120,9 +120,9 @@ public class Category implements Parcelable {
 
     @Override
     public String toString() {
-        return "Category{" +
+        return "Category{ " +
                 "categoryId= " + categoryId +
-                "categoryByLocationId= " + categoryByLocationId +
+                ", categoryByLocationId= " + categoryByLocationId +
                 ", categoryName= '" + categoryName + '\'' +
                 ", categoryRemove= " + categoryRemove +
                 ", categoryCompleted= " + categoryCompleted +

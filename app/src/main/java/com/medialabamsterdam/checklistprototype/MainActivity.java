@@ -184,7 +184,6 @@ public class MainActivity extends Activity {
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                Log.e(TAG, "gesture = " + gesture);
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:

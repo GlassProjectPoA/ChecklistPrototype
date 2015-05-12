@@ -23,10 +23,12 @@ import java.util.List;
 public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
     private final List<SubCategory> mCards;
     private final Context mContext;
+    private final String mParentCategoryName;
 
-    public SubCategoryCardScrollAdapter(Context context, List<SubCategory> views) {
+    public SubCategoryCardScrollAdapter(Context context, List<SubCategory> views, String parentCategoryName) {
         mCards = views;
         mContext = context;
+        mParentCategoryName = parentCategoryName;
         mCards.add(new SubCategory());
     }
 
@@ -71,7 +73,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             tv = (TextView) card.findViewById(R.id.category_title);
             tv.setText(sc.getSubCategoryName());
             tv = (TextView) card.findViewById(R.id.category);
-            tv.setText(sc.getParentCategoryName());
+            tv.setText(mParentCategoryName);
             int rate = sc.getCurrentRating();
             switch (rate) {
                 case -1:
@@ -104,21 +106,10 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             }
         }
 
-        /*if(position == 0 && mCards.size() == 1){
-            tv = (TextView) card.findViewById(R.id.left_arrow);
-            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-            tv = (TextView) card.findViewById(R.id.right_arrow);
-            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        } else*/
         if (position == 0) {
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        } /*else if (position == mCards.size()-1){
-            tv = (TextView) card.findViewById(R.id.right_arrow);
-            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
-        }*/
-
+        }
         return card;
     }
-
 }

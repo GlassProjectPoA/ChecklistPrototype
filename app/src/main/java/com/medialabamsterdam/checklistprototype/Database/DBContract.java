@@ -44,8 +44,8 @@ class DBContract {
 
     public static abstract class Details implements BaseColumns {
         public static final String TABLE_NAME = "Details";
-        public static final String COLUMN_DESCRIPTION = "Name";
-        public static final String COLUMN_DETAILS = "Details";
+        public static final String COLUMN_DESCRIPTION = "Description";
+        public static final String COLUMN_DETAILS = "Detail";
         public static final String COLUMN_TITLE_1 = "Title_1";
         public static final String COLUMN_RATING_1 = "Rating_1";
         public static final String COLUMN_TITLE_2 = "Title_2";
@@ -53,8 +53,8 @@ class DBContract {
         public static final String COLUMN_TITLE_3 = "Title_3";
         public static final String COLUMN_RATING_3 = "Rating_3";
 
-        public static final String COLUMN_DESCRIPTION_NL = "Name_nl";
-        public static final String COLUMN_DETAILS_NL = "Details_nl";
+        public static final String COLUMN_DESCRIPTION_NL = "Description_nl";
+        public static final String COLUMN_DETAILS_NL = "Detail_nl";
         public static final String COLUMN_TITLE_1_NL = "Title_1_nl";
         public static final String COLUMN_RATING_1_NL = "Rating_1_nl";
         public static final String COLUMN_TITLE_2_NL = "Title_2_nl";
@@ -67,6 +67,12 @@ class DBContract {
         public static final String TABLE_NAME = "Locations_by_Area";
         public static final String COLUMN_LOCATION_ID = "Location_id";
         public static final String COLUMN_AREA_ID = "Area_id";
+    }
+
+    public static abstract class DetailsBySubCat implements BaseColumns {
+        public static final String TABLE_NAME = "Details_by_SubCategory";
+        public static final String COLUMN_DETAIL_ID = "Detail_id";
+        public static final String COLUMN_SUBCATEGORYBYCATEGORY_ID = "SubCategoryByCategory_id";
     }
 
     public static abstract class SubCatByCat implements BaseColumns {

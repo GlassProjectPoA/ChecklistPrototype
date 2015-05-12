@@ -2,7 +2,8 @@ package com.medialabamsterdam.checklistprototype;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;import android.media.AudioManager;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,9 +16,10 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
 import com.medialabamsterdam.checklistprototype.Adapters.SubCategoryCardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
+import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
-import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
 
@@ -33,8 +35,9 @@ public class SubCategoriesActivity extends Activity {
     private static final int SET_RATING_DETAIL_CODE = 1652;
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
-    private ArrayList<SubCategory> mSubCatViews;
+    private ArrayList<SubCategory> mSubCategories;
     private SubCategoryCardScrollAdapter mAdapter;
+    private Category mCategory;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -42,14 +45,19 @@ public class SubCategoriesActivity extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
-            createCards();
+        Intent i = getIntent();
+        mCategory = i.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+
+        if (i.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
+            mSubCategories = i.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
+        } else if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
+            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getCategoryId(), mCategory.getCategoryByLocationId()));
         } else {
-            mSubCatViews = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
+            mSubCategories = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
         }
 
         mCardScroller = new CardScrollView(this);
-        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCatViews);
+        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, mCategory.getCategoryName());
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mCardScroller.activate();
@@ -78,17 +86,22 @@ public class SubCategoriesActivity extends Activity {
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                Log.e(TAG, "gesture = " + gesture);
+                AudioManager am = (AudioManager) SubCategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 int position = mCardScroller.getSelectedItemPosition();
                 int maxPositions = mAdapter.getCount() - 1;
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
-                            //do nothing
+                            Intent result = new Intent();
+                            mCategory.setCategoryCompleted(true);
+                            result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
+                            result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+                            setResult(Activity.RESULT_OK, result);
+                            am.playSoundEffect(Sounds.DISALLOWED);
+                            finish();
                         } else {
                             SubCategoriesActivity.this.openRatingDetailed();
-                            AudioManager am = (AudioManager) SubCategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
                             am.playSoundEffect(Sounds.TAP);
                         }
                         break;
@@ -133,27 +146,13 @@ public class SubCategoriesActivity extends Activity {
     }
     //endregion
 
-    private void createCards() {
-        mSubCatViews = new ArrayList<>();
-        Intent intent = getIntent();
-        int position = intent.getIntExtra(Constants.EXTRA_POSITION, 404);
-        String[] problems = getResources().getStringArray(Utils.getResourceId(this, "problems_" + position, "array", getPackageName()));
-        String[] categories = getResources().getStringArray(R.array.categories_list);
-        int index = 0;
-        for (String str : problems) {
-            SubCategory subCategory = new SubCategory(position, categories[position], index, str, -1);
-            index++;
-            mSubCatViews.add(subCategory);
-        }
-    }
-
     private void changeRating(boolean right) {
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCatViews.get(position).getCurrentRating();
+        int rating = mSubCategories.get(position).getCurrentRating();
         if (right && rating <= 3) {
-            mSubCatViews.get(position).setCurrentRating(rating + 1);
+            mSubCategories.get(position).setCurrentRating(rating + 1);
         } else if (!right && rating >= 0) {
-            mSubCatViews.get(position).setCurrentRating(rating - 1);
+            mSubCategories.get(position).setCurrentRating(rating - 1);
         }
 
         mAdapter.notifyDataSetChanged();
@@ -161,7 +160,7 @@ public class SubCategoriesActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCatViews);
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -173,7 +172,7 @@ public class SubCategoriesActivity extends Activity {
     private void animateScroll(boolean right) {
         final int pos = mCardScroller.getSelectedItemPosition();
         final long time = 100;
-        int size = mSubCatViews.size() - 1;
+        int size = mSubCategories.size() - 1;
         if (right && pos < size) {
             final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
             animOutRight.setDuration(time);
@@ -226,9 +225,13 @@ public class SubCategoriesActivity extends Activity {
     private void openRatingDetailed() {
         Intent intent = new Intent(this, SubCategoriesDetailedActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCatViews.get(position).getCurrentRating();
+        int rating = mSubCategories.get(position).getCurrentRating();
+        int categoryId = mSubCategories.get(position).getParentCategoryId();
+        int subCategoryId = mSubCategories.get(position).getSubCategoryId();
         intent.putExtra(Constants.EXTRA_POSITION, position);
         intent.putExtra(Constants.EXTRA_RATING, rating);
+        intent.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
+        intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
         startActivityForResult(intent, SET_RATING_DETAIL_CODE);
     }
 
@@ -237,7 +240,7 @@ public class SubCategoriesActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 int position = data.getIntExtra(Constants.EXTRA_POSITION, 1);
                 int rating = data.getIntExtra(Constants.EXTRA_RATING_DETAIL, 0);
-                mSubCatViews.get(position).setCurrentRating(rating);
+                mSubCategories.get(position).setCurrentRating(rating);
                 mCardScroller.setSelection(position);
                 mAdapter.notifyDataSetChanged();
             }
