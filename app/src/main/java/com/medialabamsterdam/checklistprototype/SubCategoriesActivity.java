@@ -223,7 +223,7 @@ public class SubCategoriesActivity extends Activity {
     }
 
     private void openRatingDetailed() {
-        Intent intent = new Intent(this, SubCategoriesDetailedActivity.class);
+        Intent intent = new Intent(this, DetailsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         int rating = mSubCategories.get(position).getCurrentRating();
         int categoryId = mSubCategories.get(position).getParentCategoryId();
