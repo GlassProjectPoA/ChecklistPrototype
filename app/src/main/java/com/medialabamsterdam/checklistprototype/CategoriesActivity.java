@@ -147,13 +147,21 @@ public class CategoriesActivity extends Activity {
                     mCategories.get(i).setCategoryCompleted(c.isCategoryCompleted());
                 }
             }
+
             if (mSubCategories != null) {
+                boolean hasInstance = false;
                 for (int i = 0; i < mSubCategories.size(); i++) {
                     for (int j = 0; j < sc.size(); j++) {
                         if (mSubCategories.get(i).getParentCategoryId() == sc.get(j).getParentCategoryId() &&
                                 mSubCategories.get(i).getSubCategoryId() == sc.get(j).getSubCategoryId()) {
                             mSubCategories.get(i).setCurrentRating(sc.get(j).getCurrentRating());
+                            hasInstance = true;
                         }
+                    }
+                }
+                if (!hasInstance){
+                    for (SubCategory subCategory : sc){
+                        mSubCategories.add(subCategory);
                     }
                 }
             } else {
@@ -214,7 +222,9 @@ public class CategoriesActivity extends Activity {
                     subCategories.add(sc);
                 }
             }
-            intent.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, subCategories);
+            if (subCategories.size() != 0){
+                intent.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, subCategories);
+            }
         }
         intent.putExtra(Constants.PARCELABLE_CATEGORY, mCategories.get(position));
         intent.putExtra(Constants.EXTRA_POSITION, position);
