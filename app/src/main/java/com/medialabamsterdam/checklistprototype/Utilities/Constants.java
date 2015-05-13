@@ -22,4 +22,6 @@ public interface Constants {
     boolean LOAD_ALTERNATE_LANGUAGE = false;
     boolean IGNORE_INSTRUCTIONS = true;
 
+    String EXTRA_CATEGORY_NAME = "com.medialabamsterdam.checklistprototype.CATEGORY_NAME";
+    String EXTRA_SUBCATEGORY_NAME = "com.medialabamsterdam.checklistprototype.SUBCATEGORY_NAME";
 }

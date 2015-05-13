@@ -26,6 +26,7 @@ public class SubCategory implements Parcelable {
     private String name;
     private boolean remove;
     private int rating;
+    private String pictureUri;
 
 
     private SubCategory(Parcel in) {
@@ -34,6 +35,7 @@ public class SubCategory implements Parcelable {
         name = in.readString();
         remove = in.readByte() != 0;
         rating = in.readInt();
+        pictureUri = in.readString();
     }
 
     public SubCategory() {
@@ -87,6 +89,14 @@ public class SubCategory implements Parcelable {
         this.remove = remove;
     }
 
+    public String getPictureUri() {
+        return pictureUri;
+    }
+
+    public void setPictureUri(String pictureUri) {
+        this.pictureUri = pictureUri;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -99,6 +109,7 @@ public class SubCategory implements Parcelable {
         out.writeString(name);
         out.writeByte((byte) (remove ? 1 : 0));
         out.writeInt(rating);
+        out.writeString(pictureUri);
     }
 
     @Override

@@ -121,10 +121,23 @@ public class CategoriesActivity extends Activity {
     }
 
     private void checkData() {
-        //TODO Check ratings if there is any that is below B, start intent.
-        Intent intent = new Intent(this, WarningActivity.class);
-        startActivityForResult(intent, WARNING_REQUEST);
-        sendData(null);
+        CheckDataLoop: for (SubCategory sc : mSubCategories){
+            if (sc.getPictureUri() == null && sc.getRating() > 1){
+                Intent intent = new Intent(this, WarningActivity.class);
+                for (Category c : mCategories){
+                    if (c.getId() == sc.getParentId()){
+                        intent.putExtra(Constants.EXTRA_CATEGORY_NAME, c.getName());
+                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_NAME, sc.getName());
+                        intent.putExtra(Constants.EXTRA_CATEGORY_ID, c.getId());
+                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, sc.getId());
+                        startActivityForResult(intent, WARNING_REQUEST);
+                        break CheckDataLoop;
+                    }
+                }
+            } else {
+                sendData();
+            }
+        }
     }
 
     @Override
@@ -136,42 +149,23 @@ public class CategoriesActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
-            sendData(data.getStringExtra(Constants.EXTRA_PICTURE));
+            savePicture(data);
         }
         if (requestCode == SUBCATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
-            ArrayList<SubCategory> sc = data.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
-            sc.remove(sc.size() - 1);
-            Category c = data.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
-            for (int i = 0; i < mCategories.size(); i++) {
-                if (mCategories.get(i).getId() == c.getId()) {
-                    mCategories.get(i).setCompleted(c.isCompleted());
-                }
-            }
-
-            if (mSubCategories != null) {
-                boolean hasInstance = false;
-                for (int i = 0; i < mSubCategories.size(); i++) {
-                    for (int j = 0; j < sc.size(); j++) {
-                        if (mSubCategories.get(i).getParentId() == sc.get(j).getParentId() &&
-                                mSubCategories.get(i).getId() == sc.get(j).getId()) {
-                            mSubCategories.get(i).setRating(sc.get(j).getRating());
-                            hasInstance = true;
-                        }
-                    }
-                }
-                if (!hasInstance) {
-                    for (SubCategory subCategory : sc) {
-                        mSubCategories.add(subCategory);
-                    }
-                }
-            } else {
-                mSubCategories = sc;
-            }
-            for (SubCategory subc : mSubCategories) {
-                Log.d(TAG, subc.toString());
-            }
-            mAdapter.notifyDataSetChanged();
+            saveData(data);
         }
+    }
+
+    private void savePicture(Intent data) {
+        int categoryId = data.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
+        int subCategoryId = data.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
+        for (SubCategory sc : mSubCategories){
+            if (categoryId == sc.getParentId() && subCategoryId == sc.getId()){
+                sc.setPictureUri(data.getStringExtra(Constants.EXTRA_PICTURE));
+                break;
+            }
+        }
+        checkData();
     }
 
     @Override
@@ -185,11 +179,42 @@ public class CategoriesActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    private void sendData(String picturePath) {
-        if (picturePath == null) {
-            //TODO send data without picture
-            Log.d(TAG, "null");
+    private void saveData(Intent data){
+        ArrayList<SubCategory> sc = data.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
+        sc.remove(sc.size() - 1);
+        Category c = data.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+        for (int i = 0; i < mCategories.size(); i++) {
+            if (mCategories.get(i).getId() == c.getId()) {
+                mCategories.get(i).setCompleted(c.isCompleted());
+            }
+        }
+
+        if (mSubCategories != null) {
+            boolean hasInstance = false;
+            for (int i = 0; i < mSubCategories.size(); i++) {
+                for (int j = 0; j < sc.size(); j++) {
+                    if (mSubCategories.get(i).getParentId() == sc.get(j).getParentId() &&
+                            mSubCategories.get(i).getId() == sc.get(j).getId()) {
+                        mSubCategories.get(i).setRating(sc.get(j).getRating());
+                        hasInstance = true;
+                    }
+                }
+            }
+            if (!hasInstance) {
+                for (SubCategory subCategory : sc) {
+                    mSubCategories.add(subCategory);
+                }
+            }
         } else {
+            mSubCategories = sc;
+        }
+        for (SubCategory subc : mSubCategories) {
+            Log.d(TAG, subc.toString());
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void sendData() {
             //TODO send data with picture
             TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
             tv.setText(R.string.upload_list);
@@ -200,8 +225,6 @@ public class CategoriesActivity extends Activity {
             spinner.setVisibility(View.VISIBLE);
             spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
             mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-            Log.d(TAG, picturePath);
-        }
     }
 
 
