@@ -44,6 +44,11 @@ public class WarningActivity extends Activity {
     private ArrayList<View> mCards;
     private MyCardScrollAdapter mAdapter;
     private ProgressBar spinner;
+    private int categoryId;
+    private int subCategoryId;
+    private String categoryName;
+    private String subCategoryName;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -53,6 +58,12 @@ public class WarningActivity extends Activity {
         if (OK_GLASS) {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
+
+        Intent intent = getIntent();
+        categoryId = intent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
+        subCategoryId = intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
+        categoryName = intent.getStringExtra(Constants.EXTRA_CATEGORY_NAME);
+        subCategoryName = intent.getStringExtra(Constants.EXTRA_SUBCATEGORY_NAME);
 
         createWarningCard();
 
@@ -118,21 +129,28 @@ public class WarningActivity extends Activity {
             String thumbnailPath = data.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
             String picturePath = data.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
 
-            processPictureWhenReady(picturePath);
+            //processPictureWhenReady(picturePath);
             // TODO: Show the thumbnail to the user while the full picture is being
             // processed.
-            if (spinner.getVisibility() == View.GONE) {
-                mCardScroller.activate();
-                mCards.get(1).findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-                mCards.get(1).findViewById(R.id.check).setVisibility(View.GONE);
-                TextView tv = (TextView) mCards.get(1).findViewById(R.id.title);
-                tv.setText(R.string.saving_picture);
-                tv = (TextView) mCards.get(1).findViewById(R.id.footer);
-                tv.setText(R.string.please_wait);
-                spinner.setVisibility(View.VISIBLE);
-                mCardScroller.setSelection(1);
-                mAdapter.notifyDataSetChanged();
-            }
+//            if (spinner.getVisibility() == View.GONE) {
+//                mCardScroller.activate();
+//                mCards.get(1).findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+//                mCards.get(1).findViewById(R.id.check).setVisibility(View.GONE);
+//                TextView tv = (TextView) mCards.get(1).findViewById(R.id.title);
+//                tv.setText(R.string.saving_picture);
+//                tv = (TextView) mCards.get(1).findViewById(R.id.footer);
+//                tv.setText(R.string.please_wait);
+//                spinner.setVisibility(View.VISIBLE);
+//                mCardScroller.setSelection(1);
+//                mAdapter.notifyDataSetChanged();
+//            }
+
+            Intent result = new Intent();
+            result.putExtra(Constants.EXTRA_PICTURE, picturePath);
+            result.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
+            result.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
+            setResult(Activity.RESULT_OK, result);
+            finish();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -183,6 +201,10 @@ public class WarningActivity extends Activity {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.warning_layout, null);
+        TextView tv = (TextView) card.findViewById(R.id.category_text);
+        tv.setText(categoryName);
+        tv = (TextView) card.findViewById(R.id.subcategory_text);
+        tv.setText(subCategoryName);
         mCards.add(card);
         card = inflater.inflate(R.layout.check_layout, null);
         mCards.add(card);

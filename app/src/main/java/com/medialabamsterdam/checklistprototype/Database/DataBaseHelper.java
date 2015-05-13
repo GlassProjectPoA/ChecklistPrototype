@@ -50,8 +50,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         this.mContext = context;
     }
 
-    //<editor-fold desc="DB creation and management">
-
     /**
      * This function is used to query data from the Area Table, returns all Areas.
      *
@@ -230,9 +228,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return categoryList;
     }
-    //</editor-fold>
-
-    //<editor-fold desc="Area and Location queries">
 
     /**
      * Write entries on the SubCategories_by_Location_And_Categories table based on the Category and Location the SubCategory is in.
@@ -326,9 +321,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return subCategoryList;
     }
-    //</editor-fold>
-
-    //<editor-fold desc="Category queries">
 
     public static Detail readDetails(Context context, int categoryID, int subCategoryID) {
         Detail detail = new Detail();
@@ -345,7 +337,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             subCatByCat = cursor.getInt(cursor.getColumnIndex(DBContract.SubCatByCat._ID));
-            Log.e(TAG, String.valueOf(subCatByCat));
         }
         cursor.close();
 
@@ -441,9 +432,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // returning number of inserted rows
         return result;
     }
-    //</editor-fold>
 
-    //<editor-fold desc="SubCategory queries">
 
     @Override
     public synchronized void close() {
@@ -465,7 +454,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
-    //</editor-fold>
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

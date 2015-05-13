@@ -121,6 +121,7 @@ public class CategoriesActivity extends Activity {
     }
 
     private void checkData() {
+        int count = 0;
         CheckDataLoop: for (SubCategory sc : mSubCategories){
             if (sc.getPictureUri() == null && sc.getRating() > 1){
                 Intent intent = new Intent(this, WarningActivity.class);
@@ -135,7 +136,10 @@ public class CategoriesActivity extends Activity {
                     }
                 }
             } else {
-                sendData();
+                count++;
+                if (mSubCategories.size() == count){
+                    sendData();
+                }
             }
         }
     }
@@ -208,9 +212,9 @@ public class CategoriesActivity extends Activity {
         } else {
             mSubCategories = sc;
         }
-        for (SubCategory subc : mSubCategories) {
-            Log.d(TAG, subc.toString());
-        }
+//        for (SubCategory subc : mSubCategories) {
+//            Log.d(TAG, subc.toString());
+//        }
         mAdapter.notifyDataSetChanged();
     }
 

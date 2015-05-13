@@ -115,11 +115,12 @@ public class SubCategory implements Parcelable {
     @Override
     public String toString() {
         return "SubCategory{ " +
-                ", parentId=" + parentId +
+                "parentId=" + parentId +
                 ", id=" + id +
                 ", name='" + name + '\'' +
-                ", rating=" + rating +
                 ", remove=" + remove +
+                ", rating=" + rating +
+                ", pictureUri='" + pictureUri + '\'' +
                 '}';
     }
 }

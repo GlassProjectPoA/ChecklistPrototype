@@ -31,7 +31,6 @@ public class DetailedCardScrollAdapter extends CardScrollAdapter {
         mContext = context;
         mDetail = views;
         for (int i = 0; i < 5; i++) mCards.add(views);
-        Log.d("Check = ", "" + mCards.toString());
     }
 
     @Override

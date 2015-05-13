@@ -51,7 +51,7 @@
                 android:textSize="28sp" />
 
             <TextView
-                android:id="@+id/category_item_text"
+                android:id="@+id/subcategory_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
