@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,11 +17,27 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.medialabamsterdam.checklistprototype.Adapters.CategoryCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +59,7 @@ public class CategoriesActivity extends Activity {
     private CategoryCardScrollAdapter mAdapter;
     private int locationIndex;
     private int areaCode;
+    private boolean isSent = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -96,26 +114,30 @@ public class CategoriesActivity extends Activity {
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
-                        if (position == maxPositions) {
-                            if (completion == mCategories.size() - 1) {
-                                CategoriesActivity.this.checkData();
-                            } else {
-                                int i = 0;
-                                for (Category category : mCategories) {
-                                    if (!category.isCompleted()) {
-                                        mCardScroller.setSelection(i);
-                                        break;
+                        if(isSent){
+                            finish();
+                        }else {
+                            if (position == maxPositions) {
+                                if (completion == mCategories.size() - 1) {
+                                    CategoriesActivity.this.checkData();
+                                } else {
+                                    int i = 0;
+                                    for (Category category : mCategories) {
+                                        if (!category.isCompleted()) {
+                                            mCardScroller.setSelection(i);
+                                            break;
+                                        }
+                                        i++;
                                     }
-                                    i++;
                                 }
-                            }
-                        } else {
-                            if (Constants.IGNORE_INSTRUCTIONS) {
-                                CategoriesActivity.this.openRating();
                             } else {
-                                CategoriesActivity.this.openInstructions();
+                                if (Constants.IGNORE_INSTRUCTIONS) {
+                                    CategoriesActivity.this.openRating();
+                                } else {
+                                    CategoriesActivity.this.openInstructions();
+                                }
+                                am.playSoundEffect(Sounds.TAP);
                             }
-                            am.playSoundEffect(Sounds.TAP);
                         }
                         break;
                     case SWIPE_DOWN:
@@ -136,6 +158,7 @@ public class CategoriesActivity extends Activity {
 
     private void checkData() {
         int count = 0;
+        HttpResponse response;
         CheckDataLoop: for (SubCategory sc : mSubCategories){
             if (sc.getPictureUri() == null && sc.getRating() > 1){
                 Intent intent = new Intent(this, WarningActivity.class);
@@ -156,6 +179,20 @@ public class CategoriesActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void statusComplete() {
+        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+        tv.setText(R.string.complete);
+        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+        tv.setText(R.string.send_complete);
+        mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar).setVisibility(View.GONE);
+        ImageView iv = (ImageView)mCardScroller.getSelectedView().findViewById(R.id.check);
+        iv.setVisibility(View.VISIBLE);
+        iv.setImageResource(R.drawable.check);
+        iv.setColorFilter(getResources().getColor(R.color.green));
+        mGestureDetector = createGestureDetector(this);
+        isSent = true;
     }
 
     @Override
@@ -236,16 +273,50 @@ public class CategoriesActivity extends Activity {
     }
 
     private void sendData() {
-            //TODO send data with picture
-            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
-            tv.setText(R.string.upload_list);
-            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
-            tv.setText(R.string.please_wait);
-            mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
-            ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar);
-            spinner.setVisibility(View.VISIBLE);
-            spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
-            mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+        startLoader();
+        mCardScroller.setFocusable(false);
+        mGestureDetector = null;
+
+        JsonArray jsonArray = new JsonArray();
+        for (SubCategory sc : mSubCategories) {
+            JsonObject object = new JsonObject();
+            object.addProperty("code", sc.getCode());
+            object.addProperty("rating", Utils.getStringFromRating(sc.getRating()));
+            jsonArray.add(object);
+        }
+
+        JsonObject json = new JsonObject();
+        json.addProperty("user_id", 1);
+        json.addProperty("location_id", locationIndex);
+        json.add("data", jsonArray);
+
+        Log.e(TAG, json.toString());
+
+        Ion.with(this)
+                .load("http://glass.twisk-interactive.nl/checklist")
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        e.printStackTrace();
+                        if (result != null) {
+                            Log.e(TAG, result.toString());
+                        }
+                    }
+                });
+    }
+
+    private void startLoader() {
+        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+        tv.setText(R.string.upload_list);
+        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+        tv.setText(R.string.please_wait);
+        mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
+        ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar);
+        spinner.setVisibility(View.VISIBLE);
+        spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
+        mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
     }
 
 

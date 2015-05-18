@@ -158,7 +158,8 @@
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
     <string name="title_activity_warning">Warning Activity</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="complete">Complete!</string>
+    <string name="send_complete">The checklist has been saved.</string>
 
 
     <!-- NOT ORDERED -->

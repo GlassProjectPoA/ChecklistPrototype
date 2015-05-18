@@ -67,7 +67,8 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             tv = (TextView) card.findViewById(R.id.title);
             tv.setText(R.string.category_finish);
             ImageView iv = (ImageView) card.findViewById(R.id.check);
-            iv.setImageResource(R.drawable.check_blue);
+            iv.setImageResource(R.drawable.check);
+            iv.setColorFilter(mContext.getResources().getColor(R.color.blue));
         } else {
             card = inflater.inflate(R.layout.subcategory_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);

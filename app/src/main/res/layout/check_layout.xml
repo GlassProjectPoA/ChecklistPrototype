@@ -67,8 +67,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="center"
-            android:src="@drawable/upload"
-            android:tint="@color/green" />
+            android:src="@drawable/upload" />
 
         <TextView
             android:id="@+id/footer"
