@@ -20,6 +20,7 @@ class DBContract {
         public static final String COLUMN_NAME = "Name";
         public static final String COLUMN_TOP_LEFT = "Top_left";
         public static final String COLUMN_BOT_RIGHT = "Bot_right";
+        public static final String COLUMN_CODE = "Code";
     }
 
     public static abstract class Location implements BaseColumns {
@@ -80,6 +81,7 @@ class DBContract {
         public static final String TABLE_NAME = "SubCategories_by_Category";
         public static final String COLUMN_CATEGORY_ID = "Category_id";
         public static final String COLUMN_SUBCATEGORY_ID = "SubCategory_id";
+        public static final String COLUMN_CODE = "Code";
     }
 
     public static abstract class CatByLocation implements BaseColumns {

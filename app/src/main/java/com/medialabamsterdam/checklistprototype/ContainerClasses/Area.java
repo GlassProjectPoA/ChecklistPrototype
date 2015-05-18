@@ -24,12 +24,14 @@ public class Area implements Parcelable {
     private String name;
     private String topLeft;
     private String botRight;
+    private int code;
 
-    public Area(int id, String name, String topLeft, String botRight) {
+    public Area(int id, String name, String topLeft, String botRight, int code) {
         this.id = id;
         this.name = name;
         this.topLeft = topLeft;
         this.botRight = botRight;
+        this.code = code;
     }
 
     private Area(Parcel in) {
@@ -37,6 +39,7 @@ public class Area implements Parcelable {
         this.name = in.readString();
         this.topLeft = in.readString();
         this.botRight = in.readString();
+        this.code = in.readInt();
     }
 
     public int getId() {
@@ -71,6 +74,14 @@ public class Area implements Parcelable {
         this.topLeft = topLeft;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -82,6 +93,7 @@ public class Area implements Parcelable {
         out.writeString(name);
         out.writeString(topLeft);
         out.writeString(botRight);
+        out.writeInt(code);
     }
 
     @Override
@@ -89,6 +101,7 @@ public class Area implements Parcelable {
         return "\nID: " + getId() +
                 "\nNAME: " + getName() +
                 "\nTOP_L: " + getTopLeft() +
-                "\nBOT_R: " + getBotRight();
+                "\nBOT_R: " + getBotRight() +
+                "\nCODE: " + getCode();
     }
 }

@@ -14,14 +14,20 @@ public interface Constants {
     String EXTRA_CATEGORY = "com.medialabamsterdam.checklistprototype.CATEGORY";
     String EXTRA_CATEGORY_ID = "com.medialabamsterdam.checklistprototype.CATEGORY_ID";
     String EXTRA_SUBCATEGORY_ID = "com.medialabamsterdam.checklistprototype.SUBCATEGORY_ID";
+    String EXTRA_CATEGORY_NAME = "com.medialabamsterdam.checklistprototype.CATEGORY_NAME";
+    String EXTRA_SUBCATEGORY_NAME = "com.medialabamsterdam.checklistprototype.SUBCATEGORY_NAME";
+    String EXTRA_SUBCATEGORY = "com.medialabamsterdam.checklistprototype.SUBCATEGORY";
+    String EXTRA_LOCATION = "com.medialabamsterdam.checklistprototype.LOCATION";
+    String EXTRA_AREA_CODE = "com.medialabamsterdam.checklistprototype.AREA_CODE";
 
     String PARCELABLE_SUBCATEGORY = "PARCELABLE_SUBCATEGORY";
     String PARCELABLE_CATEGORY = "PARCELABLE_CATEGORY";
 
+    /**
+     * Settings.
+     */
     String ALTERNATE_LANGUAGE = "nl";
     boolean LOAD_ALTERNATE_LANGUAGE = false;
     boolean IGNORE_INSTRUCTIONS = true;
 
-    String EXTRA_CATEGORY_NAME = "com.medialabamsterdam.checklistprototype.CATEGORY_NAME";
-    String EXTRA_SUBCATEGORY_NAME = "com.medialabamsterdam.checklistprototype.SUBCATEGORY_NAME";
 }

@@ -40,6 +40,8 @@ public class CategoriesActivity extends Activity {
     private ArrayList<Category> mCategories;
     private ArrayList<SubCategory> mSubCategories;
     private CategoryCardScrollAdapter mAdapter;
+    private int locationIndex;
+    private int areaCode;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -49,6 +51,9 @@ public class CategoriesActivity extends Activity {
 
         Intent i = getIntent();
         mCategories = i.getParcelableArrayListExtra(Constants.EXTRA_CATEGORY);
+        mSubCategories = i.getParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY);
+        locationIndex = i.getIntExtra(Constants.EXTRA_LOCATION, 0);
+        areaCode = i.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
 
         mCardScroller = new CardScrollView(this);
         mAdapter = new CategoryCardScrollAdapter(this, mCategories);
@@ -113,6 +118,15 @@ public class CategoriesActivity extends Activity {
                             am.playSoundEffect(Sounds.TAP);
                         }
                         break;
+                    case SWIPE_DOWN:
+                        Log.e(TAG, "SWIPE_DOWN called.");
+                        Intent result = new Intent();
+                        result.putParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY, mSubCategories);
+                        result.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, mCategories);
+                        result.putExtra(Constants.EXTRA_LOCATION, locationIndex);
+                        setResult(Activity.RESULT_OK, result);
+                        finish();
+                        break;
                 }
                 return false;
             }
@@ -175,12 +189,15 @@ public class CategoriesActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
+        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
 
     private void saveData(Intent data){
@@ -255,6 +272,7 @@ public class CategoriesActivity extends Activity {
         }
         intent.putExtra(Constants.PARCELABLE_CATEGORY, mCategories.get(position));
         intent.putExtra(Constants.EXTRA_POSITION, position);
+        intent.putExtra(Constants.EXTRA_AREA_CODE, areaCode);
         startActivityForResult(intent, SUBCATEGORY_RATING_REQUEST);
     }
 }

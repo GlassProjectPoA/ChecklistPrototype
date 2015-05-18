@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
 
     public final static boolean OK_GLASS = false;
     private final static String TAG = "MAIN";
+    private static final int CATEGORY_RATING_REQUEST = 7980;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -54,9 +55,10 @@ public class MainActivity extends Activity {
     private MyCardScrollAdapter mAdapter;
     private Location mActualLocation;
     private int areaIndex;
+    private int areaCode;
     private int locationIndex;
-    private List<Category> mCategories;
-    private List<SubCategory> mSubCategories;
+    private ArrayList<Category> mCategories;
+    private ArrayList<SubCategory> mSubCategories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -81,7 +83,7 @@ public class MainActivity extends Activity {
         mCardScroller.setFocusable(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        new CountDownTimer(1500, 500) {
+        new CountDownTimer(2000, 500) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -123,6 +125,7 @@ public class MainActivity extends Activity {
                     .build();
             if (polygon.contains(point)) {
                 areaIndex = area.getId();
+                areaCode = area.getCode();
                 tv.setText(area.getName());
                 return findLocation(point);
             }
@@ -151,7 +154,7 @@ public class MainActivity extends Activity {
             if (polygon.contains(point)) {
                 locationIndex = locations.getLocationId();
                 tv.setText(locations.getName());
-                mCategories = DataBaseHelper.readCategory(this, areaIndex, locationIndex);
+                mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
                 return true;
             }
         }
@@ -164,7 +167,6 @@ public class MainActivity extends Activity {
         super.onResume();
         mCardScroller.activate();
         mLocationUtils.restart();
-        handleLocationUtils();
     }
 
     @Override
@@ -216,9 +218,23 @@ public class MainActivity extends Activity {
 
     private void openCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
-        ArrayList<Category> al = new ArrayList<>(mCategories);
-        intent.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, al);
-        startActivity(intent);
+        intent.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, mCategories);
+        intent.putParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY, mSubCategories);
+        intent.putExtra(Constants.EXTRA_LOCATION, locationIndex);
+        intent.putExtra(Constants.EXTRA_AREA_CODE, areaCode);
+        startActivityForResult(intent, CATEGORY_RATING_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "RESULT");
+        if (requestCode == CATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
+            handleLocationUtils();
+            if (data.getIntExtra(Constants.EXTRA_LOCATION, 0) == locationIndex) {
+                mCategories = data.getParcelableArrayListExtra(Constants.EXTRA_CATEGORY);
+                mSubCategories = data.getParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY);
+            }
+        }
     }
 
     private void defineLocale() {
@@ -237,6 +253,20 @@ public class MainActivity extends Activity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);
         mCards.add(card);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
+        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
 
 }

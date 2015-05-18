@@ -74,7 +74,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     Integer.parseInt(cursorData.get(0)),
                     cursorData.get(1),
                     cursorData.get(2),
-                    cursorData.get(3)
+                    cursorData.get(3),
+                    Integer.parseInt(cursorData.get(4))
             );
             areaList.add(area);
         }
@@ -237,7 +238,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param categoryByLocationId the ID of the categoryByLocation stored on the Category.class.
      * @return a SubCategory list by calling readSubCategory() again.
      */
-    private static List<SubCategory> writeSubCatByLocationAndCategory(Context context, int categoryID, int categoryByLocationId) {
+    private static List<SubCategory> writeSubCatByLocationAndCategory(Context context, int categoryID, int categoryByLocationId, int areaCode) {
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -261,7 +262,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        return readSubCategory(context, categoryID, categoryByLocationId);
+        return readSubCategory(context, categoryID, categoryByLocationId, areaCode);
     }
 
     /**
@@ -272,7 +273,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param categoryByLocationId the ID of the categoryByLocation stored on the Category.class.
      * @return a SubCategory list.
      */
-    public static List<SubCategory> readSubCategory(Context context, int categoryID, int categoryByLocationId) {
+    public static List<SubCategory> readSubCategory(Context context, int categoryID, int categoryByLocationId, int areaCode) {
         List<SubCategory> subCategoryList = new ArrayList<>();
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(context);
@@ -285,18 +286,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String query = "SELECT " + DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID +
                 ", " + columnName +
                 ", " + DBContract.SubCatByCatAndLoc.COLUMN_REMOVE +
+                ", " + DBContract.SubCatByCat.TABLE_NAME + "." + DBContract.SubCatByCat.COLUMN_CODE +
                 " FROM " + DBContract.SubCatByCatAndLoc.TABLE_NAME +
                 ", " + DBContract.SubCategory.TABLE_NAME +
+                ", " + DBContract.SubCatByCat.TABLE_NAME +
                 " WHERE " + DBContract.SubCatByCatAndLoc.COLUMN_CATEGORYBYLOCATION_ID +
-                " =? AND " + DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID +
+                " =? AND " + DBContract.SubCatByCat.COLUMN_CATEGORY_ID +
+                " =? AND " + DBContract.SubCatByCat.TABLE_NAME + "." + DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID +
+                " = "+ DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID +
+                " AND " + DBContract.SubCatByCatAndLoc.TABLE_NAME + "." + DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID +
                 " = " + DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID;
 
-        cursor = db.rawQuery(query, new String[]{String.valueOf(categoryByLocationId)});
+        cursor = db.rawQuery(query, new String[]{String.valueOf(categoryByLocationId), String.valueOf(categoryID)});
 
         if (cursor.getCount() == 0) {
             cursor.close();
             db.close();
-            return writeSubCatByLocationAndCategory(context, categoryID, categoryByLocationId);
+            return writeSubCatByLocationAndCategory(context, categoryID, categoryByLocationId, areaCode);
         }
 
         Log.e(TAG, Arrays.toString(cursor.getColumnNames()));
@@ -313,9 +319,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     categoryID,
                     Integer.parseInt(cursorData.get(0)),
                     cursorData.get(1),
-                    Boolean.parseBoolean(cursorData.get(2))
+                    Boolean.parseBoolean(cursorData.get(2)),
+                    Integer.parseInt(areaCode+cursorData.get(3))
             );
             subCategoryList.add(subCategory);
+            Log.e(TAG, subCategory.toString());
         }
         cursor.close();
         db.close();

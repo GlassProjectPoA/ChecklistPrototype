@@ -47,11 +47,12 @@ public class SubCategoriesActivity extends Activity {
 
         Intent i = getIntent();
         mCategory = i.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+        int areaCode = i.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
 
         if (i.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
             mSubCategories = i.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         } else if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
-            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getId(), mCategory.getCategoryByLocationId()));
+            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getId(), mCategory.getCategoryByLocationId(), areaCode));
         } else {
             mSubCategories = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
         }
@@ -161,12 +162,15 @@ public class SubCategoriesActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        savedInstanceState.putParcelable(Constants.PARCELABLE_CATEGORY, mCategory);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        mCategory = savedInstanceState.getParcelable(Constants.PARCELABLE_CATEGORY);
+        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
 
     private void animateScroll(boolean right) {
