@@ -13,6 +13,7 @@ import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -139,13 +140,45 @@ public class Utils {
         return new Point(Double.parseDouble(strArray[0]), Double.parseDouble(strArray[1]));
     }
 
+    /**
+     * Method to get a String out of the "int" ratings.
+     * 0 = "AA"
+     * 1 = "A"
+     * 2 = "B"
+     * 3 = "C"
+     * 4 = "D"
+     *
+     * @param rating an int 0-4
+     * @return a String
+     */
     public static String getStringFromRating(int rating) {
-        SparseArray<String> mSparseArray = new SparseArray<String>();
-        mSparseArray.put(0, "AA");
-        mSparseArray.put(1, "A");
-        mSparseArray.put(2, "B");
-        mSparseArray.put(3, "C");
-        mSparseArray.put(4, "D");
-        return mSparseArray.get(rating);
+        SparseArray<String> _rates = new SparseArray<>();
+        _rates.put(0, "AA");
+        _rates.put(1, "A");
+        _rates.put(2, "B");
+        _rates.put(3, "C");
+        _rates.put(4, "D");
+        return _rates.get(rating);
+    }
+
+    /**
+     * Method to get an int out of the "String" ratings.
+     * "AA" = 0
+     * "A" = 1
+     * "B" = 2
+     * "C" = 3
+     * "D" = 4
+     *
+     * @param rating a String with the rating letter ('A+' should be depicted as 'AA')
+     * @return an int
+     */
+    public static int getRatingFromString(String rating) {
+        Map<String, Integer>_rates = new HashMap<>();
+        _rates.put("AA", 0);
+        _rates.put("A", 1);
+        _rates.put("B", 2);
+        _rates.put("C", 3);
+        _rates.put("D", 4);
+        return _rates.get(rating);
     }
 }

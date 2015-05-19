@@ -75,7 +75,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             tv.setText(sc.getName());
             tv = (TextView) card.findViewById(R.id.category);
             tv.setText(mParentCategoryName);
-            int rate = sc.getRating();
+            int rate = sc.getGrade();
             switch (rate) {
                 case -1:
                     break;

@@ -25,7 +25,7 @@ public class SubCategory implements Parcelable {
     private int id;
     private String name;
     private boolean remove;
-    private int rating;
+    private int grade;
     private String pictureUri;
     private int code;
 
@@ -35,7 +35,7 @@ public class SubCategory implements Parcelable {
         id = in.readInt();
         name = in.readString();
         remove = in.readByte() != 0;
-        rating = in.readInt();
+        grade = in.readInt();
         pictureUri = in.readString();
         code = in.readInt();
     }
@@ -48,7 +48,7 @@ public class SubCategory implements Parcelable {
         this.id = id;
         this.name = name;
         this.remove = remove;
-        this.rating = 0;
+        this.grade = 0;
         this.code = code;
     }
 
@@ -76,12 +76,12 @@ public class SubCategory implements Parcelable {
         this.name = name;
     }
 
-    public int getRating() {
-        return rating;
+    public int getGrade() {
+        return grade;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 
     public boolean isRemove() {
@@ -119,7 +119,7 @@ public class SubCategory implements Parcelable {
         out.writeInt(id);
         out.writeString(name);
         out.writeByte((byte) (remove ? 1 : 0));
-        out.writeInt(rating);
+        out.writeInt(grade);
         out.writeString(pictureUri);
         out.writeInt(code);
     }
@@ -132,7 +132,7 @@ public class SubCategory implements Parcelable {
                 ", code=" + code +
                 ", name='" + name + '\'' +
                 ", remove=" + remove +
-                ", rating=" + rating +
+                ", grade=" + grade +
                 ", pictureUri='" + pictureUri + '\'' +
                 '}';
     }

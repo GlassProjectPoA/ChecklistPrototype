@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
@@ -26,12 +27,12 @@ import com.medialabamsterdam.checklistprototype.Utilities.Constants;
  */
 public class DetailsActivity extends Activity {
 
-    private final static String TAG = "DETAILED";
+    private final static String TAG = "DETAILS";
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private DetailedCardScrollAdapter mDetailedAdapter;
     private DetailedExtendedCardScrollAdapter mDetailedExtendedAdapter;
-    private int mSubCategory;
+    private int mSubCategoryPosition;
     private Detail mDetail;
     private boolean extended = false;
 
@@ -39,22 +40,53 @@ public class DetailsActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
+        //Get data from intent sent from SubCategoriesActivity.
         Intent intent = getIntent();
-        mSubCategory = intent.getIntExtra(Constants.EXTRA_POSITION, 0);
+        mSubCategoryPosition = intent.getIntExtra(Constants.EXTRA_POSITION, 0);
+        int categoryId = intent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
+        int subCategoryId = intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
 
-        mDetail = DataBaseHelper.readDetails(this, intent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0), intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0));
+        //Loads details from Database.
+        mDetail = DataBaseHelper.readDetails(this, categoryId, subCategoryId);
 
+        //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         mCardScroller = new CardScrollView(this);
         mDetailedAdapter = new DetailedCardScrollAdapter(this, mDetail);
         mDetailedExtendedAdapter = new DetailedExtendedCardScrollAdapter(this, mDetail);
-
         mCardScroller.setAdapter(mDetailedAdapter);
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        mCardScroller.setSelection(intent.getIntExtra(Constants.EXTRA_RATING, 0));
+        mCardScroller.setSelection(intent.getIntExtra(Constants.EXTRA_GRADE, 0));
+    }
+
+    /**
+     * Sends Activity Result back to SubCategoryActivity
+     * Is called when user TAP.
+     */
+    private void sendResult() {
+        Intent result = new Intent();
+        result.putExtra(Constants.EXTRA_GRADE_DETAIL, mCardScroller.getSelectedItemPosition());
+        result.putExtra(Constants.EXTRA_POSITION, mSubCategoryPosition);
+        DetailsActivity.this.setResult(Activity.RESULT_OK, result);
+        DetailsActivity.this.finish();
+    }
+
+    /**
+     * Changes the adapter so it displays two kinds of data sets (needed to show all the details).
+     * Is called when user SWIPE_UP.
+     */
+    private void changeAdapter() {
+        mCardScroller.deactivate();
+        if (!extended) {
+            mCardScroller.setAdapter(mDetailedExtendedAdapter);
+            extended = true;
+        } else {
+            mCardScroller.setAdapter(mDetailedAdapter);
+            extended = false;
+        }
+        mCardScroller.activate();
     }
 
     //region Boring Stuff
@@ -82,24 +114,13 @@ public class DetailsActivity extends Activity {
                 AudioManager am = (AudioManager) DetailsActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
-                        // Create intent to deliver some kind of result data
-                        Intent result = new Intent();
-                        result.putExtra(Constants.EXTRA_RATING_DETAIL, mCardScroller.getSelectedItemPosition());
-                        result.putExtra(Constants.EXTRA_POSITION, mSubCategory);
-                        DetailsActivity.this.setResult(Activity.RESULT_OK, result);
+                        Log.e(TAG, "TAP called.");
+                        sendResult();
                         am.playSoundEffect(Sounds.DISALLOWED);
-                        DetailsActivity.this.finish();
                         break;
                     case SWIPE_UP:
-                        mCardScroller.deactivate();
-                        if (!extended) {
-                            mCardScroller.setAdapter(mDetailedExtendedAdapter);
-                            extended = true;
-                        } else {
-                            mCardScroller.setAdapter(mDetailedAdapter);
-                            extended = false;
-                        }
-                        mCardScroller.activate();
+                        Log.e(TAG, "SWIPE_UP called.");
+                        changeAdapter();
                         break;
                 }
                 return false;

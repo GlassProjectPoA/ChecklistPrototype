@@ -43,20 +43,22 @@ public class SubCategoriesActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //Get data from intent sent from CategoriesActivity.
+        Intent intent = getIntent();
+        mCategory = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+        int areaCode = intent.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
 
-        Intent i = getIntent();
-        mCategory = i.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
-        int areaCode = i.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
-
-        if (i.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
-            mSubCategories = i.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
+        //Checks if there is a SubCategory parcelable in the Intent or Bundle and loads it.
+        if (intent.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
+            mSubCategories = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         } else if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
             mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getId(), mCategory.getCategoryByLocationId(), areaCode));
         } else {
             mSubCategories = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
         }
 
+        //Regular CardScroller/Adapter procedure.
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
         mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, mCategory.getName());
         mCardScroller.setAdapter(mAdapter);
@@ -66,113 +68,30 @@ public class SubCategoriesActivity extends Activity {
         setContentView(mCardScroller);
     }
 
-    //region Boring Stuff
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCardScroller.activate();
-    }
-
-    @Override
-    protected void onPause() {
-        mCardScroller.deactivate();
-        super.onPause();
-    }
-    //endregion
-
-    //region Gesture Detector
-    private GestureDetector createGestureDetector(final Context context) {
-        GestureDetector gestureDetector = new GestureDetector(context);
-        //Create a base listener for generic gestures
-        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
-            @Override
-            public boolean onGesture(Gesture gesture) {
-                AudioManager am = (AudioManager) SubCategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
-                int position = mCardScroller.getSelectedItemPosition();
-                int maxPositions = mAdapter.getCount() - 1;
-                switch (gesture) {
-                    case TAP:
-                        Log.e(TAG, "TAP called.");
-                        if (position == maxPositions) {
-                            Intent result = new Intent();
-                            mCategory.setCompleted(true);
-                            result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
-                            result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
-                            setResult(Activity.RESULT_OK, result);
-                            am.playSoundEffect(Sounds.DISALLOWED);
-                            finish();
-                        } else {
-                            SubCategoriesActivity.this.openRatingDetailed();
-                            am.playSoundEffect(Sounds.TAP);
-                        }
-                        break;
-                    case SWIPE_LEFT:
-                        Log.e(TAG, "SWIPE_LEFT called.");
-                        SubCategoriesActivity.this.animateScroll(false);
-                        return true;
-                    case SWIPE_RIGHT:
-                        Log.e(TAG, "SWIPE_RIGHT called.");
-                        SubCategoriesActivity.this.animateScroll(true);
-                        return true;
-                    case SWIPE_DOWN:
-                        Log.e(TAG, "SWIPE_DOWN called.");
-                        SubCategoriesActivity.this.finish();
-                        return true;
-                    case TWO_SWIPE_LEFT:
-                        Log.e(TAG, "TWO_SWIPE_LEFT called.");
-                        if (position == maxPositions) {
-                            //do nothing
-                        } else {
-                            SubCategoriesActivity.this.changeRating(false);
-                        }
-                        return true;
-                    case TWO_SWIPE_RIGHT:
-                        Log.e(TAG, "TWO_SWIPE_RIGHT called.");
-                        if (position == maxPositions) {
-                            //do nothing
-                        } else {
-                            SubCategoriesActivity.this.changeRating(true);
-                        }
-                        return true;
-                }
-                return false;
-            }
-        });
-        return gestureDetector;
-    }
-
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
-    }
-    //endregion
-
-    private void changeRating(boolean right) {
+    /**
+     * Method used change the SubCategory grade variable.
+     *
+     * @param isAdd true if increasing the grade, false otherwise.
+     */
+    private void changeRating(boolean isAdd) {
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCategories.get(position).getRating();
-        if (right && rating <= 3) {
-            mSubCategories.get(position).setRating(rating + 1);
-        } else if (!right && rating >= 0) {
-            mSubCategories.get(position).setRating(rating - 1);
+        int grade = mSubCategories.get(position).getGrade();
+        // Checks if not on the border cards in order to not let the grade go over the limits.
+        if (isAdd && grade <= 3) {
+            mSubCategories.get(position).setGrade(grade + 1);
+        } else if (!isAdd && grade >= 0) {
+            mSubCategories.get(position).setGrade(grade - 1);
         }
 
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
-        savedInstanceState.putParcelable(Constants.PARCELABLE_CATEGORY, mCategory);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mCategory = savedInstanceState.getParcelable(Constants.PARCELABLE_CATEGORY);
-        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
-    }
-
+    /**
+     * Animates the CardScroller based on user input in order for us to use the TWO_SWIPE gesture
+     * to change grades instead of changing cards.
+     *
+     * @param right true if animating right, false otherwise.
+     */
     private void animateScroll(boolean right) {
         final int pos = mCardScroller.getSelectedItemPosition();
         final long time = 100;
@@ -226,29 +145,136 @@ public class SubCategoriesActivity extends Activity {
         }
     }
 
-    private void openRatingDetailed() {
+    /**
+     * Starts the DetailsActivity.
+     */
+    private void startDetails() {
         Intent intent = new Intent(this, DetailsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
-        int rating = mSubCategories.get(position).getRating();
+        int grade = mSubCategories.get(position).getGrade();
         int categoryId = mSubCategories.get(position).getParentId();
         int subCategoryId = mSubCategories.get(position).getId();
         intent.putExtra(Constants.EXTRA_POSITION, position);
-        intent.putExtra(Constants.EXTRA_RATING, rating);
+        intent.putExtra(Constants.EXTRA_GRADE, grade);
         intent.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
         intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
         startActivityForResult(intent, SET_RATING_DETAIL_CODE);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    /**
+     * Receives result from DetailsActivity in order to save the data changed in that activity.
+     *
+     * @param requestCode the request code.
+     * @param resultCode the result code.
+     * @param result the result intent.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == SET_RATING_DETAIL_CODE) {
             if (resultCode == RESULT_OK) {
-                int position = data.getIntExtra(Constants.EXTRA_POSITION, 1);
-                int rating = data.getIntExtra(Constants.EXTRA_RATING_DETAIL, 0);
-                mSubCategories.get(position).setRating(rating);
+                int position = result.getIntExtra(Constants.EXTRA_POSITION, 1);
+                int rating = result.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
+                mSubCategories.get(position).setGrade(rating);
                 mCardScroller.setSelection(position);
                 mAdapter.notifyDataSetChanged();
             }
         }
     }
 
+    /**
+     * Sends result back to CategoryActivity.
+     */
+    private void sendResult() {
+        Intent result = new Intent();
+        mCategory.setCompleted(true);
+        result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
+        result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        setResult(Activity.RESULT_OK, result);
+    }
+
+    //region Boring Stuff
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCardScroller.activate();
+    }
+
+    @Override
+    protected void onPause() {
+        mCardScroller.deactivate();
+        super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        savedInstanceState.putParcelable(Constants.PARCELABLE_CATEGORY, mCategory);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCategory = savedInstanceState.getParcelable(Constants.PARCELABLE_CATEGORY);
+        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
+    }
+    //endregion
+
+    //region Gesture Detector
+    private GestureDetector createGestureDetector(final Context context) {
+        GestureDetector gestureDetector = new GestureDetector(context);
+        //Create a base listener for generic gestures
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
+            @Override
+            public boolean onGesture(Gesture gesture) {
+                AudioManager am = (AudioManager) SubCategoriesActivity.this.getSystemService(Context.AUDIO_SERVICE);
+                int position = mCardScroller.getSelectedItemPosition();
+                int maxPositions = mAdapter.getCount() - 1;
+                switch (gesture) {
+                    case TAP:
+                        Log.e(TAG, "TAP called.");
+                        if (position == maxPositions) {
+                            sendResult();
+                            am.playSoundEffect(Sounds.DISALLOWED);
+                            finish();
+                        } else {
+                            startDetails();
+                            am.playSoundEffect(Sounds.TAP);
+                        }
+                        break;
+                    case SWIPE_LEFT:
+                        Log.e(TAG, "SWIPE_LEFT called.");
+                        animateScroll(false);
+                        return true;
+                    case SWIPE_RIGHT:
+                        Log.e(TAG, "SWIPE_RIGHT called.");
+                        animateScroll(true);
+                        return true;
+                    case SWIPE_DOWN:
+                        Log.e(TAG, "SWIPE_DOWN called.");
+                        finish();
+                        return true;
+                    case TWO_SWIPE_LEFT:
+                        Log.e(TAG, "TWO_SWIPE_LEFT called.");
+                        if (position != maxPositions) {
+                            changeRating(false);
+                        }
+                        return true;
+                    case TWO_SWIPE_RIGHT:
+                        Log.e(TAG, "TWO_SWIPE_RIGHT called.");
+                        if (position != maxPositions) {
+                            changeRating(true);
+                        }
+                        return true;
+                }
+                return false;
+            }
+        });
+        return gestureDetector;
+    }
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
+    }
+    //endregion
 }

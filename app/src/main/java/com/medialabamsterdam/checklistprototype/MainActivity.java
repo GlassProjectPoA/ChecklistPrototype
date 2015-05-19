@@ -64,7 +64,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        handleLocationUtils();
         defineLocale();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -73,6 +72,7 @@ public class MainActivity extends Activity {
         }
 
         createLocationCard();
+        handleLocationUtils();
 
         Utils.ChangeTextColor(this, mCards.get(0), R.id.footer, R.array.tap_to_start, R.color.green);
         Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
@@ -93,17 +93,25 @@ public class MainActivity extends Activity {
         }.start();
     }
 
+    //region Locations
     private boolean handleLocationUtils() {
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
         }
         mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
-            Log.e("WORKS!", mActualLocation.toString());
+            Log.e(TAG, mActualLocation.toString());
             Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
             return findArea(mLocationPoint);
         } else {
-            return false;
+            //TODO remove test location
+            Log.e(TAG, "\nCouldn't find location.\nUsing test Location");
+            mActualLocation = new Location("");
+            mActualLocation.setLatitude(52.381234);
+            mActualLocation.setLongitude(4.895540);
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
+            return findArea(mLocationPoint);
+//            return false;
         }
     }
 
@@ -161,7 +169,9 @@ public class MainActivity extends Activity {
         tv.setText(R.string.unknown);
         return false;
     }
+    //endregion
 
+    //region onResume/Pause onInstance
     @Override
     protected void onResume() {
         super.onResume();
@@ -176,6 +186,21 @@ public class MainActivity extends Activity {
         super.onPause();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
+        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
+        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
+    }
+    //endregion
+
     //region Gesture Detector
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
@@ -187,8 +212,8 @@ public class MainActivity extends Activity {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
+                        Log.e(TAG, "TAP called.");
                         if (mActualLocation != null) {
-                            Log.e(TAG, "TAP called.");
                             openCategories();
                             am.playSoundEffect(Sounds.TAP);
                         } else {
@@ -254,19 +279,4 @@ public class MainActivity extends Activity {
         View card = inflater.inflate(R.layout.location_layout, null);
         mCards.add(card);
     }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
-        savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
-        mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
-    }
-
 }
