@@ -4,150 +4,56 @@
     <string name="app_name">Checklist Prototype</string>
     <string name="voice_trigger">Load Checklist</string>
 
-    <!-- CATEGORIES -->
-    <string-array name="categories_list">
-        <item>Beplanting</item>
-        <item>Boomspiegel</item>
-        <item>Gras</item>
-        <item>Kunstwerken Groot</item>
-        <item>Meubilair - Afvalbakken</item>
-        <item>Meubilair - Borden</item>
-        <item>Meubilair - Dragers</item>
-        <item>Meubilair - Hekken</item>
-        <item>Meubilair - Palen</item>
-        <item>Meubilair - Banken &amp; Tafels</item>
-        <item>Riolering</item>
-        <item>Verharding</item>
-        <item>Elementen Verharding</item>
-        <item>Ongebonden Verharding</item>
-    </string-array>
-
-    <!-- PROBLEMS -->
-    <string-array name="problems_404">
-        <item>FOUT!</item>
-    </string-array>
-    <string-array name="problems_0">
-        <item>Bloembakken - Zwerfafval Fijn</item>
-        <item>Bloembakken - Zwerfafval Grof</item>
-        <item>Grofvuil</item>
-        <item>Zwerfafval Fijn</item>
-        <item>Zwerfafval Grof</item>
-    </string-array>
-    <string-array name="problems_1">
-        <item>Zwerfafval Fijn</item>
-        <item>Zwerfafval Grof</item>
-    </string-array>
-    <string-array name="problems_2">
-        <item>Zwerfafval Fijn</item>
-        <item>Zwerfafval Grof</item>
-        <item>Grofvuil</item>
-        <item>Natuurlijk Afval</item>
-    </string-array>
-    <string-array name="problems_3">
-        <item>Beplakking</item>
-        <item>Graffiti</item>
-    </string-array>
-    <string-array name="problems_4">
-        <item>Beplakking / Graffiti</item>
-        <item>Besmeuring</item>
-        <item>Natuurlijke Aanslag</item>
-        <item>Scheefstand</item>
-        <item>Vullingsgraad</item>
-    </string-array>
-    <string-array name="problems_5">
-        <item>Beplakking / Graffiti</item>
-        <item>Natuurlijke Aanslag</item>
-        <item>Verdraaiing</item>
-    </string-array>
-    <string-array name="problems_6">
-        <item>Beplakking / Graffiti</item>
-        <item>Scheefstand</item>
-    </string-array>
-    <string-array name="problems_7">
-        <item>Scheefstand</item>
-    </string-array>
-    <string-array name="problems_8">
-        <item>Beplakking / Graffiti</item>
-        <item>Natuurlijke Aanslag</item>
-        <item>Scheefstand</item>
-    </string-array>
-    <string-array name="problems_9">
-        <item>Beplakking / Graffiti</item>
-        <item>Besmeuring</item>
-        <item>Natuurlijke Aanslag</item>
-        <item>Scheefstand</item>
-    </string-array>
-    <string-array name="problems_10">
-        <item>Belemmering Inlaat</item>
-    </string-array>
-    <string-array name="problems_11">
-        <item>Grofvuil</item>
-        <item>Natuurlijke Aanslag</item>
-        <item>Onkruid Goten</item>
-        <item>Onkruid Rondom Obstakels</item>
-        <item>Uitwerpselen</item>
-        <item>Veegbaar Zwerfafval Fijn</item>
-        <item>Veegvuil Goten</item>
-        <item>Zwerfafval Fijn</item>
-        <item>Zwerfafval Grof</item>
-    </string-array>
-    <string-array name="problems_12">
-        <item>Onkruid Klinkers</item>
-        <item>Onkruid Tegels</item>
-    </string-array>
-    <string-array name="problems_13">
-        <item>Onkruid</item>
-    </string-array>
-
-    <!-- RATINGS -->
-    <string name="rating_aa">A+</string>
-    <string name="rating_a">A</string>
-    <string name="rating_b">B</string>
-    <string name="rating_c">C</string>
-    <string name="rating_d">D</string>
-
-    <!-- SUBMIT -->
-    <string name="submit_report">Verzend Controle</string>
-    <string name="submit_rates">Bevestig Beoordeling</string>
+    <!-- FINISH -->
+    <string name="checklist_finish">You finished the checklist!</string>
+    <string name="checklist_not_finish">The checklist is not complete!</string>
+    <string name="category_finish">You finished this category!</string>
 
     <!-- INSTRUCTIONS -->
-    <string name="tap_to_submit">Tap om te verzenden</string>
+    <string name="tap_to_save">Tap to save grades</string>
+    <string name="tap_to_send">Tap to send the list</string>
+    <string name="tap_to_not_complete">Tap to see missing category</string>
     <string-array name="tap_to_start">
-        <item>Tap om te starten</item>
-        <item>starten</item>
+        <item>Tap to start</item>
+        <item>start</item>
     </string-array>
-    <string name="tap_to_grade">Tap om beoordeling te starten</string>
-    <string name="tap_to_continue">Tap om door te gaan</string>
-    <string name="tap_for_info">Tap voor beoordeling info</string>
+    <string name="tap_to_grade">Tap to start grading</string>
+    <string name="tap_to_continue">Tap to continue</string>
+    <string name="tap_for_info">Tap for grading info</string>
     <string-array name="tap_two_to_refresh">
-        <item>Tap met twee vingers om opnieuw te laden</item>
-        <item>opnieuw te laden</item>
+        <item>Tap with two fingers to refresh</item>
+        <item>refresh</item>
     </string-array>
-    <string name="tap_two_to_confirm_grade">Tap met twee vingers om beoordeling te bevestigen</string>
-    <string name="swipe_two_to_grade">Swipe met twee vingers om beoordeling aan te passen</string>
+    <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
+    <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
 
     <!-- UTILITIES -->
-    <string name="random_time">12:34</string>
-    <string name="left_arrow">‹</string>
-    <string name="right_arrow">›</string>
-    <string name="example_text">Er zijn kleine stickers.</string>
+    <string name="example_text">There are little stickers.</string>
+    <string name="saving_picture">Saving picture.</string>
+    <string name="please_wait">Please wait.</string>
+    <string name="upload_list">Uploading list.</string>
 
     <!-- TITLES -->
-    <string name="title_instructions">Beoordelingsinstructies</string>
-    <string name="title_summary">Samenvatting</string>
-    <string name="title_location">Checklist voor locatie</string>
-    <string name="title_categories">Categorieen</string>
-    <string name="title_rating">Beoordeling</string>
-    <string name="title_rating_detailed">Beoordeling Detail</string>
+    <string name="title_instructions">Grading Instructions</string>
+    <string name="title_summary">Summary</string>
+    <string name="title_location">Checklist for area/location</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_rating">Rating</string>
+    <string name="title_rating_detailed">Rating Detailed</string>
 
     <!-- IMAGE DESCRIPTIONS -->
-    <string name="map_location_description">map locatie snapshot</string>
     <string name="warning_sign_description">Warning sign.</string>
 
+    <!-- JSON RESPONSES -->
+    <string name="complete">Complete!</string>
+    <string name="send_complete">The checklist has been saved.</string>
+    <string name="incomplete">Incomplete!</string>
+    <string name="send_failed">Failed to save the checklist.</string>
+
     <!-- WARNING TEXT -->
-    <string name="warning_text">De staat van deze post is lager dan toegestaan. Maak nu een foto van de post.</string>
+    <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
+    <string name="title_activity_warning">Warning Activity</string>
 
     <!-- NOT ORDERED -->
-
-
+    <string name="hello_world">Hello world!</string>
 </resources>

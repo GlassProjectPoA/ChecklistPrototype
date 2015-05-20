@@ -43,7 +43,6 @@ public class WarningActivity extends Activity {
     private GestureDetector mGestureDetector;
     private ArrayList<View> mCards;
     private MyCardScrollAdapter mAdapter;
-    private ProgressBar spinner;
     private int categoryId;
     private int subCategoryId;
     private String categoryName;
@@ -54,19 +53,21 @@ public class WarningActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // Enables voice commands.
         if (OK_GLASS) {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
 
+        //Get data from intent sent from CategoryActivity.
         Intent intent = getIntent();
         categoryId = intent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
         subCategoryId = intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
         categoryName = intent.getStringExtra(Constants.EXTRA_CATEGORY_NAME);
         subCategoryName = intent.getStringExtra(Constants.EXTRA_SUBCATEGORY_NAME);
 
+        //Regular CardScroller/Adapter procedure.
         createWarningCard();
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
         mAdapter = new MyCardScrollAdapter(mCards);
         mCardScroller.setAdapter(mAdapter);
@@ -74,9 +75,9 @@ public class WarningActivity extends Activity {
         mCardScroller.setHorizontalScrollBarEnabled(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        spinner = (ProgressBar) mCards.get(1).findViewById(R.id.pictureProcessBar);
     }
 
+    //region onPause/Resume and onInstance
     @Override
     protected void onResume() {
         super.onResume();
@@ -88,6 +89,7 @@ public class WarningActivity extends Activity {
         mCardScroller.deactivate();
         super.onPause();
     }
+    //endregion
 
     //region Gesture Detector
     private GestureDetector createGestureDetector(final Context context) {
@@ -98,11 +100,11 @@ public class WarningActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 Log.e(TAG, "gesture = " + gesture);
-                AudioManager am = (AudioManager) WarningActivity.this.getSystemService(Context.AUDIO_SERVICE);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called.");
-                        WarningActivity.this.takePicture();
+                        takePicture();
                         am.playSoundEffect(Sounds.TAP);
                         break;
                 }
@@ -118,85 +120,40 @@ public class WarningActivity extends Activity {
     }
     //endregion
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TAKE_PICTURE_REQUEST && resultCode == RESULT_OK) {
+            sendResult(data);
+        }
+    }
+
+    /**
+     * Starts intent to take a picture with the glass' default program.
+     */
     private void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, TAKE_PICTURE_REQUEST);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TAKE_PICTURE_REQUEST && resultCode == RESULT_OK) {
-            String thumbnailPath = data.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
-            String picturePath = data.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
-
-            //processPictureWhenReady(picturePath);
-            // TODO: Show the thumbnail to the user while the full picture is being
-            // processed.
-//            if (spinner.getVisibility() == View.GONE) {
-//                mCardScroller.activate();
-//                mCards.get(1).findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-//                mCards.get(1).findViewById(R.id.check).setVisibility(View.GONE);
-//                TextView tv = (TextView) mCards.get(1).findViewById(R.id.title);
-//                tv.setText(R.string.saving_picture);
-//                tv = (TextView) mCards.get(1).findViewById(R.id.footer);
-//                tv.setText(R.string.please_wait);
-//                spinner.setVisibility(View.VISIBLE);
-//                mCardScroller.setSelection(1);
-//                mAdapter.notifyDataSetChanged();
-//            }
-
-            Intent result = new Intent();
-            result.putExtra(Constants.EXTRA_PICTURE, picturePath);
-            result.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
-            result.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
-            setResult(Activity.RESULT_OK, result);
-            finish();
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
+    /**
+     * Sends result from the takePicture intent back to CategoryActivity.
+     *
+     * @param picturePathIntent the intent received from takePicture containing the picture path.
+     */
+    private void sendResult(Intent picturePathIntent) {
+        //String thumbnailPath = picturePathIntent.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
+        String picturePath = picturePathIntent.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
+        Intent result = new Intent();
+        result.putExtra(Constants.EXTRA_PICTURE, picturePath);
+        result.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
+        result.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
+        setResult(Activity.RESULT_OK, result);
+        finish();
     }
 
-    private void processPictureWhenReady(final String picturePath) {
-        final File pictureFile = new File(picturePath);
-
-        if (pictureFile.exists()) {
-            // The picture is ready; process it.
-            Intent result = new Intent();
-            result.putExtra(Constants.EXTRA_PICTURE, picturePath);
-            setResult(Activity.RESULT_OK, result);
-            finish();
-        } else {
-            // The file does not exist yet. Before starting the file observer, you
-            // can update your UI to let the user know that the application is
-            // waiting for the picture (for example, by displaying the thumbnail
-            // image and a progress indicator).
-
-            final File parentDirectory = pictureFile.getParentFile();
-            FileObserver observer = new FileObserver(parentDirectory.getPath(), FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
-                private boolean isFileWritten;
-
-                @Override
-                public void onEvent(int event, String path) {
-                    if (!isFileWritten) {
-                        File affectedFile = new File(parentDirectory, path);
-                        isFileWritten = affectedFile.equals(pictureFile);
-
-                        if (isFileWritten) {
-                            stopWatching();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    processPictureWhenReady(picturePath);
-                                }
-                            });
-                        }
-                    }
-                }
-            };
-            observer.startWatching();
-        }
-    }
-
+    /**
+     * Creates the card view.
+     */
     private void createWarningCard() {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -205,8 +162,6 @@ public class WarningActivity extends Activity {
         tv.setText(categoryName);
         tv = (TextView) card.findViewById(R.id.subcategory_text);
         tv.setText(subCategoryName);
-        mCards.add(card);
-        card = inflater.inflate(R.layout.check_layout, null);
         mCards.add(card);
     }
 

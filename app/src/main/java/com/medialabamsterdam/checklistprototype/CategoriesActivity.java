@@ -27,6 +27,7 @@ import com.medialabamsterdam.checklistprototype.Adapters.CategoryCardScrollAdapt
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.LocationUtils;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
@@ -131,8 +132,8 @@ public class CategoriesActivity extends Activity {
                             // server or send the user to one of the Categories he didn't grade.
                             if (position == maxPositions) {
                                 if (completion == mCategories.size() - 1) {
-                                    // If _grades is not null then getGrades() has been called before
-                                    // so there is no need to call it again.
+                                    // If _grades is not null then getGrades() has been called
+                                    // before so there is no need to call it again.
                                     if (_grades != null) {
                                         checkData();
                                     } else {
@@ -161,6 +162,7 @@ public class CategoriesActivity extends Activity {
                         }
                         break;
                     case SWIPE_DOWN:
+                        Log.e(TAG, "SWIPE_DOWN called.");
                         sendResult();
                         break;
                 }
@@ -176,9 +178,21 @@ public class CategoriesActivity extends Activity {
     }
     //endregion
 
+    //region onActivityResult
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
+            savePicture(data);
+        }
+        if (requestCode == SUBCATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
+            saveSubcategoryData(data);
+        }
+    }
+    //endregion
+
     /**
      * This method grabs grades from the server in order to compare them with the grades from user
-     * input and prompt the user to take a picture in case they are lower than what they should be.
+     * input.
      *
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
@@ -194,12 +208,10 @@ public class CategoriesActivity extends Activity {
                         if (e != null) e.printStackTrace();
                         if (result != null) {
                             // Saves all acceptable grades from given location in _grades.
-                            // Use the SubCategory.getCode() in order to extract the according
-                            // acceptable grade from _grades.
                             Log.e(TAG, result.toString());
                             JsonArray jsonArray = result.getAsJsonArray("grades");
                             _grades = new SparseIntArray();
-                            for (int i = 0; i < jsonArray.size() ; i++) {
+                            for (int i = 0; i < jsonArray.size(); i++) {
                                 int code = jsonArray.get(i).getAsJsonObject().get("code").getAsInt();
                                 int grade = Utils.getRatingFromString(jsonArray.get(i)
                                         .getAsJsonObject().get("accepted_grade").getAsString());
@@ -213,42 +225,49 @@ public class CategoriesActivity extends Activity {
 
     }
 
+    /**
+     * Sends result back to MainActivity.
+     */
     private void sendResult() {
-        Log.e(TAG, "SWIPE_DOWN called.");
+        mCardScroller.deactivate();
         Intent result = new Intent();
         result.putParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY, mSubCategories);
-        result.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, mCategories);
+        // Removes last entry on mCategories that is used to create and display the check mark.
+        ArrayList<Category> fixedCategories = mCategories;
+        fixedCategories.remove(fixedCategories.size()-1);
+        result.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, fixedCategories);
         result.putExtra(Constants.EXTRA_LOCATION, locationIndex);
         setResult(Activity.RESULT_OK, result);
         finish();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
-            savePicture(data);
-        }
-        if (requestCode == SUBCATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
-            saveData(data);
-        }
-    }
-
-    private void savePicture(Intent data) {
-        int categoryId = data.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
-        int subCategoryId = data.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
+    /**
+     * Saves the picture path from the received intent.
+     *
+     * @param picturePathIntent Intent received from WarningActivity.
+     */
+    private void savePicture(Intent picturePathIntent) {
+        int categoryId = picturePathIntent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
+        int subCategoryId = picturePathIntent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
         for (SubCategory sc : mSubCategories){
             if (categoryId == sc.getParentId() && subCategoryId == sc.getId()){
-                sc.setPictureUri(data.getStringExtra(Constants.EXTRA_PICTURE));
+                sc.setPictureUri(picturePathIntent.getStringExtra(Constants.EXTRA_PICTURE));
                 break;
             }
         }
+        // Calls checkData() to see if any other SubCategory need a picture.
         checkData();
     }
 
-
+    /**
+     * This method checks if any SubCategory has a grade below the accepted. And calls
+     * WarningActivity if they do.
+     */
     private void checkData() {
         int count = 0;
         CheckDataLoop: for (SubCategory sc : mSubCategories){
+            // If any category has a grade below accepted AND has no picture URI related to it
+            // the code will call WarningActivity to prompt the user to take a picture.
             if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode())){
                 Intent intent = new Intent(this, WarningActivity.class);
                 for (Category c : mCategories){
@@ -262,51 +281,74 @@ public class CategoriesActivity extends Activity {
                     }
                 }
             } else {
+                // If no SubCategory is below accepted grade, the code will call sendData() to send
+                // the checklist to the server.
                 count++;
                 if (mSubCategories.size() == count){
                     sendData();
+                    break;
                 }
             }
         }
     }
 
-    private void saveData(Intent data){
-        ArrayList<SubCategory> sc = data.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
-        sc.remove(sc.size() - 1);
-        Category c = data.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+    /**
+     * This method saves the results received from SubCategoryActivity.
+     *
+     * @param intent the data received.
+     */
+    private void saveSubcategoryData(Intent intent){
+        ArrayList<SubCategory> sc = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
+        // Get the Category object on the intent and changes it's 'completed' variable to 'true'.
+        Category c = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
         for (int i = 0; i < mCategories.size(); i++) {
             if (mCategories.get(i).getId() == c.getId()) {
                 mCategories.get(i).setCompleted(c.isCompleted());
             }
         }
-
+        // If mSubCategories is not null then it checks if the SubCategories have already been
+        // graded.
         if (mSubCategories != null) {
             boolean hasInstance = false;
             for (int i = 0; i < mSubCategories.size(); i++) {
                 for (int j = 0; j < sc.size(); j++) {
                     if (mSubCategories.get(i).getParentId() == sc.get(j).getParentId() &&
                             mSubCategories.get(i).getId() == sc.get(j).getId()) {
+                        //Updates the data on the SubCategory if it was already created.
                         mSubCategories.get(i).setGrade(sc.get(j).getGrade());
                         hasInstance = true;
                     }
                 }
             }
             if (!hasInstance) {
+                // If there were no SubCategories in the ArrayList related to the received category
+                // it will just add the given SubCategory object.
                 for (SubCategory subCategory : sc) {
                     mSubCategories.add(subCategory);
                 }
             }
         } else {
+            // If mSubCategories is null then it will just save every SubCategory received.
             mSubCategories = sc;
         }
+        // Updates view.
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * This method sends all the data from the checklist to the server.
+     *
+     * This uses Json and the Ion library.
+     * https://github.com/koush/ion
+     */
     private void sendData() {
+        // startLoader() handles the loader screen in view so the user know we are sending data.
         startLoader();
+        // Disables scrolling and tapping on the device, so we don't send data twice.
         mCardScroller.setFocusable(false);
         mGestureDetector = null;
 
+        // Put all data we have to send in a JsonArray.
         JsonArray jsonArray = new JsonArray();
         for (SubCategory sc : mSubCategories) {
             JsonObject object = new JsonObject();
@@ -323,6 +365,7 @@ public class CategoriesActivity extends Activity {
 
         Log.e(TAG, json.toString());
 
+        // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)
                 .load("http://glass.twisk-interactive.nl/checklist")
                 .setJsonObjectBody(json)
@@ -331,14 +374,25 @@ public class CategoriesActivity extends Activity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (e != null) e.printStackTrace();
-                        if (result != null){
-                            Log.e(TAG, result.toString());
-                            statusComplete();
+                        if (result != null) {
+                            if (result.get("status").getAsString().equals("OK")) {
+                                Log.e(TAG, result.toString());
+                                // Calls statusComplete() after it receives a result as to let the user
+                                // know the operation was completed.
+                                statusComplete();
+                            } else {
+                                statusFail();
+                            }
+                        } else {
+                            statusFail();
                         }
                     }
                 });
     }
 
+    /**
+     * Tell the view to change text and start a loader as to let the user know we are sending data.
+     */
     private void startLoader() {
         TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
         tv.setText(R.string.upload_list);
@@ -352,6 +406,10 @@ public class CategoriesActivity extends Activity {
         mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Changes the view to let the user know the data is sent. If the user clicks again he will
+     * be sent to the starting screen of the app (MainActivity).
+     */
     private void statusComplete() {
         TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
         tv.setText(R.string.complete);
@@ -366,7 +424,25 @@ public class CategoriesActivity extends Activity {
         isSent = true;
     }
 
+    /**
+     * Changes the view to let the user know the data was not sent.
+     */
+    private void statusFail() {
+        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+        tv.setText(R.string.incomplete);
+        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+        tv.setText(R.string.send_failed);
+        mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar).setVisibility(View.GONE);
+        ImageView iv = (ImageView)mCardScroller.getSelectedView().findViewById(R.id.check);
+        iv.setVisibility(View.VISIBLE);
+        iv.setImageResource(R.drawable.stop);
+        iv.setColorFilter(getResources().getColor(R.color.red));
+        mGestureDetector = createGestureDetector(this);
+    }
 
+    /**
+     * Starts the InstructionActivity
+     */
     private void startInstructions() {
         Intent intent = new Intent(this, InstructionsActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
@@ -374,10 +450,16 @@ public class CategoriesActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * Starts the SubCategoryActivity
+     */
     private void startSubCategories() {
         Intent intent = new Intent(this, SubCategoriesActivity.class);
         int position = mCardScroller.getSelectedItemPosition();
         ArrayList<SubCategory> subCategories = new ArrayList<>();
+        // Check if mSubCategories is null. If it's not then it checks if the category has been
+        // rated before, in which case it sends the previews values to SubCategoryActivity to allow
+        // the user to change it.
         if (mSubCategories != null) {
             for (SubCategory sc : mSubCategories) {
                 if (sc.getParentId() == mCategories.get(position).getId()) {

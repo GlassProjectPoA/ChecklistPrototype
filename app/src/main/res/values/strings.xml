@@ -4,107 +4,12 @@
     <string name="app_name">Checklist Prototype</string>
     <string name="voice_trigger">Load Checklist</string>
 
-    <!-- CATEGORIES -->
-    <string-array name="categories_list">
-        <item>Vegetation</item>
-        <item>Treeline</item>
-        <item>Grass</item>
-        <item>Large Artwork</item>
-        <item>Furniture - Trashcan</item>
-        <item>Furniture - Signs</item>
-        <item>Furniture - Carriers</item>
-        <item>Furniture - Fences</item>
-        <item>Furniture - Poles</item>
-        <item>Furniture - Benches &amp; Tables</item>
-        <item>Sewerage</item>
-        <item>Hardening</item>
-        <item>Hardening Elements</item>
-        <item>Hardening Unbound</item>
-    </string-array>
-
-    <!-- PROBLEMS -->
-    <string-array name="problems_404">
-        <item>ERROR!</item>
-    </string-array>
-    <string-array name="problems_0">
-        <item>Planter - Fine Litter</item>
-        <item>Planter - Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_1">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_2">
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-        <item>Bulk Waste</item>
-        <item>Natural Waste</item>
-    </string-array>
-    <string-array name="problems_3">
-        <item>Coverings</item>
-        <item>Graffiti</item>
-    </string-array>
-    <string-array name="problems_4">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-        <item>Fill Level</item>
-    </string-array>
-    <string-array name="problems_5">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Warp</item>
-    </string-array>
-    <string-array name="problems_6">
-        <item>Coverings / Graffiti</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_7">
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_8">
-        <item>Coverings / Graffiti</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_9">
-        <item>Coverings / Graffiti</item>
-        <item>Smudging</item>
-        <item>Natural Dirt</item>
-        <item>Tilt</item>
-    </string-array>
-    <string-array name="problems_10">
-        <item>Barrier Inlet</item>
-    </string-array>
-    <string-array name="problems_11">
-        <item>Bulk Waste</item>
-        <item>Natural Dirt</item>
-        <item>Weed Gutters</item>
-        <item>Weed Around Obstacles</item>
-        <item>Excreta</item>
-        <item>Wipeable Fine Litter</item>
-        <item>Wipe Dirt Gutters</item>
-        <item>Fine Litter</item>
-        <item>Coarse Litter</item>
-    </string-array>
-    <string-array name="problems_12">
-        <item>Weed Pavers</item>
-        <item>Weet Tiles</item>
-    </string-array>
-    <string-array name="problems_13">
-        <item>Weed</item>
-    </string-array>
-
     <!-- RATINGS -->
-    <string name="rating_aa">A+</string>
-    <string name="rating_a">A</string>
-    <string name="rating_b">B</string>
-    <string name="rating_c">C</string>
-    <string name="rating_d">D</string>
+    <string name="rating_aa" translatable="false">A+</string>
+    <string name="rating_a" translatable="false">A</string>
+    <string name="rating_b" translatable="false">B</string>
+    <string name="rating_c" translatable="false">C</string>
+    <string name="rating_d" translatable="false">D</string>
 
     <!-- FINISH -->
     <string name="checklist_finish">You finished the checklist!</string>
@@ -130,13 +35,13 @@
     <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
 
     <!-- UTILITIES -->
-    <string name="random_time">12:34</string>
-    <string name="random_number">2</string>
-    <string name="random_word">Trees</string>
-    <string name="unknown">"?"</string>
-    <string name="left_arrow">‹</string>
-    <string name="right_arrow">›</string>
-    <string name="slash_divider">/</string>
+    <string name="random_time" translatable="false">12:34</string>
+    <string name="random_number" translatable="false">2</string>
+    <string name="random_word" translatable="false">Trees</string>
+    <string name="unknown" translatable="false">"?"</string>
+    <string name="left_arrow" translatable="false">‹</string>
+    <string name="right_arrow" translatable="false">›</string>
+    <string name="slash_divider" translatable="false">/</string>
     <string name="example_text">There are little stickers.</string>
     <string name="saving_picture">Saving picture.</string>
     <string name="please_wait">Please wait.</string>
@@ -145,24 +50,25 @@
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
     <string name="title_summary">Summary</string>
-    <string name="title_location">Checklist for area/location</string>
+    <string name="title_location">Checklist for \narea/location</string>
     <string name="title_categories">Categories</string>
     <string name="title_rating">Rating</string>
     <string name="title_rating_detailed">Rating Detailed</string>
 
     <!-- IMAGE DESCRIPTIONS -->
-    <string name="map_location_description">map location snapshot</string>
+    <string name="map_location_description" translatable="false">map location snapshot</string>
     <string name="warning_sign_description">Warning sign.</string>
+
+    <!-- JSON RESPONSES -->
+    <string name="complete">Complete!</string>
+    <string name="send_complete">The checklist has been saved.</string>
+    <string name="incomplete">Incomplete!</string>
+    <string name="send_failed">Failed to save the checklist.</string>
 
     <!-- WARNING TEXT -->
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
     <string name="title_activity_warning">Warning Activity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="complete">Complete!</string>
-    <string name="send_complete">The checklist has been saved.</string>
-
 
     <!-- NOT ORDERED -->
-
-
+    <string name="hello_world">Hello world!</string>
 </resources>

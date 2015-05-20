@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
 
         defineLocale();
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // Defines if using voice commands or not.
         if (OK_GLASS) {
             getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         }
@@ -74,102 +74,19 @@ public class MainActivity extends Activity {
         createLocationCard();
         handleLocationUtils();
 
+        // Changes the color of some text in the view.
         Utils.ChangeTextColor(this, mCards.get(0), R.id.footer, R.array.tap_to_start, R.color.green);
         Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
 
+        //Regular CardScroller/Adapter procedure.
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
         mAdapter = new MyCardScrollAdapter(mCards);
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        new CountDownTimer(2000, 500) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                handleLocationUtils();
-            }
-        }.start();
     }
-
-    //region Locations
-    private boolean handleLocationUtils() {
-        if (mLocationUtils == null) {
-            mLocationUtils = new LocationUtils(this);
-        }
-        mActualLocation = mLocationUtils.getLocation();
-        if (mActualLocation != null) {
-            Log.e(TAG, mActualLocation.toString());
-            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
-            return findArea(mLocationPoint);
-        } else {
-            //TODO remove test location
-            Log.e(TAG, "\nCouldn't find location.\nUsing test Location");
-            mActualLocation = new Location("");
-            mActualLocation.setLatitude(52.381234);
-            mActualLocation.setLongitude(4.895540);
-            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(), (float) mActualLocation.getLongitude());
-            return findArea(mLocationPoint);
-//            return false;
-        }
-    }
-
-    private boolean findArea(Point point) {
-        List<Area> mAreas = DataBaseHelper.readArea(this);
-        TextView tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
-        for (Area area : mAreas) {
-
-            Point topLeft = Utils.stringToPoint(area.getTopLeft());
-            Point botRight = Utils.stringToPoint(area.getBotRight());
-            Point topRight = new Point(topLeft.x, botRight.y);
-            Point botLeft = new Point(botRight.x, topLeft.y);
-
-            Polygon polygon = Polygon.Builder()
-                    .addVertex(topRight)
-                    .addVertex(topLeft)
-                    .addVertex(botLeft)
-                    .addVertex(botRight)
-                    .build();
-            if (polygon.contains(point)) {
-                areaIndex = area.getId();
-                areaCode = area.getCode();
-                tv.setText(area.getName());
-                return findLocation(point);
-            }
-        }
-        tv.setText(R.string.unknown);
-        return false;
-    }
-
-    private boolean findLocation(Point point) {
-        TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
-        List<Locations> mLocations = DataBaseHelper.readLocations(this, areaIndex);
-        for (Locations locations : mLocations) {
-
-            Point topRight = Utils.stringToPoint(locations.getTopRight());
-            Point topLeft = Utils.stringToPoint(locations.getTopLeft());
-            Point botLeft = Utils.stringToPoint(locations.getBotLeft());
-            Point botRight = Utils.stringToPoint(locations.getBotRight());
-
-            Polygon polygon = Polygon.Builder()
-                    .addVertex(topRight)
-                    .addVertex(topLeft)
-                    .addVertex(botLeft)
-                    .addVertex(botRight)
-                    .build();
-
-            if (polygon.contains(point)) {
-                locationIndex = locations.getLocationId();
-                tv.setText(locations.getName());
-                mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
-                return true;
-            }
-        }
-        tv.setText(R.string.unknown);
-        return false;
-    }
-    //endregion
 
     //region onResume/Pause onInstance
     @Override
@@ -221,12 +138,7 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case TWO_LONG_PRESS:
-                        boolean ok = handleLocationUtils();
-                        if (ok) {
-                            am.playSoundEffect(Sounds.SUCCESS);
-                        } else {
-                            am.playSoundEffect(Sounds.ERROR);
-                        }
+                            am.playSoundEffect(handleLocationUtils());
                         return true;
                 }
                 return false;
@@ -241,6 +153,129 @@ public class MainActivity extends Activity {
     }
     //endregion
 
+    //region onActivityResult
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
+            handleLocationUtils();
+            if (data.getIntExtra(Constants.EXTRA_LOCATION, 0) == locationIndex) {
+                mCategories = data.getParcelableArrayListExtra(Constants.EXTRA_CATEGORY);
+                mSubCategories = data.getParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY);
+            }
+        }
+    }
+    //endregion
+
+    /**
+     * Handles LocationUtils, starting it then querying for location updates and then stopping it
+     * when we receive a location.
+     *
+     * @return returns an int related to a sound effect in order to give sound feedback to user.
+     */
+    private int handleLocationUtils() {
+        if (mLocationUtils == null) {
+            mLocationUtils = new LocationUtils(this);
+        }
+        mActualLocation = mLocationUtils.getLocation();
+        if (mActualLocation != null) {
+            Log.e(TAG, mActualLocation.toString());
+            // Creates a point to check if actual location is inside an Area.
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
+                    (float) mActualLocation.getLongitude());
+            mLocationUtils.stop();
+            // Calls the findArea() method in order to check which area are we in.
+            return findArea(mLocationPoint);
+        } else {
+            //TODO remove test location
+            Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
+            mActualLocation = new Location("");
+            mActualLocation.setLatitude(52.381234);
+            mActualLocation.setLongitude(4.895540);
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
+                    (float) mActualLocation.getLongitude());
+            return findArea(mLocationPoint);
+//            return Sounds.ERROR;
+        }
+    }
+
+    /**
+     * Searches the internal database in order to find if we are inside an Area.
+     *
+     * @param point out current location in a Point Object.
+     * @return returns an int related to a sound effect in order to give sound feedback to user.
+     */
+    private int findArea(Point point) {
+        List<Area> mAreas = DataBaseHelper.readArea(this);
+        TextView tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
+        for (Area area : mAreas) {
+
+            Point topLeft = Utils.stringToPoint(area.getTopLeft());
+            Point botRight = Utils.stringToPoint(area.getBotRight());
+            Point topRight = new Point(topLeft.x, botRight.y);
+            Point botLeft = new Point(botRight.x, topLeft.y);
+
+            Polygon polygon = Polygon.Builder()
+                    .addVertex(topRight)
+                    .addVertex(topLeft)
+                    .addVertex(botLeft)
+                    .addVertex(botRight)
+                    .build();
+            // If we are inside an Area then it updates areaIndex, areaCode values as well as the
+            // Area text on the screen.
+            if (polygon.contains(point)) {
+                areaIndex = area.getId();
+                areaCode = area.getCode();
+                tv.setText(area.getName());
+                // It then calls findLocation() method to find in which location are we, based on
+                // which area we are.
+                return findLocation(point);
+            }
+        }
+        // Sets Area text to "?" if not inside any recorded area.
+        tv.setText(R.string.unknown);
+        return Sounds.ERROR;
+    }
+
+    /**
+     * Searches the internal database in order to find if we are inside a Location.
+     *
+     * @param point out current location in a Point Object.
+     * @return returns an int related to a sound effect in order to give sound feedback to user.
+     */
+    private int findLocation(Point point) {
+        TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
+        List<Locations> mLocations = DataBaseHelper.readLocations(this, areaIndex);
+        for (Locations locations : mLocations) {
+
+            Point topRight = Utils.stringToPoint(locations.getTopRight());
+            Point topLeft = Utils.stringToPoint(locations.getTopLeft());
+            Point botLeft = Utils.stringToPoint(locations.getBotLeft());
+            Point botRight = Utils.stringToPoint(locations.getBotRight());
+
+            Polygon polygon = Polygon.Builder()
+                    .addVertex(topRight)
+                    .addVertex(topLeft)
+                    .addVertex(botLeft)
+                    .addVertex(botRight)
+                    .build();
+            // If we are inside a Location then it updates locationIndex value as well as the
+            // Location text on the screen.
+            if (polygon.contains(point)) {
+                locationIndex = locations.getLocationId();
+                tv.setText(locations.getName());
+                // Loads the Categories based on the given location.
+                mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
+                return Sounds.SUCCESS;
+            }
+        }
+        // Sets Location text to "?" if not inside any recorded location.
+        tv.setText(R.string.unknown);
+        return Sounds.ERROR;
+    }
+
+    /**
+     * Starts the CategoriesActivity.
+     */
     private void openCategories() {
         Intent intent = new Intent(this, CategoriesActivity.class);
         intent.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, mCategories);
@@ -250,18 +285,10 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, CATEGORY_RATING_REQUEST);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "RESULT");
-        if (requestCode == CATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
-            handleLocationUtils();
-            if (data.getIntExtra(Constants.EXTRA_LOCATION, 0) == locationIndex) {
-                mCategories = data.getParcelableArrayListExtra(Constants.EXTRA_CATEGORY);
-                mSubCategories = data.getParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY);
-            }
-        }
-    }
-
+    /**
+     * Defines the locale based on Constants "Configuration".
+     * Language can be changed to Dutch(nl) by changing LOAD_ALTERNATE_LANGUAGE to true.
+     */
     private void defineLocale() {
         if (Constants.LOAD_ALTERNATE_LANGUAGE) {
             Locale locale = new Locale(Constants.ALTERNATE_LANGUAGE);
@@ -273,6 +300,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    /**
+     * Creates the card view.
+     */
     private void createLocationCard() {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);

@@ -90,18 +90,21 @@ public class SubCategoriesActivity extends Activity {
      * Animates the CardScroller based on user input in order for us to use the TWO_SWIPE gesture
      * to change grades instead of changing cards.
      *
-     * @param right true if animating right, false otherwise.
+     * @param right true if animating right, false if left.
      */
     private void animateScroll(boolean right) {
         final int pos = mCardScroller.getSelectedItemPosition();
         final long time = 100;
         int size = mSubCategories.size() - 1;
+        // Animates the current card to leave view to the right.
         if (right && pos < size) {
             final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
             animOutRight.setDuration(time);
             final Animation animInRight = new TranslateAnimation(640, 0, 0, 0);
             animInRight.setDuration(time);
 
+            // Creates an Animation Listener that when onAnimationEnd is called it loads the
+            // next card from the right.
             Animation.AnimationListener al = new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -119,12 +122,15 @@ public class SubCategoriesActivity extends Activity {
             };
             animOutRight.setAnimationListener(al);
             mCardScroller.startAnimation(animOutRight);
+        // Animates the current card to leave view to the left.
         } else if (!right && pos > 0) {
             Animation animOutLeft = new TranslateAnimation(0, 640, 0, 0);
             animOutLeft.setDuration(time);
             final Animation animInLeft = new TranslateAnimation(-640, 0, 0, 0);
             animInLeft.setDuration(time);
 
+            // Creates an Animation Listener that when onAnimationEnd is called it loads the
+            // next card from the right.
             Animation.AnimationListener al = new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -185,9 +191,13 @@ public class SubCategoriesActivity extends Activity {
      * Sends result back to CategoryActivity.
      */
     private void sendResult() {
+        mCardScroller.deactivate();
         Intent result = new Intent();
         mCategory.setCompleted(true);
         result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
+        // Removes last entry on mSubCategories that is used to create and display the check mark.
+        ArrayList<SubCategory> fixedSubCategories = mSubCategories;
+        fixedSubCategories.remove(fixedSubCategories.size() - 1);
         result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         setResult(Activity.RESULT_OK, result);
     }
