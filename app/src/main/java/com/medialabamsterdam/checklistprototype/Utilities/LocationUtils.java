@@ -16,6 +16,8 @@ import java.util.List;
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 20/04/2015.
+ * <p/>
+ * This class is meant to manage the GPS and acquire the device's location.
  */
 public class LocationUtils {
 
@@ -25,53 +27,69 @@ public class LocationUtils {
     private List<String> providers;
 
     public LocationUtils(Context context) {
+        // Sets the criteria to use when querying for GPS data.
+        // Currently using "ACCURACY_FINE".
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        // Gets LocationManager.
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
+        // Applies the criteria.
         providers = mLocationManager.getProviders(criteria, true);
-
+        // Checks if any of the Location Providers are Enabled.
         boolean isAnyEnabled = false;
         for (String provider : providers) {
-            if (mLocationManager.isProviderEnabled(provider)){
+            if (mLocationManager.isProviderEnabled(provider)) {
                 isAnyEnabled = true;
             }
         }
+        // Informs the debug accordingly.
         if (isAnyEnabled) {
             Log.e("SUCCESS:", " GPS is enabled on providers: " + Arrays.toString(providers.toArray()));
         } else {
             Log.e("ERROR:", " GPS not enabled on providers: " + Arrays.toString(providers.toArray()));
         }
 
+        // Sets a Location Listener in order to change the mLocation variable when the location of
+        // the device changes.
         mLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 mLocation = location;
             }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
 
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+            }
 
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+            }
         };
 
-        // Register the listener with the Location Manager to receive location updates
+        // Calls restart() to request location updates.
         restart();
     }
 
+    /**
+     * Starts or restarts the Location Updates.
+     * Remember to use stop() when a location is acquired in order to save battery life.
+     */
     public void restart() {
         for (String provider : providers) {
-            if (mLocationManager.isProviderEnabled(provider)){
+            if (mLocationManager.isProviderEnabled(provider)) {
                 mLocationManager.requestLocationUpdates(provider, 1000, 0, mLocationListener);
             }
         }
     }
 
-    public Location getLocation() {
-        return mLocation;
-    }
-
+    /**
+     * Stops the Location Updates.
+     */
     public void stop() {
         mLocationManager.removeUpdates(mLocationListener);
+    }
+
+    public Location getLocation() {
+        return mLocation;
     }
 }

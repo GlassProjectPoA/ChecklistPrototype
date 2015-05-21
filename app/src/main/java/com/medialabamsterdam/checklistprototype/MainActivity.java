@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -138,7 +137,7 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case TWO_LONG_PRESS:
-                            am.playSoundEffect(handleLocationUtils());
+                        am.playSoundEffect(handleLocationUtils());
                         return true;
                 }
                 return false;

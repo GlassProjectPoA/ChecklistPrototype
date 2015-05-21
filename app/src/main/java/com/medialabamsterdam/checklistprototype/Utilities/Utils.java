@@ -11,11 +11,8 @@ import android.widget.TextView;
 
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by
@@ -135,7 +132,7 @@ public class Utils {
      * @return an int
      */
     public static int getRatingFromString(String rating) {
-        Map<String, Integer>_rates = new HashMap<>();
+        Map<String, Integer> _rates = new HashMap<>();
         _rates.put("AA", 0);
         _rates.put("A", 1);
         _rates.put("B", 2);

@@ -3,6 +3,8 @@ package com.medialabamsterdam.checklistprototype.Database;
 import android.provider.BaseColumns;
 
 /**
+ * Contract class for the Database where we store all the database's constants.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

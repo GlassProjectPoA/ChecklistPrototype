@@ -33,6 +33,7 @@ public class SubCategoriesActivity extends Activity {
 
     private final static String TAG = "SUBCATEGORIES";
     private static final int SET_RATING_DETAIL_CODE = 1652;
+
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCategories;
@@ -122,7 +123,7 @@ public class SubCategoriesActivity extends Activity {
             };
             animOutRight.setAnimationListener(al);
             mCardScroller.startAnimation(animOutRight);
-        // Animates the current card to leave view to the left.
+            // Animates the current card to leave view to the left.
         } else if (!right && pos > 0) {
             Animation animOutLeft = new TranslateAnimation(0, 640, 0, 0);
             animOutLeft.setDuration(time);
@@ -171,8 +172,8 @@ public class SubCategoriesActivity extends Activity {
      * Receives result from DetailsActivity in order to save the data changed in that activity.
      *
      * @param requestCode the request code.
-     * @param resultCode the result code.
-     * @param result the result intent.
+     * @param resultCode  the result code.
+     * @param result      the result intent.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
@@ -282,6 +283,7 @@ public class SubCategoriesActivity extends Activity {
         });
         return gestureDetector;
     }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);

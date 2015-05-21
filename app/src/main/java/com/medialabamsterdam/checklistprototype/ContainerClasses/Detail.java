@@ -3,6 +3,8 @@ package com.medialabamsterdam.checklistprototype.ContainerClasses;
 import java.util.Arrays;
 
 /**
+ * This class represents a Detail with all it's possible parameters.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

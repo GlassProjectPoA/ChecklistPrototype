@@ -27,7 +27,6 @@ import com.medialabamsterdam.checklistprototype.Adapters.CategoryCardScrollAdapt
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
-import com.medialabamsterdam.checklistprototype.Utilities.LocationUtils;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
@@ -149,8 +148,8 @@ public class CategoriesActivity extends Activity {
                                         i++;
                                     }
                                 }
-                            // If CardScroller is not at the last position it will either start
-                            // SubCategoriesActiviry or InstructionsActivity based on Settings.
+                                // If CardScroller is not at the last position it will either start
+                                // SubCategoriesActiviry or InstructionsActivity based on Settings.
                             } else {
                                 if (Constants.IGNORE_INSTRUCTIONS) {
                                     startSubCategories();
@@ -193,11 +192,11 @@ public class CategoriesActivity extends Activity {
     /**
      * This method grabs grades from the server in order to compare them with the grades from user
      * input.
-     *
+     * <p/>
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
-    private void getGrades(){
+    private void getGrades() {
         Ion.with(this)
                 //TODO change the 866 at the end to match locationId
                 .load("http://glass.twisk-interactive.nl/subcategories/grades/866")
@@ -234,7 +233,7 @@ public class CategoriesActivity extends Activity {
         result.putParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY, mSubCategories);
         // Removes last entry on mCategories that is used to create and display the check mark.
         ArrayList<Category> fixedCategories = mCategories;
-        fixedCategories.remove(fixedCategories.size()-1);
+        fixedCategories.remove(fixedCategories.size() - 1);
         result.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, fixedCategories);
         result.putExtra(Constants.EXTRA_LOCATION, locationIndex);
         setResult(Activity.RESULT_OK, result);
@@ -249,8 +248,8 @@ public class CategoriesActivity extends Activity {
     private void savePicture(Intent picturePathIntent) {
         int categoryId = picturePathIntent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
         int subCategoryId = picturePathIntent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
-        for (SubCategory sc : mSubCategories){
-            if (categoryId == sc.getParentId() && subCategoryId == sc.getId()){
+        for (SubCategory sc : mSubCategories) {
+            if (categoryId == sc.getParentId() && subCategoryId == sc.getId()) {
                 sc.setPictureUri(picturePathIntent.getStringExtra(Constants.EXTRA_PICTURE));
                 break;
             }
@@ -265,13 +264,14 @@ public class CategoriesActivity extends Activity {
      */
     private void checkData() {
         int count = 0;
-        CheckDataLoop: for (SubCategory sc : mSubCategories){
+        CheckDataLoop:
+        for (SubCategory sc : mSubCategories) {
             // If any category has a grade below accepted AND has no picture URI related to it
             // the code will call WarningActivity to prompt the user to take a picture.
-            if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode())){
+            if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode())) {
                 Intent intent = new Intent(this, WarningActivity.class);
-                for (Category c : mCategories){
-                    if (c.getId() == sc.getParentId()){
+                for (Category c : mCategories) {
+                    if (c.getId() == sc.getParentId()) {
                         intent.putExtra(Constants.EXTRA_CATEGORY_NAME, c.getName());
                         intent.putExtra(Constants.EXTRA_SUBCATEGORY_NAME, sc.getName());
                         intent.putExtra(Constants.EXTRA_CATEGORY_ID, c.getId());
@@ -284,7 +284,7 @@ public class CategoriesActivity extends Activity {
                 // If no SubCategory is below accepted grade, the code will call sendData() to send
                 // the checklist to the server.
                 count++;
-                if (mSubCategories.size() == count){
+                if (mSubCategories.size() == count) {
                     sendData();
                     break;
                 }
@@ -297,7 +297,7 @@ public class CategoriesActivity extends Activity {
      *
      * @param intent the data received.
      */
-    private void saveSubcategoryData(Intent intent){
+    private void saveSubcategoryData(Intent intent) {
         ArrayList<SubCategory> sc = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         // Get the Category object on the intent and changes it's 'completed' variable to 'true'.
         Category c = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
@@ -337,7 +337,7 @@ public class CategoriesActivity extends Activity {
 
     /**
      * This method sends all the data from the checklist to the server.
-     *
+     * <p/>
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
@@ -416,7 +416,7 @@ public class CategoriesActivity extends Activity {
         tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
         tv.setText(R.string.send_complete);
         mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar).setVisibility(View.GONE);
-        ImageView iv = (ImageView)mCardScroller.getSelectedView().findViewById(R.id.check);
+        ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
         iv.setVisibility(View.VISIBLE);
         iv.setImageResource(R.drawable.check);
         iv.setColorFilter(getResources().getColor(R.color.green));
@@ -433,7 +433,7 @@ public class CategoriesActivity extends Activity {
         tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
         tv.setText(R.string.send_failed);
         mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar).setVisibility(View.GONE);
-        ImageView iv = (ImageView)mCardScroller.getSelectedView().findViewById(R.id.check);
+        ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
         iv.setVisibility(View.VISIBLE);
         iv.setImageResource(R.drawable.stop);
         iv.setColorFilter(getResources().getColor(R.color.red));

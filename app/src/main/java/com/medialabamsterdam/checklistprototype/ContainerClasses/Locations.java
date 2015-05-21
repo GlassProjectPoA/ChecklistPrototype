@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * This class represents a Location as stored on the Database.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -27,6 +29,19 @@ public class Locations implements Parcelable {
     private String botLeft;
     private String botRight;
 
+    /**
+     * Locations default constructor.
+     * <p/>
+     * Coordinates are stored as a string "##.######,##.######".
+     * (latitude),(longitude)
+     *
+     * @param locationId the ID of the Location.
+     * @param name       the name of the Location.
+     * @param topRight   the coordinate for the top-right corner of the location.
+     * @param topLeft    the coordinate for the top-left corner of the location.
+     * @param botLeft    the coordinate for the bottom-left corner of the location.
+     * @param botRight   the coordinate for the bottom-right corner of the location.
+     */
     public Locations(int locationId, String name, String topRight, String topLeft, String botLeft, String botRight) {
         this.locationId = locationId;
         this.name = name;
@@ -36,6 +51,11 @@ public class Locations implements Parcelable {
         this.botRight = botRight;
     }
 
+    /**
+     * Parcelable Constructor.
+     *
+     * @param in Parcel.
+     */
     private Locations(Parcel in) {
         this.locationId = in.readInt();
         this.name = in.readString();
@@ -44,56 +64,6 @@ public class Locations implements Parcelable {
         this.botLeft = in.readString();
         this.botRight = in.readString();
     }
-
-    //<editor-fold desc="Getters and Setters">
-    public int getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTopRight() {
-        return topRight;
-    }
-
-    public void setTopRight(String topRight) {
-        this.topRight = topRight;
-    }
-
-    public String getTopLeft() {
-        return topLeft;
-    }
-
-    public void setTopLeft(String topLeft) {
-        this.topLeft = topLeft;
-    }
-
-    public String getBotLeft() {
-        return botLeft;
-    }
-
-    public void setBotLeft(String botLeft) {
-        this.botLeft = botLeft;
-    }
-
-    public String getBotRight() {
-        return botRight;
-    }
-
-    public void setBotRight(String botRight) {
-        this.botRight = botRight;
-    }
-    //</editor-fold>
 
     @Override
     public int describeContents() {
@@ -109,4 +79,30 @@ public class Locations implements Parcelable {
         out.writeString(botLeft);
         out.writeString(botRight);
     }
+
+    //<editor-fold desc="Getters and Setters">
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTopRight() {
+        return topRight;
+    }
+
+    public String getTopLeft() {
+        return topLeft;
+    }
+
+    public String getBotLeft() {
+        return botLeft;
+    }
+
+    public String getBotRight() {
+        return botRight;
+    }
+    //</editor-fold>
 }

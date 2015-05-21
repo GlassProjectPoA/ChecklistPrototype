@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * This class represents a Category with all it's possible parameters.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -26,14 +28,27 @@ public class Category implements Parcelable {
     private boolean remove;
     private boolean completed;
 
+    /**
+     * Category default constructor.
+     *
+     * @param id                   this Category's ID
+     * @param categoryByLocationId the ID that relates this Category to a Location.
+     * @param name                 this Category's name.
+     * @param remove               if this Category should be removed from the listing.
+     */
     public Category(int id, int categoryByLocationId, String name, boolean remove) {
         this.id = id;
         this.categoryByLocationId = categoryByLocationId;
         this.name = name;
         this.remove = remove;
-        this.completed = false;
+        this.completed = false; // Set to true if this Category has been fully graded.
     }
 
+    /**
+     * Parcelable Constructor.
+     *
+     * @param in Parcel.
+     */
     public Category(Parcel in) {
         this.id = in.readInt();
         this.categoryByLocationId = in.readInt();
@@ -42,6 +57,9 @@ public class Category implements Parcelable {
         this.completed = in.readByte() != 0;
     }
 
+    /**
+     * This constructor is only used to easily create a new card at the end of a CardScrollView.
+     */
     public Category() {
     }
 
@@ -49,16 +67,8 @@ public class Category implements Parcelable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public boolean isRemove() {
@@ -79,10 +89,6 @@ public class Category implements Parcelable {
 
     public int getCategoryByLocationId() {
         return categoryByLocationId;
-    }
-
-    public void setCategoryByLocationId(int categoryByLocationId) {
-        this.categoryByLocationId = categoryByLocationId;
     }
 
     @Override

@@ -15,6 +15,8 @@ import com.medialabamsterdam.checklistprototype.R;
 import java.util.List;
 
 /**
+ * CardScrollAdapter used to display the SubCategory cards at the SubCategoryActivity.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -25,10 +27,20 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
     private final Context mContext;
     private final String mParentCategoryName;
 
-    public SubCategoryCardScrollAdapter(Context context, List<SubCategory> views, String parentCategoryName) {
-        mCards = views;
+    /**
+     * Default constructor.
+     *
+     * @param context            the activity's context.
+     * @param subCategories      a List containing all SubCategory objects that should be depicted on
+     *                           the view.
+     * @param parentCategoryName the parent Category's name.
+     */
+    public SubCategoryCardScrollAdapter(Context context, List<SubCategory> subCategories,
+                                        String parentCategoryName) {
+        mCards = subCategories;
         mContext = context;
         mParentCategoryName = parentCategoryName;
+        //Adds an empty SubCategory at the end in order to display the check marks card.
         mCards.add(new SubCategory());
     }
 
@@ -55,10 +67,12 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // The current layout in order to inflate and put our own layout inside.
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View card;
         TextView tv;
         SubCategory sc = mCards.get(position);
+        // If the SubCategory is the last on the array, turn it into a check_layout card.
         if (position == mCards.size() - 1) {
             //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
@@ -70,11 +84,13 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             iv.setImageResource(R.drawable.check);
             iv.setColorFilter(mContext.getResources().getColor(R.color.blue));
         } else {
+            // If it's not the last on the array, create the appropriate card to show.
             card = inflater.inflate(R.layout.subcategory_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
             tv.setText(sc.getName());
             tv = (TextView) card.findViewById(R.id.category);
             tv.setText(mParentCategoryName);
+            // Gets the SubCategory's grade and changes the texts and colors of the card accordingly.
             int rate = sc.getGrade();
             switch (rate) {
                 case -1:
@@ -106,10 +122,10 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
                     break;
             }
         }
-
+        // Makes left arrow invisible if the card is the first one.
         if (position == 0) {
             tv = (TextView) card.findViewById(R.id.left_arrow);
-            tv.setTextColor(mContext.getResources().getColor(R.color.gray_dark));
+            tv.setVisibility(View.INVISIBLE);
         }
         return card;
     }

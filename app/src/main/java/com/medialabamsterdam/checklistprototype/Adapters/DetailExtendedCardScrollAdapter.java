@@ -1,7 +1,6 @@
 package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +16,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * CardScrollAdapter used to display the many Ratings descriptions at the DetailActivity.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 12/05/2015.
  */
-public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
+public class DetailExtendedCardScrollAdapter extends CardScrollAdapter {
     private final List<Detail> mCards;
     private final Context mContext;
     private final Detail mDetail;
 
-    public DetailedExtendedCardScrollAdapter(Context context, Detail views) {
+    /**
+     * Default constructor.
+     *
+     * @param context the activity's context.
+     * @param detail  the Detail object to be shown.
+     */
+    public DetailExtendedCardScrollAdapter(Context context, Detail detail) {
         mCards = new ArrayList<>();
         mContext = context;
-        mDetail = views;
-        for (int i = 0; i < 5; i++) mCards.add(views);
+        mDetail = detail;
+        //Creates four more cards in order to show everything we need to show.
+        for (int i = 0; i < 5; i++) mCards.add(detail);
     }
 
     @Override
@@ -60,14 +68,14 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View card;
         TextView tv;
-        int color = 0;
+        int color = 0; // Color Resource Id that was used. Saved here in order to reuse it later.
+        // Inflates the card layout.
         card = inflater.inflate(R.layout.details_extended_layout, null);
-
         String title1;
         String title2 = null;
         String rating1;
         String rating2 = null;
-
+        // Sets text based on language to display.
         if (Constants.LOAD_ALTERNATE_LANGUAGE) {
             title1 = mDetail.getTitle_1_nl();
             rating1 = mDetail.getRating_1_nl()[position];
@@ -84,6 +92,7 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
             }
         }
 
+        // Changes grade colors and indicators to inform the selected grade.
         switch (position) {
             case 0:
                 color = mContext.getResources().getColor(R.color.green);
@@ -117,12 +126,14 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
                 break;
         }
 
+        // Displays rating and rating title 1.
         tv = (TextView) card.findViewById(R.id.title_text_1);
         tv.setText(title1);
         tv = (TextView) card.findViewById(R.id.rating_text_1);
         tv.setText(rating1);
         tv.setTextColor(color);
 
+        // If rating2 is not null then it displays them here.
         if (title2 != null && rating2 != null) {
             tv = (TextView) card.findViewById(R.id.title_text_2);
             tv.setText(title2);
@@ -130,6 +141,7 @@ public class DetailedExtendedCardScrollAdapter extends CardScrollAdapter {
             tv.setText(rating2);
             tv.setTextColor(color);
         } else {
+            // Else it will just disable the views.
             tv = (TextView) card.findViewById(R.id.title_text_2);
             tv.setVisibility(View.GONE);
             tv = (TextView) card.findViewById(R.id.rating_text_2);

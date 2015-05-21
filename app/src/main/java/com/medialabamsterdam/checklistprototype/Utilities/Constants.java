@@ -1,8 +1,5 @@
 package com.medialabamsterdam.checklistprototype.Utilities;
 
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * Created by
  * Jose Carlos Quintas Junior
@@ -28,8 +25,9 @@ public interface Constants {
 
     /**
      * Settings.
+     * Currently only works with "nl" as alternate language.
      */
     String ALTERNATE_LANGUAGE = "nl";
-    boolean LOAD_ALTERNATE_LANGUAGE = false;
-    boolean IGNORE_INSTRUCTIONS = true;
+    boolean LOAD_ALTERNATE_LANGUAGE = false; // Set true if loading another language.
+    boolean IGNORE_INSTRUCTIONS = true; // Set true to ignore instructions panel.
 }

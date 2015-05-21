@@ -20,12 +20,25 @@ public class Area implements Parcelable {
             return new Area[size];
         }
     };
+
     private int id;
     private String name;
     private String topLeft;
     private String botRight;
     private int code;
 
+    /**
+     * Area default constructor.
+     * <p/>
+     * Coordinates are stored as a string "##.######,##.######".
+     * (latitude),(longitude)
+     *
+     * @param id       this Area's ID.
+     * @param name     this Area's name.
+     * @param topLeft  this Area's top-left coordinate.
+     * @param botRight this Area's bottom-right coordinate.
+     * @param code     this Area's code (2 numbers).
+     */
     public Area(int id, String name, String topLeft, String botRight, int code) {
         this.id = id;
         this.name = name;
@@ -34,6 +47,11 @@ public class Area implements Parcelable {
         this.code = code;
     }
 
+    /**
+     * Parcelable Constructor.
+     *
+     * @param in Parcel.
+     */
     private Area(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
@@ -46,40 +64,20 @@ public class Area implements Parcelable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getBotRight() {
         return botRight;
     }
 
-    public void setBotRight(String botRight) {
-        this.botRight = botRight;
-    }
-
     public String getTopLeft() {
         return topLeft;
     }
 
-    public void setTopLeft(String topLeft) {
-        this.topLeft = topLeft;
-    }
-
     public int getCode() {
         return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
     }
 
     @Override

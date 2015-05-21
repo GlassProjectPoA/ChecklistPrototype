@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * This class represents a SubCategory with all it's possible parameters.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -25,24 +27,25 @@ public class SubCategory implements Parcelable {
     private int id;
     private String name;
     private boolean remove;
-    private int grade;
-    private String pictureUri;
+    private int grade; // The actual given grade of the SubCategory. Is set to 0 when created.
+    private String pictureUri;// Save the URI here in case the SubCategory rating is below accepted.
     private int code;
 
-
-    private SubCategory(Parcel in) {
-        parentId = in.readInt();
-        id = in.readInt();
-        name = in.readString();
-        remove = in.readByte() != 0;
-        grade = in.readInt();
-        pictureUri = in.readString();
-        code = in.readInt();
-    }
-
+    /**
+     * This constructor is only used to easily create a new card at the end of a CardScrollView.
+     */
     public SubCategory() {
     }
 
+    /**
+     * SubCategory default constructor.
+     *
+     * @param parentId the Category's ID that references this SubCategory.
+     * @param id       this SubCategory's  ID.
+     * @param name     this SubCategory's Name.
+     * @param remove   if this SubCategory should be removed from the listing.
+     * @param code     this SubCategory's code (Area Code(2 numbers) + SubCategory Code(4 numbers))
+     */
     public SubCategory(int parentId, int id, String name, boolean remove, int code) {
         this.parentId = parentId;
         this.id = id;
@@ -52,60 +55,19 @@ public class SubCategory implements Parcelable {
         this.code = code;
     }
 
-    public int getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
-
-    public boolean isRemove() {
-        return remove;
-    }
-
-    public void setRemove(boolean remove) {
-        this.remove = remove;
-    }
-
-    public String getPictureUri() {
-        return pictureUri;
-    }
-
-    public void setPictureUri(String pictureUri) {
-        this.pictureUri = pictureUri;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
+    /**
+     * Parcelable Constructor.
+     *
+     * @param in Parcel.
+     */
+    private SubCategory(Parcel in) {
+        parentId = in.readInt();
+        id = in.readInt();
+        name = in.readString();
+        remove = in.readByte() != 0;
+        grade = in.readInt();
+        pictureUri = in.readString();
+        code = in.readInt();
     }
 
     @Override
@@ -135,5 +97,45 @@ public class SubCategory implements Parcelable {
                 ", grade=" + grade +
                 ", pictureUri='" + pictureUri + '\'' +
                 '}';
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public boolean isRemove() {
+        return remove;
+    }
+
+    public void setRemove(boolean remove) {
+        this.remove = remove;
+    }
+
+    public String getPictureUri() {
+        return pictureUri;
+    }
+
+    public void setPictureUri(String pictureUri) {
+        this.pictureUri = pictureUri;
+    }
+
+    public int getCode() {
+        return code;
     }
 }

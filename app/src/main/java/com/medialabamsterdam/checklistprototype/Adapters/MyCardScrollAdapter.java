@@ -9,6 +9,8 @@ import com.google.android.glass.widget.CardScrollAdapter;
 import java.util.List;
 
 /**
+ * Generic CardScrollAdapter to use on regular views.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

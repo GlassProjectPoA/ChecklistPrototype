@@ -1,7 +1,6 @@
 package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +15,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * CardScrollAdapter used to display the Detail cards at the DetailActivity.
+ * <p/>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 12/05/2015.
  */
-public class DetailedCardScrollAdapter extends CardScrollAdapter {
+public class DetailCardScrollAdapter extends CardScrollAdapter {
     private final List<Detail> mCards;
     private final Context mContext;
     private final Detail mDetail;
 
-    public DetailedCardScrollAdapter(Context context, Detail views) {
+    /**
+     * Default constructor.
+     *
+     * @param context the activity's context.
+     * @param detail  the Detail object to be shown.
+     */
+    public DetailCardScrollAdapter(Context context, Detail detail) {
         mCards = new ArrayList<>();
         mContext = context;
-        mDetail = views;
-        for (int i = 0; i < 5; i++) mCards.add(views);
+        mDetail = detail;
+        //Creates four more cards in order to show everything we need to show.
+        for (int i = 0; i < 5; i++) mCards.add(detail);
     }
 
     @Override
@@ -56,14 +64,19 @@ public class DetailedCardScrollAdapter extends CardScrollAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // The current layout in order to inflate and put our own layout inside.
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View card;
         TextView tv;
+        // Inflates the card layout.
         card = inflater.inflate(R.layout.details_layout, null);
+        // Set the description text related to the grade selected.
         tv = (TextView) card.findViewById(R.id.description_text);
         tv.setText(mDetail.getDescription()[position]);
+        // Set the detail text to the given Detail.
         tv = (TextView) card.findViewById(R.id.detail_text);
         tv.setText(mDetail.getDetails());
+        // Changes grade colors and indicators to inform the selected grade.
         switch (position) {
             case 0:
                 tv = (TextView) card.findViewById(R.id.rating_text_aa);

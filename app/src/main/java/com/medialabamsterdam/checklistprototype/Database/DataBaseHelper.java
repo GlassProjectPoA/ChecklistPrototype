@@ -41,7 +41,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Constructor
-     * Takes and keeps a reference of the passed context in order to access the application assets and resources.
+     * Takes and keeps a reference of the passed context in order to access the application assets
+     * and resources.
      *
      * @param context the activity's context.
      */
@@ -85,7 +86,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This function is used to query data from the Locations Table based on the Area_id related to a given location.
+     * This function is used to query data from the Locations Table based on the Area_id related to
+     * a given location.
      *
      * @param context   the activity's context.
      * @param areaIndex the _id of the Area that you want to query the locations.
@@ -151,7 +153,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(DBContract.CatByLocation.COLUMN_CATEGORY_ID, cursor.getInt(cursor.getColumnIndex(DBContract.CatByArea.COLUMN_CATEGORY_ID)));
+            values.put(DBContract.CatByLocation.COLUMN_CATEGORY_ID,
+                    cursor.getInt(cursor.getColumnIndex(DBContract.CatByArea.COLUMN_CATEGORY_ID)));
             values.put(DBContract.CatByLocation.COLUMN_LOCATION_ID, locationIndex);
             values.put(DBContract.CatByLocation.COLUMN_REMOVE, 0);
             try {
@@ -169,7 +172,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Read the entries on the Category_by_Location table. If the query returns an empty result then it calls writeCatByLocation().
+     * Read the entries on the Category_by_Location table. If the query returns an empty result
+     * then it calls writeCatByLocation().
      *
      * @param context       the activity's context.
      * @param areaIndex     the _id of the Area the Location is in.
@@ -231,14 +235,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Write entries on the SubCategories_by_Location_And_Categories table based on the Category and Location the SubCategory is in.
+     * Write entries on the SubCategories_by_Location_And_Categories table based on the Category
+     * and Location the SubCategory is in.
      *
      * @param context              the activity's context.
      * @param categoryID           the ID of the Category to use.
      * @param categoryByLocationId the ID of the categoryByLocation stored on the Category.class.
      * @return a SubCategory list by calling readSubCategory() again.
      */
-    private static List<SubCategory> writeSubCatByLocationAndCategory(Context context, int categoryID, int categoryByLocationId, int areaCode) {
+    private static List<SubCategory> writeSubCatByLocationAndCategory(
+            Context context, int categoryID, int categoryByLocationId, int areaCode) {
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -248,8 +254,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID, cursor.getInt(cursor.getColumnIndex(DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID)));
-            values.put(DBContract.SubCatByCatAndLoc.COLUMN_CATEGORYBYLOCATION_ID, categoryByLocationId);
+            values.put(DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID, cursor.getInt(
+                    cursor.getColumnIndex(DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID)));
+            values.put(DBContract.SubCatByCatAndLoc.COLUMN_CATEGORYBYLOCATION_ID,
+                    categoryByLocationId);
             values.put(DBContract.SubCatByCatAndLoc.COLUMN_REMOVE, 0);
             try {
                 db.insertOrThrow(
@@ -266,14 +274,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Read the entries on the SubCategories_by_Location_And_Categories table. If the query returns an empty result then it calls writeSubCatByLocationAndCategory().
+     * Read the entries on the SubCategories_by_Location_And_Categories table. If the query
+     * returns an empty result then it calls writeSubCatByLocationAndCategory().
      *
      * @param context              the activity's context.
      * @param categoryID           the ID of the Category to use.
      * @param categoryByLocationId the ID of the categoryByLocation stored on the Category.class.
      * @return a SubCategory list.
      */
-    public static List<SubCategory> readSubCategory(Context context, int categoryID, int categoryByLocationId, int areaCode) {
+    public static List<SubCategory> readSubCategory(Context context, int categoryID,
+                                                    int categoryByLocationId, int areaCode) {
         List<SubCategory> subCategoryList = new ArrayList<>();
         SQLiteDatabase db;
         DataBaseHelper dbHelper = new DataBaseHelper(context);
@@ -292,12 +302,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ", " + DBContract.SubCatByCat.TABLE_NAME +
                 " WHERE " + DBContract.SubCatByCatAndLoc.COLUMN_CATEGORYBYLOCATION_ID +
                 " =? AND " + DBContract.SubCatByCat.COLUMN_CATEGORY_ID +
-                " =? AND " + DBContract.SubCatByCat.TABLE_NAME + "." + DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID +
-                " = "+ DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID +
-                " AND " + DBContract.SubCatByCatAndLoc.TABLE_NAME + "." + DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID +
+                " =? AND " + DBContract.SubCatByCat.TABLE_NAME + "."
+                + DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID +
+                " = " + DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID +
+                " AND " + DBContract.SubCatByCatAndLoc.TABLE_NAME + "."
+                + DBContract.SubCatByCatAndLoc.COLUMN_SUBCATEGORY_ID +
                 " = " + DBContract.SubCategory.TABLE_NAME + "." + DBContract.SubCategory._ID;
 
-        cursor = db.rawQuery(query, new String[]{String.valueOf(categoryByLocationId), String.valueOf(categoryID)});
+        cursor = db.rawQuery(query, new String[]{String.valueOf(categoryByLocationId),
+                String.valueOf(categoryID)});
 
         if (cursor.getCount() == 0) {
             cursor.close();
@@ -320,7 +333,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     Integer.parseInt(cursorData.get(0)),
                     cursorData.get(1),
                     Boolean.parseBoolean(cursorData.get(2)),
-                    Integer.parseInt(areaCode+cursorData.get(3))
+                    Integer.parseInt(areaCode + cursorData.get(3))
             );
             subCategoryList.add(subCategory);
             Log.e(TAG, subCategory.toString());
@@ -330,6 +343,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return subCategoryList;
     }
 
+    /**
+     * Reads the entries on the Details table where Category_id and SubCategory_id equals the given
+     * respective parameters.
+     *
+     * @param context       the activity's context.
+     * @param categoryID    the Category ID to be used in que query.
+     * @param subCategoryID the SubCategory ID to be used in the query.
+     * @return returns a Detail object.
+     */
     public static Detail readDetails(Context context, int categoryID, int subCategoryID) {
         Detail detail = new Detail();
         SQLiteDatabase db;
@@ -339,7 +361,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         int subCatByCat = -1;
 
         String[] args = new String[]{String.valueOf(categoryID), String.valueOf(subCategoryID)};
-        String where = DBContract.SubCatByCat.COLUMN_CATEGORY_ID + " =? AND " + DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID + " =? ";
+        String where = DBContract.SubCatByCat.COLUMN_CATEGORY_ID + " =? AND "
+                + DBContract.SubCatByCat.COLUMN_SUBCATEGORY_ID + " =? ";
 
         cursor = db.query(DBContract.SubCatByCat.TABLE_NAME, null, where, args, null, null, null);
 
@@ -367,9 +390,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ", " + DBContract.Details.COLUMN_RATING_3_NL +
                 " FROM " + DBContract.Details.TABLE_NAME +
                 ", " + DBContract.DetailsBySubCat.TABLE_NAME +
-                " WHERE " + DBContract.DetailsBySubCat.TABLE_NAME + "." + DBContract.DetailsBySubCat.COLUMN_SUBCATEGORYBYCATEGORY_ID +
+                " WHERE " + DBContract.DetailsBySubCat.TABLE_NAME + "."
+                + DBContract.DetailsBySubCat.COLUMN_SUBCATEGORYBYCATEGORY_ID +
                 " =? AND " + DBContract.Details.TABLE_NAME + "." + DBContract.Details._ID +
-                " = " + DBContract.DetailsBySubCat.TABLE_NAME + "." + DBContract.DetailsBySubCat.COLUMN_DETAIL_ID;
+                " = " + DBContract.DetailsBySubCat.TABLE_NAME + "."
+                + DBContract.DetailsBySubCat.COLUMN_DETAIL_ID;
 
         cursor = db.rawQuery(query, new String[]{String.valueOf(subCatByCat)});
 

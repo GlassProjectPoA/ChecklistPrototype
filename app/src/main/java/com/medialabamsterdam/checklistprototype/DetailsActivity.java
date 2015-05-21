@@ -13,8 +13,8 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
-import com.medialabamsterdam.checklistprototype.Adapters.DetailedCardScrollAdapter;
-import com.medialabamsterdam.checklistprototype.Adapters.DetailedExtendedCardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.Adapters.DetailCardScrollAdapter;
+import com.medialabamsterdam.checklistprototype.Adapters.DetailExtendedCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Detail;
 import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
@@ -30,8 +30,8 @@ public class DetailsActivity extends Activity {
     private final static String TAG = "DETAILS";
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
-    private DetailedCardScrollAdapter mDetailedAdapter;
-    private DetailedExtendedCardScrollAdapter mDetailedExtendedAdapter;
+    private DetailCardScrollAdapter mDetailedAdapter;
+    private DetailExtendedCardScrollAdapter mDetailedExtendedAdapter;
     private int mSubCategoryPosition;
     private Detail mDetail;
     private boolean extended = false;
@@ -52,8 +52,8 @@ public class DetailsActivity extends Activity {
         //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
-        mDetailedAdapter = new DetailedCardScrollAdapter(this, mDetail);
-        mDetailedExtendedAdapter = new DetailedExtendedCardScrollAdapter(this, mDetail);
+        mDetailedAdapter = new DetailCardScrollAdapter(this, mDetail);
+        mDetailedExtendedAdapter = new DetailExtendedCardScrollAdapter(this, mDetail);
         mCardScroller.setAdapter(mDetailedAdapter);
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
