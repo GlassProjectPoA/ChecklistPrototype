@@ -225,7 +225,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     Integer.parseInt(cursorData.get(0)),
                     Integer.parseInt(cursorData.get(1)),
                     cursorData.get(2),
-                    Boolean.parseBoolean(cursorData.get(3))
+                    Integer.parseInt(cursorData.get(3)) != 0
             );
             categoryList.add(category);
         }
@@ -332,7 +332,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     categoryID,
                     Integer.parseInt(cursorData.get(0)),
                     cursorData.get(1),
-                    Boolean.parseBoolean(cursorData.get(2)),
+                    Integer.parseInt(cursorData.get(2)) != 0,
                     Integer.parseInt(areaCode + cursorData.get(3))
             );
             subCategoryList.add(subCategory);
@@ -340,6 +340,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+        for (SubCategory sc : subCategoryList){
+            if (sc.isRemove()){
+                subCategoryList.remove(sc);
+            }
+        }
         return subCategoryList;
     }
 
