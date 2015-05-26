@@ -459,7 +459,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // Iterate through lines (assuming each insert has its own line and theres no other stuff)
         while (insertReader.ready()) {
-            Log.d(TAG, "Came here " + result);
             String insertStmt = insertReader.readLine();
             db.execSQL(insertStmt);
             result++;
