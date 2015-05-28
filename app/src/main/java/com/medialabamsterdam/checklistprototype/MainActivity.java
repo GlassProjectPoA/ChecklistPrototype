@@ -187,7 +187,7 @@ public class MainActivity extends Activity {
         } else {
             //TODO remove test location
             Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
-/*          HVBO location
+/*          HVBO location*/
             mActualLocation = new Location("");
             mActualLocation.setLatitude(52.381234);
             mActualLocation.setLongitude(4.895540);/**/
@@ -195,10 +195,10 @@ public class MainActivity extends Activity {
             mActualLocation = new Location("");
             mActualLocation.setLatitude(52.388266);
             mActualLocation.setLongitude(4.820238);/**/
-//            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
-//                    (float) mActualLocation.getLongitude());
-//            return findArea(mLocationPoint);
-            return Sounds.ERROR;
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
+                    (float) mActualLocation.getLongitude());
+            return findArea(mLocationPoint);
+//            return Sounds.ERROR;
         }
     }
 

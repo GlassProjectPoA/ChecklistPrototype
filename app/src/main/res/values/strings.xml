@@ -71,4 +71,6 @@
 
     <!-- NOT ORDERED -->
     <string name="hello_world">Hello world!</string>
+    <string name="could_not_connect">Couldn\'t Connect!</string>
+    <string name="request_failed">Request failed.</string>
 </resources>
