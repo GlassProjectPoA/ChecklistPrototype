@@ -1,9 +1,12 @@
 package com.medialabamsterdam.checklistprototype.Utilities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 
 import com.medialabamsterdam.checklistprototype.Polygon_contains_Point.Point;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,5 +143,29 @@ public class Utils {
         _rates.put("C", 3);
         _rates.put("D", 4);
         return _rates.get(rating);
+    }
+
+    /**
+     *
+     * @param path
+     * @return
+     */
+    public static String imgToString (String path){
+
+        BitmapFactory.Options options0 = new BitmapFactory.Options();
+        options0.inSampleSize = 2;
+        // options.inJustDecodeBounds = true;
+        options0.inScaled = false;
+        options0.inDither = false;
+        options0.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+
+        ByteArrayOutputStream baos0 = new ByteArrayOutputStream();
+
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos0);
+        byte[] imageBytes0 = baos0.toByteArray();
+
+        return Base64.encodeToString(imageBytes0, Base64.DEFAULT);
     }
 }

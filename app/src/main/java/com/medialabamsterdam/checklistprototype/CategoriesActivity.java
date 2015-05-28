@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -198,8 +200,7 @@ public class CategoriesActivity extends Activity {
      */
     private void getGrades() {
         Ion.with(this)
-                //TODO change the 866 at the end to match locationId
-                .load("http://glass.twisk-interactive.nl/subcategories/grades/866")
+                .load("http://glass.twisk-interactive.nl/subcategories/grades/"+locationIndex)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -264,8 +265,12 @@ public class CategoriesActivity extends Activity {
      */
     private void checkData() {
         int count = 0;
+        String lastPicture = null;
         CheckDataLoop:
         for (SubCategory sc : mSubCategories) {
+            if(sc.getPictureUri() != null){
+                lastPicture = sc.getPictureUri();
+            }
             // If any category has a grade below accepted AND has no picture URI related to it
             // the code will call WarningActivity to prompt the user to take a picture.
             if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode())) {
@@ -285,7 +290,7 @@ public class CategoriesActivity extends Activity {
                 // the checklist to the server.
                 count++;
                 if (mSubCategories.size() == count) {
-                    sendData();
+                    processPictureWhenReady(lastPicture);
                     break;
                 }
             }
@@ -342,8 +347,6 @@ public class CategoriesActivity extends Activity {
      * https://github.com/koush/ion
      */
     private void sendData() {
-        // startLoader() handles the loader screen in view so the user know we are sending data.
-        startLoader();
         // Disables scrolling and tapping on the device, so we don't send data twice.
         mCardScroller.setFocusable(false);
         mGestureDetector = null;
@@ -354,13 +357,15 @@ public class CategoriesActivity extends Activity {
             JsonObject object = new JsonObject();
             object.addProperty("code", sc.getCode());
             object.addProperty("rating", Utils.getStringFromRating(sc.getGrade()));
+            if (sc.getPictureUri() != null) {
+                object.addProperty("image", Utils.imgToString(sc.getPictureUri()));
+            }
             jsonArray.add(object);
         }
 
         JsonObject json = new JsonObject();
         json.addProperty("user_id", 1);
-        //TODO change location_id value to locationIndex
-        json.addProperty("location_id", 866);
+        json.addProperty("location_id", locationIndex);
         json.add("data", jsonArray);
 
         Log.e(TAG, json.toString());
@@ -398,12 +403,12 @@ public class CategoriesActivity extends Activity {
         tv.setText(R.string.upload_list);
         tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
         tv.setText(R.string.please_wait);
+        mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
         mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
         ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView()
                 .findViewById(R.id.pictureProcessBar);
         spinner.setVisibility(View.VISIBLE);
         spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
-        mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -474,5 +479,40 @@ public class CategoriesActivity extends Activity {
         intent.putExtra(Constants.EXTRA_POSITION, position);
         intent.putExtra(Constants.EXTRA_AREA_CODE, areaCode);
         startActivityForResult(intent, SUBCATEGORY_RATING_REQUEST);
+    }
+
+    private void processPictureWhenReady(final String picturePath) {
+        // startLoader() handles the loader screen in view so the user know we are sending data.
+        startLoader();
+        final File pictureFile = new File(picturePath);
+
+        if (pictureFile.exists()) {
+            // The picture is ready; process it.
+            sendData();
+        } else {
+            final File parentDirectory = pictureFile.getParentFile();
+            FileObserver observer = new FileObserver(parentDirectory.getPath(), FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
+                private boolean isFileWritten;
+
+                @Override
+                public void onEvent(int event, String path) {
+                    if (!isFileWritten) {
+                        File affectedFile = new File(parentDirectory, path);
+                        isFileWritten = affectedFile.equals(pictureFile);
+
+                        if (isFileWritten) {
+                            stopWatching();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    processPictureWhenReady(picturePath);
+                                }
+                            });
+                        }
+                    }
+                }
+            };
+            observer.startWatching();
+        }
     }
 }

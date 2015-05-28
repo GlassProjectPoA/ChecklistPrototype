@@ -138,7 +138,7 @@ public class WarningActivity extends Activity {
      * @param picturePathIntent the intent received from takePicture containing the picture path.
      */
     private void sendResult(Intent picturePathIntent) {
-        //String thumbnailPath = picturePathIntent.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
+//        String thumbnailPath = picturePathIntent.getStringExtra(Intents.EXTRA_THUMBNAIL_FILE_PATH);
         String picturePath = picturePathIntent.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
         Intent result = new Intent();
         result.putExtra(Constants.EXTRA_PICTURE, picturePath);
