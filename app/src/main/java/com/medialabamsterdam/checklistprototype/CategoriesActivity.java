@@ -449,12 +449,13 @@ public class CategoriesActivity extends Activity {
     }
 
     /**
-     * Changes the view to let the user know the data is sent. If the user clicks again he will
-     * be sent to the starting screen of the app (MainActivity).
+     * Updates the last card in the view to the the wanted setup.
+     *
+     * @param updateCode the STATUS id you want to show.
      */
     private void statusUpdate(int updateCode) {
-        int position = mCardScroller.getSelectedItemPosition();
-        mCardScroller.setSelection(mCategories.size()-1);
+        int position = mCategories.size()-1;
+
         String title = null;
         String footer = null;
         Drawable check = null;
@@ -503,30 +504,29 @@ public class CategoriesActivity extends Activity {
                 break;
         }
         if (load){
-            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+            TextView tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.title);
             tv.setText(title);
-            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.footer);
             tv.setText(footer);
-            mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-            mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
-            ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView()
+            mCardScroller.getChildAt(position).findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+            mCardScroller.getChildAt(position).findViewById(R.id.check).setVisibility(View.GONE);
+            ProgressBar spinner = (ProgressBar) mCardScroller.getChildAt(position)
                     .findViewById(spinnerId);
             spinner.setVisibility(View.VISIBLE);
             spinner.setIndeterminateDrawable(check);
         } else {
-            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+            TextView tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.title);
             tv.setText(title);
-            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.footer);
             tv.setText(footer);
-            mCardScroller.getSelectedView().findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
-            mCardScroller.getSelectedView().findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
-            ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
+            mCardScroller.getChildAt(position).findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
+            mCardScroller.getChildAt(position).findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
+            ImageView iv = (ImageView) mCardScroller.getChildAt(position).findViewById(R.id.check);
             iv.setVisibility(View.VISIBLE);
             iv.setImageDrawable(check);
             iv.setColorFilter(color);
             mGestureDetector = createGestureDetector(this);
         }
-        mCardScroller.setSelection(position);
     }
 
     /**
@@ -566,6 +566,11 @@ public class CategoriesActivity extends Activity {
         startActivityForResult(intent, SUBCATEGORY_RATING_REQUEST);
     }
 
+    /**
+     * Receives the path of a picture in order to watch if it was writen.
+     *
+     * @param picturePath the path of the last picture taken.
+     */
     private void processPictureWhenReady(final String picturePath) {
         final File pictureFile = new File(picturePath);
 

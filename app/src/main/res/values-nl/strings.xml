@@ -56,4 +56,9 @@
 
     <!-- NOT ORDERED -->
     <string name="hello_world">Hello world!</string>
+    <string name="could_not_connect">Couldn\'t Connect!</string>
+    <string name="request_failed">Request failed.</string>
+    <string name="tap_to_check">Tap to check for errors.</string>
+    <string name="checklist_skip">You skipped some items!</string>
+    <string name="tap_to_skip">Tap if you wish to skip them.</string>
 </resources>

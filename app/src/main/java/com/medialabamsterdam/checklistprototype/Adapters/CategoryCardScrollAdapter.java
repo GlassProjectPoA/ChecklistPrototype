@@ -76,22 +76,31 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         if (position == mCards.size() - 1) {
             //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
+
+            String footer;
+            String title;
+
             ImageView iv = (ImageView) card.findViewById(R.id.check);
             // Sets the message and color of the check mark in the card to inform the user if there
             // are any Categories he missed.
             if (completion == mCards.size() - 1) {
                 iv.setColorFilter(mContext.getResources().getColor(R.color.yellow));
-                tv = (TextView) card.findViewById(R.id.footer);
-                tv.setText(R.string.tap_to_check);
-                tv = (TextView) card.findViewById(R.id.title);
-                tv.setText(R.string.checklist_finish);
+                footer = mContext.getResources().getString(R.string.tap_to_check);
+                title = mContext.getResources().getString(R.string.checklist_finish);
+            } else
+            if (completion > 0) {
+                iv.setColorFilter(mContext.getResources().getColor(R.color.yellow));
+                footer = mContext.getResources().getString(R.string.tap_to_skip);
+                title = mContext.getResources().getString(R.string.checklist_skip);
             } else {
                 iv.setColorFilter(mContext.getResources().getColor(R.color.red));
-                tv = (TextView) card.findViewById(R.id.footer);
-                tv.setText(R.string.tap_to_not_complete);
-                tv = (TextView) card.findViewById(R.id.title);
-                tv.setText(R.string.checklist_not_finish);
+                footer = mContext.getResources().getString(R.string.tap_to_not_complete);
+                title = mContext.getResources().getString(R.string.checklist_not_finish);
             }
+            tv = (TextView) card.findViewById(R.id.footer);
+            tv.setText(footer);
+            tv = (TextView) card.findViewById(R.id.title);
+            tv.setText(title);
         } else {
             // If it's not the last on the array, create the appropriate card to show.
             card = inflater.inflate(R.layout.categories_layout, null);
