@@ -59,7 +59,11 @@ public class WarningActivity extends Activity {
         Intent intent = getIntent();
         categoryId = intent.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
         subCategoryId = intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
-        categoryName = intent.getStringExtra(Constants.EXTRA_CATEGORY_NAME);
+        if (intent.hasExtra(Constants.EXTRA_CATEGORY_NAME)) {
+            categoryName = intent.getStringExtra(Constants.EXTRA_CATEGORY_NAME);
+        }else {
+            categoryName = "SubCategory -";
+        }
         subCategoryName = intent.getStringExtra(Constants.EXTRA_SUBCATEGORY_NAME);
 
         //Regular CardScroller/Adapter procedure.

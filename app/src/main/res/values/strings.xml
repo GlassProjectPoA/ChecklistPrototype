@@ -43,7 +43,7 @@
     <string name="right_arrow" translatable="false">›</string>
     <string name="slash_divider" translatable="false">/</string>
     <string name="example_text">There are little stickers.</string>
-    <string name="saving_picture">Saving picture.</string>
+    <string name="saving_picture">Saving pictures.</string>
     <string name="please_wait">Please wait.</string>
     <string name="upload_list">Uploading list.</string>
 
@@ -73,4 +73,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="could_not_connect">Couldn\'t Connect!</string>
     <string name="request_failed">Request failed.</string>
+    <string name="tap_to_check">Tap to check for errors.</string>
 </resources>

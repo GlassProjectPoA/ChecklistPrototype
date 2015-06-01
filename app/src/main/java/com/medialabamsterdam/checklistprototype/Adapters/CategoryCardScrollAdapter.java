@@ -80,9 +80,9 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
             // Sets the message and color of the check mark in the card to inform the user if there
             // are any Categories he missed.
             if (completion == mCards.size() - 1) {
-                iv.setColorFilter(mContext.getResources().getColor(R.color.green));
+                iv.setColorFilter(mContext.getResources().getColor(R.color.yellow));
                 tv = (TextView) card.findViewById(R.id.footer);
-                tv.setText(R.string.tap_to_send);
+                tv.setText(R.string.tap_to_check);
                 tv = (TextView) card.findViewById(R.id.title);
                 tv.setText(R.string.checklist_finish);
             } else {

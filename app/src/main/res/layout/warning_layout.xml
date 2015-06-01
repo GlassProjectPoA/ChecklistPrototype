@@ -17,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -35,7 +35,7 @@
         <LinearLayout
             android:id="@+id/info_text_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="2"
             android:orientation="vertical">
 
@@ -43,24 +43,26 @@
                 android:id="@+id/category_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:paddingLeft="40dp"
                 android:paddingRight="20dp"
                 android:text="Furniture"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                android:gravity="left|bottom" />
 
             <TextView
                 android:id="@+id/subcategory_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="0"
+                android:layout_weight="1"
                 android:paddingLeft="40dp"
                 android:paddingRight="20dp"
                 android:text="Natural dirt"
                 android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="top|left" />
 
         </LinearLayout>
 

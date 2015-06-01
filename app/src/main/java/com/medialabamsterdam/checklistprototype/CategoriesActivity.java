@@ -47,9 +47,12 @@ public class CategoriesActivity extends Activity {
     private static final int SUBCATEGORY_RATING_REQUEST = 5046;
     private final static int WARNING_REQUEST = 9574;
 
-    private final static int STATUS_COMPLETE = 200;
-    private final static int STATUS_INCOMPLETE = 666;
-    private final static int STATUS_COULDNOTCONNECT = 404;
+    private final static int STATUS_COMPLETE = 0;
+    private final static int STATUS_INCOMPLETE = 1;
+    private final static int STATUS_COULDNOTCONNECT = 2;
+    private static final int STATUS_LOAD = 3;
+    private static final int STATUS_SAVINGPICTURE = 4;
+    private static final int STATUS_CANSEND = 5;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -60,7 +63,7 @@ public class CategoriesActivity extends Activity {
     private int areaCode;
     private boolean isSent = false;
     private SparseIntArray _grades;
-    private String lastPicturePath;
+    private volatile boolean picturesReady = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -142,10 +145,15 @@ public class CategoriesActivity extends Activity {
                                 if (completion == mCategories.size() - 1) {
                                     // If _grades is not null then getGrades() has been called
                                     // before so there is no need to call it again.
-                                    if (_grades != null) {
-                                        checkData();
+                                    if (picturesReady) {
+                                        if (_grades != null) {
+                                            checkData();
+                                        } else {
+                                            getGrades();
+                                        }
                                     } else {
-                                        getGrades();
+                                        statusUpdate(STATUS_SAVINGPICTURE);
+                                        am.playSoundEffect(Sounds.DISALLOWED);
                                     }
                                 } else {
                                     int i = 0;
@@ -279,15 +287,14 @@ public class CategoriesActivity extends Activity {
      * WarningActivity if they do.
      */
     private void checkData() {
+        statusUpdate(STATUS_LOAD);
         int count = 0;
         CheckDataLoop:
         for (SubCategory sc : mSubCategories) {
-            if (sc.getPictureUri() != null) {
-                lastPicturePath = sc.getPictureUri();
-            }
             if (_grades == null){
                 _grades = new SparseIntArray();
                 _grades.put(1, 1);
+                Log.e(TAG, "Loaded default ratings");
             }
             // If any category has a grade below accepted AND has no picture URI related to it
             // the code will call WarningActivity to prompt the user to take a picture.
@@ -304,12 +311,12 @@ public class CategoriesActivity extends Activity {
                     }
                 }
             } else {
-                // If no SubCategory is below accepted grade, the code will call sendData() to send
+                // If no SubCategory is below accepted grade, the code will call prepareJson() to send
                 // the checklist to the server.
                 count++;
                 if (mSubCategories.size() == count) {
                     //TODO YOLO
-                    new processPictureWhenReady().execute();
+                    prepareJson();
                     //break;
                 }
             }
@@ -322,12 +329,13 @@ public class CategoriesActivity extends Activity {
      * @param intent the data received.
      */
     private void saveSubcategoryData(Intent intent) {
-        ArrayList<SubCategory> sc = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
+        picturesReady = false;
+        ArrayList<SubCategory> subCategories = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         // Get the Category object on the intent and changes it's 'completed' variable to 'true'.
-        Category c = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+        Category category = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
         for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).getId() == c.getId()) {
-                mCategories.get(i).setCompleted(c.isCompleted());
+            if (mCategories.get(i).getId() == category.getId()) {
+                    mCategories.get(i).setCompleted(category.isCompleted());
             }
         }
         // If mSubCategories is not null then it checks if the SubCategories have already been
@@ -335,11 +343,11 @@ public class CategoriesActivity extends Activity {
         if (mSubCategories != null) {
             boolean hasInstance = false;
             for (int i = 0; i < mSubCategories.size(); i++) {
-                for (int j = 0; j < sc.size(); j++) {
-                    if (mSubCategories.get(i).getParentId() == sc.get(j).getParentId() &&
-                            mSubCategories.get(i).getId() == sc.get(j).getId()) {
+                for (int j = 0; j < subCategories.size(); j++) {
+                    if (mSubCategories.get(i).getParentId() == subCategories.get(j).getParentId() &&
+                            mSubCategories.get(i).getId() == subCategories.get(j).getId()) {
                         //Updates the data on the SubCategory if it was already created.
-                        mSubCategories.get(i).setGrade(sc.get(j).getGrade());
+                        mSubCategories.get(i).setGrade(subCategories.get(j).getGrade());
                         hasInstance = true;
                     }
                 }
@@ -347,16 +355,27 @@ public class CategoriesActivity extends Activity {
             if (!hasInstance) {
                 // If there were no SubCategories in the ArrayList related to the received category
                 // it will just add the given SubCategory object.
-                for (SubCategory subCategory : sc) {
+                for (SubCategory subCategory : subCategories) {
                     mSubCategories.add(subCategory);
                 }
             }
         } else {
             // If mSubCategories is null then it will just save every SubCategory received.
-            mSubCategories = sc;
+            mSubCategories = subCategories;
         }
         // Updates view.
         mAdapter.notifyDataSetChanged();
+        String lastPictureUri = null;
+        for (SubCategory sc : subCategories){
+            if (sc.getPictureUri() != null){
+                lastPictureUri = sc.getPictureUri();
+            }
+        }
+        if (lastPictureUri != null){
+            processPictureWhenReady(lastPictureUri);
+        } else {
+            picturesReady = true;
+        }
     }
 
     /**
@@ -365,30 +384,45 @@ public class CategoriesActivity extends Activity {
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
-    private void sendData() {
+    private void prepareJson() {
         // Disables scrolling and tapping on the device, so we don't send data twice.
         mCardScroller.setFocusable(false);
         mGestureDetector = null;
 
         // Put all data we have to send in a JsonArray.
-        JsonArray jsonArray = new JsonArray();
-        for (SubCategory sc : mSubCategories) {
-            JsonObject object = new JsonObject();
-            object.addProperty("code", sc.getCode());
-            object.addProperty("rating", Utils.getStringFromRating(sc.getGrade()));
-            if (sc.getPictureUri() != null) {
-                object.addProperty("image", Utils.imgToString(sc.getPictureUri()));
+        new AsyncTask<Void, Void, Void>(){
+            JsonObject json;
+            @Override
+            protected Void doInBackground(Void... voids) {
+                JsonArray jsonArray = new JsonArray();
+                for (SubCategory sc : mSubCategories) {
+                    JsonObject object = new JsonObject();
+                    object.addProperty("code", sc.getCode());
+                    object.addProperty("rating", Utils.getStringFromRating(sc.getGrade()));
+                    if (sc.getPictureUri() != null) {
+                        object.addProperty("image", Utils.imgToString(sc.getPictureUri()));
+                    }
+                    jsonArray.add(object);
+                }
+
+                json = new JsonObject();
+                json.addProperty("user_id", 1);
+                json.addProperty("location_id", locationIndex);
+                json.add("data", jsonArray);
+
+                Log.e(TAG, json.toString());
+                return null;
             }
-            jsonArray.add(object);
-        }
 
-        JsonObject json = new JsonObject();
-        json.addProperty("user_id", 1);
-        json.addProperty("location_id", locationIndex);
-        json.add("data", jsonArray);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                sendData(json);
+            }
+        }.execute();
+    }
 
-        Log.e(TAG, json.toString());
-
+    private void sendData(JsonObject json) {
         // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)
                 .load("http://glass.twisk-interactive.nl/checklist")
@@ -415,36 +449,25 @@ public class CategoriesActivity extends Activity {
     }
 
     /**
-     * Tell the view to change text and start a loader as to let the user know we are sending data.
-     */
-    private void startLoader() {
-        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
-        tv.setText(R.string.upload_list);
-        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
-        tv.setText(R.string.please_wait);
-        mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-        mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
-        ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView()
-                .findViewById(R.id.pictureProcessBar);
-        spinner.setVisibility(View.VISIBLE);
-        spinner.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_bar_green));
-    }
-
-    /**
      * Changes the view to let the user know the data is sent. If the user clicks again he will
      * be sent to the starting screen of the app (MainActivity).
      */
     private void statusUpdate(int updateCode) {
+        int position = mCardScroller.getSelectedItemPosition();
+        mCardScroller.setSelection(mCategories.size()-1);
         String title = null;
         String footer = null;
         Drawable check = null;
+        boolean load = false;
         int color = -1;
+        int spinnerId = -1;
         switch (updateCode) {
             case STATUS_COMPLETE:
                 title = getResources().getString(R.string.complete);
                 footer = getResources().getString(R.string.send_complete);
                 check = getResources().getDrawable(R.drawable.check);
                 color = getResources().getColor(R.color.green);
+                isSent = true;
                 break;
             case STATUS_INCOMPLETE:
                 title = getResources().getString(R.string.incomplete);
@@ -458,18 +481,52 @@ public class CategoriesActivity extends Activity {
                 check = getResources().getDrawable(R.drawable.stop);
                 color = getResources().getColor(R.color.red);
                 break;
+            case STATUS_LOAD:
+                title = getResources().getString(R.string.upload_list);
+                footer = getResources().getString(R.string.please_wait);
+                check = getResources().getDrawable(R.drawable.progress_bar_green);
+                spinnerId = R.id.sendProgressSpinner;
+                load = true;
+                break;
+            case STATUS_SAVINGPICTURE:
+                title = getResources().getString(R.string.saving_picture);
+                footer = getResources().getString(R.string.please_wait);
+                check = getResources().getDrawable(R.drawable.progress_bar_yellow);
+                spinnerId = R.id.pictureProgressSpinner;
+                load = true;
+                break;
+            case STATUS_CANSEND:
+                title = getResources().getString(R.string.checklist_finish);
+                footer = getResources().getString(R.string.tap_to_send);
+                check = getResources().getDrawable(R.drawable.upload);
+                color = getResources().getColor(R.color.green);
+                break;
         }
-        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
-        tv.setText(title);
-        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
-        tv.setText(footer);
-        mCardScroller.getSelectedView().findViewById(R.id.pictureProcessBar).setVisibility(View.GONE);
-        ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
-        iv.setVisibility(View.VISIBLE);
-        iv.setImageDrawable(check);
-        iv.setColorFilter(color);
-        mGestureDetector = createGestureDetector(this);
-        isSent = true;
+        if (load){
+            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+            tv.setText(title);
+            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv.setText(footer);
+            mCardScroller.getSelectedView().findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+            mCardScroller.getSelectedView().findViewById(R.id.check).setVisibility(View.GONE);
+            ProgressBar spinner = (ProgressBar) mCardScroller.getSelectedView()
+                    .findViewById(spinnerId);
+            spinner.setVisibility(View.VISIBLE);
+            spinner.setIndeterminateDrawable(check);
+        } else {
+            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+            tv.setText(title);
+            tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv.setText(footer);
+            mCardScroller.getSelectedView().findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
+            mCardScroller.getSelectedView().findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
+            ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
+            iv.setVisibility(View.VISIBLE);
+            iv.setImageDrawable(check);
+            iv.setColorFilter(color);
+            mGestureDetector = createGestureDetector(this);
+        }
+        mCardScroller.setSelection(position);
     }
 
     /**
@@ -505,58 +562,53 @@ public class CategoriesActivity extends Activity {
         intent.putExtra(Constants.PARCELABLE_CATEGORY, mCategories.get(position));
         intent.putExtra(Constants.EXTRA_POSITION, position);
         intent.putExtra(Constants.EXTRA_AREA_CODE, areaCode);
+        intent.putExtra(Constants.EXTRA_LOCATION, locationIndex);
         startActivityForResult(intent, SUBCATEGORY_RATING_REQUEST);
     }
 
-    private class processPictureWhenReady extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // startLoader() handles the loader screen in view so the user know we are sending data.
-            startLoader();
-        }
+    private void processPictureWhenReady(final String picturePath) {
+        final File pictureFile = new File(picturePath);
 
-        @Override
-        protected Void doInBackground(Void... voids) {
+        if (pictureFile.exists()) {
+            picturesReady = true;
+            statusUpdate(STATUS_CANSEND);
+        } else {
+            // The file does not exist yet. Before starting the file observer, you
+            // can update your UI to let the user know that the application is
+            // waiting for the picture (for example, by displaying the thumbnail
+            // image and a progress indicator).
 
-            final File pictureFile = new File(lastPicturePath);
-            if (pictureFile.exists()) {
-                // The picture is ready; process it.
-                return null;
-            } else {
-                final File parentDirectory = pictureFile.getParentFile();
-                FileObserver observer = new FileObserver(parentDirectory.getPath(), FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
-                    private boolean isFileWritten;
+            final File parentDirectory = pictureFile.getParentFile();
+            FileObserver observer = new FileObserver(parentDirectory.getPath(),
+                    FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
+                // Protect against additional pending events after CLOSE_WRITE
+                // or MOVED_TO is handled.
+                private boolean isFileWritten;
 
-                    @Override
-                    public void onEvent(int event, String path) {
-                        if (!isFileWritten) {
-                            File affectedFile = new File(parentDirectory, path);
-                            isFileWritten = affectedFile.equals(pictureFile);
+                @Override
+                public void onEvent(int event, String path) {
+                    if (!isFileWritten) {
+                        // For safety, make sure that the file that was created in
+                        // the directory is actually the one that we're expecting.
+                        File affectedFile = new File(parentDirectory, path);
+                        isFileWritten = affectedFile.equals(pictureFile);
 
-                            if (isFileWritten) {
-                                stopWatching();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        new processPictureWhenReady();
-                                    }
-                                });
-                            }
+                        if (isFileWritten) {
+                            stopWatching();
+
+                            // Now that the file is ready, recursively call
+                            // processPictureWhenReady again (on the UI thread).
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    processPictureWhenReady(picturePath);
+                                }
+                            });
                         }
                     }
-                };
-                observer.startWatching();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            // The picture is ready; process it.
-            sendData();
+                }
+            };
+            observer.startWatching();
         }
     }
 }

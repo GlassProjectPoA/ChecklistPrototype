@@ -3,23 +3,32 @@ package com.medialabamsterdam.checklistprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.medialabamsterdam.checklistprototype.Adapters.SubCategoryCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
 
@@ -32,13 +41,18 @@ import java.util.ArrayList;
 public class SubCategoriesActivity extends Activity {
 
     private final static String TAG = "SUBCATEGORIES";
-    private static final int SET_RATING_DETAIL_CODE = 1652;
+    private static final int RATING_DETAIL_REQUEST = 1652;
+    private final static int WARNING_REQUEST = 9575;
+
+    private final static int STATUS_COULDNOTCONNECT = 2;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCategories;
     private SubCategoryCardScrollAdapter mAdapter;
     private Category mCategory;
+    private SparseIntArray _grades;
+    private int locationIndex;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -47,6 +61,7 @@ public class SubCategoriesActivity extends Activity {
         //Get data from intent sent from CategoriesActivity.
         Intent intent = getIntent();
         mCategory = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
+        locationIndex = intent.getIntExtra(Constants.EXTRA_LOCATION, 0);
         int areaCode = intent.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
 
         //Checks if there is a SubCategory parcelable in the Intent or Bundle and loads it.
@@ -165,7 +180,7 @@ public class SubCategoriesActivity extends Activity {
         intent.putExtra(Constants.EXTRA_GRADE, grade);
         intent.putExtra(Constants.EXTRA_CATEGORY_ID, categoryId);
         intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, subCategoryId);
-        startActivityForResult(intent, SET_RATING_DETAIL_CODE);
+        startActivityForResult(intent, RATING_DETAIL_REQUEST);
     }
 
     /**
@@ -173,19 +188,37 @@ public class SubCategoriesActivity extends Activity {
      *
      * @param requestCode the request code.
      * @param resultCode  the result code.
-     * @param result      the result intent.
+     * @param data      the result intent.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        if (requestCode == SET_RATING_DETAIL_CODE) {
-            if (resultCode == RESULT_OK) {
-                int position = result.getIntExtra(Constants.EXTRA_POSITION, 1);
-                int rating = result.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
-                mSubCategories.get(position).setGrade(rating);
-                mCardScroller.setSelection(position);
-                mAdapter.notifyDataSetChanged();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
+            savePicture(data);
+        }
+        if (requestCode == RATING_DETAIL_REQUEST && resultCode == RESULT_OK) {
+            saveDetailData(data);
+        }
+    }
+
+    private void savePicture(Intent picturePathData) {
+        int categoryId = picturePathData.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
+        int subCategoryId = picturePathData.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
+        for (SubCategory sc : mSubCategories) {
+            if (categoryId == sc.getParentId() && subCategoryId == sc.getId()) {
+                sc.setPictureUri(picturePathData.getStringExtra(Constants.EXTRA_PICTURE));
+                break;
             }
         }
+        // Calls checkData() to see if any other SubCategory need a picture.
+        checkData();
+    }
+
+    private void saveDetailData(Intent detailData) {
+            int position = detailData.getIntExtra(Constants.EXTRA_POSITION, 1);
+            int rating = detailData.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
+            mSubCategories.get(position).setGrade(rating);
+            mCardScroller.setSelection(position);
+            mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -201,6 +234,7 @@ public class SubCategoriesActivity extends Activity {
         fixedSubCategories.remove(fixedSubCategories.size() - 1);
         result.putParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         setResult(Activity.RESULT_OK, result);
+        finish();
     }
 
     //region Boring Stuff
@@ -245,9 +279,12 @@ public class SubCategoriesActivity extends Activity {
                     case TAP:
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
-                            sendResult();
+                                if (_grades != null) {
+                                    checkData();
+                                } else {
+                                    getGrades();
+                                }
                             am.playSoundEffect(Sounds.DISALLOWED);
-                            finish();
                         } else {
                             startDetails();
                             am.playSoundEffect(Sounds.TAP);
@@ -289,4 +326,110 @@ public class SubCategoriesActivity extends Activity {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
+
+    /**
+     * This method grabs grades from the server in order to compare them with the grades from user
+     * input.
+     * <p/>
+     * This uses Json and the Ion library.
+     * https://github.com/koush/ion
+     */
+    private void getGrades() {
+        Ion.with(this)
+                .load("http://glass.twisk-interactive.nl/subcategories/grades/" + locationIndex)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) e.printStackTrace();
+                        if (result != null) {
+                            // Saves all acceptable grades from given location in _grades.
+                            if (result.has("grades")) {
+                                Log.e(TAG, result.toString());
+                                JsonArray jsonArray = result.getAsJsonArray("grades");
+                                _grades = new SparseIntArray();
+                                for (int i = 0; i < jsonArray.size(); i++) {
+                                    int code = jsonArray.get(i).getAsJsonObject().get("code").getAsInt();
+                                    int grade = Utils.getRatingFromString(jsonArray.get(i)
+                                            .getAsJsonObject().get("accepted_grade").getAsString());
+                                    _grades.put(code, grade);
+                                }
+                                // Calls the checkData() method to determine if any grade needs a picture.
+                                checkData();
+                            } else {
+                                //statusUpdate(STATUS_COULDNOTCONNECT);
+                                //TODO REMOVE
+                                checkData();
+                            }
+                        } else {
+                            //statusUpdate(STATUS_COULDNOTCONNECT);
+                            //TODO REMOVE
+                            checkData();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Changes the view to let the user know the data is sent. If the user clicks again he will
+     * be sent to the starting screen of the app (MainActivity).
+     */
+    private void statusUpdate(int updateCode) {
+        String title = null;
+        String footer = null;
+        Drawable check = null;
+        int color = -1;
+        switch (updateCode) {
+            case STATUS_COULDNOTCONNECT:
+                title = getResources().getString(R.string.could_not_connect);
+                footer = getResources().getString(R.string.request_failed);
+                check = getResources().getDrawable(R.drawable.stop);
+                color = getResources().getColor(R.color.red);
+                break;
+        }
+            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
+            tv.setText(title);
+        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
+            tv.setText(footer);
+            ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
+            iv.setImageDrawable(check);
+            iv.setColorFilter(color);
+    }
+
+    /**
+     * This method checks if any SubCategory has a grade below the accepted. And calls
+     * WarningActivity if they do.
+     */
+    private void checkData() {
+        int count = 0;
+        if (_grades == null){
+            _grades = new SparseIntArray();
+            _grades.put(1, 1);
+            Log.e(TAG, "Loaded default ratings");
+        }
+        for (SubCategory sc : mSubCategories) {
+            // If any SubCategory has a grade below accepted AND has no picture URI related to it
+            // the code will call WarningActivity to prompt the user to take a picture.
+            if (sc.getName() == null){
+                count++;
+            } else
+            if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode(), 1)) {
+                Intent intent = new Intent(this, WarningActivity.class);
+                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_NAME, sc.getName());
+                        intent.putExtra(Constants.EXTRA_CATEGORY_ID, sc.getParentId());
+                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, sc.getId());
+                        startActivityForResult(intent, WARNING_REQUEST);
+                        break;
+            } else {
+                // If no SubCategory is below accepted grade, the code will call sendData() to send
+                // the checklist to the server.
+                count++;
+            }
+        }
+        if (mSubCategories.size() == count) {
+            //TODO YOLO
+            sendResult();
+            //break;
+        }
+    }
 }
