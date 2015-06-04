@@ -26,7 +26,7 @@ public class Category implements Parcelable {
     private int categoryByLocationId;
     private String name;
     private boolean remove;
-    private boolean completed;
+    private boolean complete;
 
     /**
      * Category default constructor.
@@ -41,7 +41,7 @@ public class Category implements Parcelable {
         this.categoryByLocationId = categoryByLocationId;
         this.name = name;
         this.remove = remove;
-        this.completed = false; // Set to true if this Category has been fully graded.
+        this.complete = false; // Set to true if this Category has been fully graded.
     }
 
     /**
@@ -54,7 +54,7 @@ public class Category implements Parcelable {
         this.categoryByLocationId = in.readInt();
         this.name = in.readString();
         this.remove = in.readByte() != 0;
-        this.completed = in.readByte() != 0;
+        this.complete = in.readByte() != 0;
     }
 
     /**
@@ -79,12 +79,12 @@ public class Category implements Parcelable {
         this.remove = remove;
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public boolean isComplete() {
+        return complete;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 
     public int getCategoryByLocationId() {
@@ -102,7 +102,7 @@ public class Category implements Parcelable {
         out.writeInt(categoryByLocationId);
         out.writeString(name);
         out.writeByte((byte) (remove ? 1 : 0));
-        out.writeByte((byte) (completed ? 1 : 0));
+        out.writeByte((byte) (complete ? 1 : 0));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Category implements Parcelable {
                 ", categoryByLocationId= " + categoryByLocationId +
                 ", name= '" + name + '\'' +
                 ", remove= " + remove +
-                ", completed= " + completed +
+                ", complete= " + complete +
                 '}';
     }
 }

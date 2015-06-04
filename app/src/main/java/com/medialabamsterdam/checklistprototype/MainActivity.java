@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        defineLocale();
+//        defineLocale();
 
         // Defines if using voice commands or not.
         if (OK_GLASS) {
@@ -210,6 +210,7 @@ public class MainActivity extends Activity {
      */
     private int findArea(Point point) {
         List<Area> mAreas = DataBaseHelper.readArea(this);
+        List<Area> mPossibleAreas = new ArrayList<>();
         TextView tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
         for (Area area : mAreas) {
 
@@ -227,13 +228,13 @@ public class MainActivity extends Activity {
             // If we are inside an Area then it updates areaIndex, areaCode values as well as the
             // Area text on the screen.
             if (polygon.contains(point)) {
-                areaIndex = area.getId();
-                areaCode = area.getCode();
-                tv.setText(area.getName());
+                mPossibleAreas.add(area);
                 // It then calls findLocation() method to find in which location are we, based on
                 // which area we are.
-                return findLocation(point);
             }
+        }
+        if (mPossibleAreas.size() > 0){
+            return findLocation(point, mPossibleAreas);
         }
         // Sets Area text to "?" if not inside any recorded area.
         tv.setText(R.string.unknown);
@@ -246,33 +247,41 @@ public class MainActivity extends Activity {
      * @param point out current location in a Point Object.
      * @return returns an int related to a sound effect in order to give sound feedback to user.
      */
-    private int findLocation(Point point) {
-        TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
-        List<Locations> mLocations = DataBaseHelper.readLocations(this, areaIndex);
-        for (Locations locations : mLocations) {
+    private int findLocation(Point point, List<Area> areas) {
 
-            Point topRight = Utils.stringToPoint(locations.getTopRight());
-            Point topLeft = Utils.stringToPoint(locations.getTopLeft());
-            Point botLeft = Utils.stringToPoint(locations.getBotLeft());
-            Point botRight = Utils.stringToPoint(locations.getBotRight());
+        for (Area area : areas) {
+            List<Locations> mLocations = DataBaseHelper.readLocations(this, area.getId());
+            for (Locations locations : mLocations) {
 
-            Polygon polygon = Polygon.Builder()
-                    .addVertex(topRight)
-                    .addVertex(topLeft)
-                    .addVertex(botLeft)
-                    .addVertex(botRight)
-                    .build();
-            // If we are inside a Location then it updates locationIndex value as well as the
-            // Location text on the screen.
-            if (polygon.contains(point)) {
-                locationIndex = locations.getLocationId();
-                tv.setText(locations.getName());
-                // Loads the Categories based on the given location.
-                mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
-                return Sounds.SUCCESS;
+                Point topRight = Utils.stringToPoint(locations.getTopRight());
+                Point topLeft = Utils.stringToPoint(locations.getTopLeft());
+                Point botLeft = Utils.stringToPoint(locations.getBotLeft());
+                Point botRight = Utils.stringToPoint(locations.getBotRight());
+
+                Polygon polygon = Polygon.Builder()
+                        .addVertex(topRight)
+                        .addVertex(topLeft)
+                        .addVertex(botLeft)
+                        .addVertex(botRight)
+                        .build();
+                // If we are inside a Location then it updates locationIndex value as well as the
+                // Location text on the screen.
+                if (polygon.contains(point)) {
+                    areaIndex = area.getId();
+                    areaCode = area.getCode();
+                    locationIndex = locations.getLocationId();
+                    TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
+                    tv.setText(locations.getName());
+                    tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
+                    tv.setText(area.getName());
+                    // Loads the Categories based on the given location.
+                    mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
+                    return Sounds.SUCCESS;
+                }
             }
         }
         // Sets Location text to "?" if not inside any recorded location.
+        TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
         tv.setText(R.string.unknown);
         return Sounds.ERROR;
     }

@@ -227,7 +227,7 @@ public class SubCategoriesActivity extends Activity {
     private void sendResult() {
         mCardScroller.deactivate();
         Intent result = new Intent();
-        mCategory.setCompleted(true);
+        mCategory.setComplete(true);
         result.putExtra(Constants.PARCELABLE_CATEGORY, mCategory);
         // Removes last entry on mSubCategories that is used to create and display the check mark.
         ArrayList<SubCategory> fixedSubCategories = mSubCategories;
@@ -357,12 +357,12 @@ public class SubCategoriesActivity extends Activity {
                                 // Calls the checkData() method to determine if any grade needs a picture.
                                 checkData();
                             } else {
-                                //statusUpdate(STATUS_COULDNOTCONNECT);
+                                //statusUpdate(FAIL_CONNECT);
                                 //TODO REMOVE
                                 checkData();
                             }
                         } else {
-                            //statusUpdate(STATUS_COULDNOTCONNECT);
+                            //statusUpdate(FAIL_CONNECT);
                             //TODO REMOVE
                             checkData();
                         }
