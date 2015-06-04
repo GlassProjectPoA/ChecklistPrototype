@@ -10,6 +10,7 @@ import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Detail;
 import com.medialabamsterdam.checklistprototype.R;
+import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +71,22 @@ public class DetailCardScrollAdapter extends CardScrollAdapter {
         TextView tv;
         // Inflates the card layout.
         card = inflater.inflate(R.layout.details_layout, null);
-        // Set the description text related to the grade selected.
-        tv = (TextView) card.findViewById(R.id.description_text);
-        tv.setText(mDetail.getDescription()[position]);
-        // Set the detail text to the given Detail.
-        tv = (TextView) card.findViewById(R.id.detail_text);
-        tv.setText(mDetail.getDetails());
+
+        if (Constants.LOAD_ALTERNATE_LANGUAGE){
+            // Set the description text related to the grade selected.
+            tv = (TextView) card.findViewById(R.id.description_text);
+            tv.setText(mDetail.getDescription_nl()[position]);
+            // Set the detail text to the given Detail.
+            tv = (TextView) card.findViewById(R.id.detail_text);
+            tv.setText(mDetail.getDetails_nl());
+        } else {
+            // Set the description text related to the grade selected.
+            tv = (TextView) card.findViewById(R.id.description_text);
+            tv.setText(mDetail.getDescription()[position]);
+            // Set the detail text to the given Detail.
+            tv = (TextView) card.findViewById(R.id.detail_text);
+            tv.setText(mDetail.getDetails());
+        }
         // Changes grade colors and indicators to inform the selected grade.
         switch (position) {
             case 0:

@@ -30,4 +30,5 @@ public interface Constants {
     String ALTERNATE_LANGUAGE = "nl";
     boolean LOAD_ALTERNATE_LANGUAGE = false; // Set true if loading another language.
     boolean IGNORE_INSTRUCTIONS = true; // Set true to ignore instructions panel.
+
 }

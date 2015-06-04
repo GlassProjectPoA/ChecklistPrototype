@@ -1,17 +1,20 @@
 package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.R;
+import com.medialabamsterdam.checklistprototype.Utilities.Status;
 
 import java.util.List;
 
@@ -26,6 +29,7 @@ import java.util.List;
 public class CategoryCardScrollAdapter extends CardScrollAdapter {
     private final List<Category> mCards;
     private final Context mContext;
+    private Status mStatus;
 
     /**
      * Default constructor.
@@ -33,11 +37,18 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
      * @param context    the activity's context.
      * @param categories a List containing all Category objects that should be depicted on the view.
      */
-    public CategoryCardScrollAdapter(Context context, List<Category> categories) {
-        mCards = categories;
-        mContext = context;
+    public CategoryCardScrollAdapter(Context context, List<Category> categories, Status status) {
+        super();
+        this.mCards = categories;
+        this.mContext = context;
+        this.mStatus = status;
         //Adds an empty Category at the end in order to display the check marks card.
-        mCards.add(new Category());
+        this.mCards.add(new Category());
+    }
+
+    public void updateStatus(Status status){
+        this.mStatus = status;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -55,7 +66,6 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         return mCards.get(position);
     }
 
-
     @Override
     public int getViewTypeCount() {
         return CardBuilder.getViewTypeCount();
@@ -67,40 +77,99 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View card;
         TextView tv;
-        int completion = 0;
+
         Category c = mCards.get(position);
-        for (Category category : mCards) {
-            if (category.isCompleted()) completion++;
-        }
+
         // If the Category is the last on the array, turn it into a check_layout card.
         if (position == mCards.size() - 1) {
             //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
 
-            String footer;
-            String title;
+            String title = null;
+            String footer = null;
+            Drawable check = null;
+            boolean load = false;
+            boolean hideArrow = false;
+            int color = -1;
+            int spinnerId = -1;
 
-            ImageView iv = (ImageView) card.findViewById(R.id.check);
-            // Sets the message and color of the check mark in the card to inform the user if there
-            // are any Categories he missed.
-            if (completion == mCards.size() - 1) {
-                iv.setColorFilter(mContext.getResources().getColor(R.color.yellow));
-                footer = mContext.getResources().getString(R.string.tap_to_check);
-                title = mContext.getResources().getString(R.string.checklist_finish);
-            } else
-            if (completion > 0) {
-                iv.setColorFilter(mContext.getResources().getColor(R.color.yellow));
-                footer = mContext.getResources().getString(R.string.tap_to_skip);
-                title = mContext.getResources().getString(R.string.checklist_skip);
-            } else {
-                iv.setColorFilter(mContext.getResources().getColor(R.color.red));
-                footer = mContext.getResources().getString(R.string.tap_to_not_complete);
-                title = mContext.getResources().getString(R.string.checklist_not_finish);
+            switch (mStatus) {
+                case UPLOAD_COMPLETE:
+                    title = mContext.getResources().getString(R.string.complete);
+                    footer = mContext.getResources().getString(R.string.send_complete);
+                    check = mContext.getResources().getDrawable(R.drawable.check);
+                    color = mContext.getResources().getColor(R.color.green);
+                    hideArrow = true;
+                    break;
+                case FAIL_SEND:
+                    title = mContext.getResources().getString(R.string.incomplete);
+                    footer = mContext.getResources().getString(R.string.send_failed);
+                    check = mContext.getResources().getDrawable(R.drawable.stop);
+                    color = mContext.getResources().getColor(R.color.red);
+                    hideArrow = true;
+                    break;
+                case FAIL_CONNECT:
+                    title = mContext.getResources().getString(R.string.could_not_connect);
+                    footer = mContext.getResources().getString(R.string.request_failed);
+                    check = mContext.getResources().getDrawable(R.drawable.stop);
+                    color = mContext.getResources().getColor(R.color.red);
+                    hideArrow = true;
+                    break;
+                case UPLOADING:
+                    title = mContext.getResources().getString(R.string.upload_list);
+                    footer = mContext.getResources().getString(R.string.please_wait);
+                    check = mContext.getResources().getDrawable(R.drawable.progress_bar_green);
+                    spinnerId = R.id.sendProgressSpinner;
+                    load = true;
+                    hideArrow = true;
+                    break;
+                case SAVING_PICTURE:
+                    title = mContext.getResources().getString(R.string.saving_picture);
+                    footer = mContext.getResources().getString(R.string.please_wait);
+                    check = mContext.getResources().getDrawable(R.drawable.progress_bar_yellow);
+                    spinnerId = R.id.pictureProgressSpinner;
+                    load = true;
+                    hideArrow = true;
+                    break;
+                case CAN_SEND:
+                    title = mContext.getResources().getString(R.string.checklist_finish);
+                    footer = mContext.getResources().getString(R.string.tap_to_send);
+                    check = mContext.getResources().getDrawable(R.drawable.upload);
+                    color = mContext.getResources().getColor(R.color.green);
+                    break;
+                case CATEGORY_COMPLETE:
+                    title = mContext.getResources().getString(R.string.checklist_finish);
+                    footer = mContext.getResources().getString(R.string.tap_to_check);
+                    check = mContext.getResources().getDrawable(R.drawable.upload);
+                    color = mContext.getResources().getColor(R.color.yellow);
+                    break;
+                case CATEGORY_INCOMPLETE:
+                    title = mContext.getResources().getString(R.string.checklist_not_finish);
+                    footer = mContext.getResources().getString(R.string.tap_to_not_complete);
+                    check = mContext.getResources().getDrawable(R.drawable.upload);
+                    color = mContext.getResources().getColor(R.color.red);
+                    break;
             }
-            tv = (TextView) card.findViewById(R.id.footer);
-            tv.setText(footer);
+            if (load){
+                card.findViewById(R.id.check).setVisibility(View.GONE);
+                ProgressBar spinner = (ProgressBar) card.findViewById(spinnerId);
+                spinner.setVisibility(View.VISIBLE);
+                spinner.setIndeterminateDrawable(check);
+            } else {
+                card.findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
+                card.findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
+                ImageView iv = (ImageView) card.findViewById(R.id.check);
+                iv.setVisibility(View.VISIBLE);
+                iv.setImageDrawable(check);
+                iv.setColorFilter(color);
+            }
+            if (hideArrow){
+                card.findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
+            }
             tv = (TextView) card.findViewById(R.id.title);
             tv.setText(title);
+            tv = (TextView) card.findViewById(R.id.footer);
+            tv.setText(footer);
         } else {
             // If it's not the last on the array, create the appropriate card to show.
             card = inflater.inflate(R.layout.categories_layout, null);
@@ -116,7 +185,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         }
         // Makes the circle that is shown in the Category card green if the Category is marked
         // as complete.
-        if (c.isCompleted()) {
+        if (c.isComplete()) {
             LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
             ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_green));
             tv = (TextView) card.findViewById(R.id.order);

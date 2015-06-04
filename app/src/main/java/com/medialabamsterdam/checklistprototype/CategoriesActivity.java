@@ -3,7 +3,6 @@ package com.medialabamsterdam.checklistprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,11 +10,7 @@ import android.os.FileObserver;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -30,6 +25,7 @@ import com.medialabamsterdam.checklistprototype.Adapters.CategoryCardScrollAdapt
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
+import com.medialabamsterdam.checklistprototype.Utilities.Status;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.io.File;
@@ -47,13 +43,6 @@ public class CategoriesActivity extends Activity {
     private static final int SUBCATEGORY_RATING_REQUEST = 5046;
     private final static int WARNING_REQUEST = 9574;
 
-    private final static int STATUS_COMPLETE = 0;
-    private final static int STATUS_INCOMPLETE = 1;
-    private final static int STATUS_COULDNOTCONNECT = 2;
-    private static final int STATUS_LOAD = 3;
-    private static final int STATUS_SAVINGPICTURE = 4;
-    private static final int STATUS_CANSEND = 5;
-
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<Category> mCategories;
@@ -63,7 +52,8 @@ public class CategoriesActivity extends Activity {
     private int areaCode;
     private boolean isSent = false;
     private SparseIntArray _grades;
-    private volatile boolean picturesReady = false;
+    private volatile boolean picturesReady = true;
+    private volatile Status statusCurrent;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -75,11 +65,12 @@ public class CategoriesActivity extends Activity {
         mSubCategories = i.getParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY);
         locationIndex = i.getIntExtra(Constants.EXTRA_LOCATION, 0);
         areaCode = i.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
+        statusCurrent = Status.CATEGORY_INCOMPLETE;
 
         //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
-        mAdapter = new CategoryCardScrollAdapter(this, mCategories);
+        mAdapter = new CategoryCardScrollAdapter(this, mCategories, statusCurrent);
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.activate();
         mCardScroller.setHorizontalScrollBarEnabled(false);
@@ -104,12 +95,14 @@ public class CategoriesActivity extends Activity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
+        savedInstanceState.putSerializable("status", statusCurrent);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        statusCurrent = (Status) savedInstanceState.get("status");
         mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
@@ -127,7 +120,7 @@ public class CategoriesActivity extends Activity {
                 int maxPositions = mAdapter.getCount() - 1;
                 int completion = 0;
                 for (Category category : mCategories) {
-                    if (category.isCompleted()) completion++;
+                    if (category.isComplete()) completion++;
                 }
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
@@ -152,13 +145,12 @@ public class CategoriesActivity extends Activity {
                                             getGrades();
                                         }
                                     } else {
-                                        statusUpdate(STATUS_SAVINGPICTURE);
                                         am.playSoundEffect(Sounds.DISALLOWED);
                                     }
                                 } else {
                                     int i = 0;
                                     for (Category category : mCategories) {
-                                        if (!category.isCompleted()) {
+                                        if (!category.isComplete()) {
                                             mCardScroller.setSelection(i);
                                             break;
                                         }
@@ -236,12 +228,16 @@ public class CategoriesActivity extends Activity {
                                 // Calls the checkData() method to determine if any grade needs a picture.
                                 checkData();
                             } else {
-                                statusUpdate(STATUS_COULDNOTCONNECT);
+                                statusCurrent = Status.FAIL_CONNECT;
+                                mAdapter.updateStatus(statusCurrent);
+                                mAdapter.notifyDataSetChanged();
                                 //TODO REMOVE
                                 checkData();
                             }
                         } else {
-                            statusUpdate(STATUS_COULDNOTCONNECT);
+                            statusCurrent = Status.FAIL_CONNECT;
+                            mAdapter.updateStatus(statusCurrent);
+                            mAdapter.notifyDataSetChanged();
                             checkData();
                         }
                     }
@@ -287,7 +283,9 @@ public class CategoriesActivity extends Activity {
      * WarningActivity if they do.
      */
     private void checkData() {
-        statusUpdate(STATUS_LOAD);
+        statusCurrent = Status.UPLOADING;
+        mAdapter.updateStatus(statusCurrent);
+        mAdapter.notifyDataSetChanged();
         int count = 0;
         CheckDataLoop:
         for (SubCategory sc : mSubCategories) {
@@ -329,13 +327,12 @@ public class CategoriesActivity extends Activity {
      * @param intent the data received.
      */
     private void saveSubcategoryData(Intent intent) {
-        picturesReady = false;
         ArrayList<SubCategory> subCategories = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
         // Get the Category object on the intent and changes it's 'completed' variable to 'true'.
         Category category = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
         for (int i = 0; i < mCategories.size(); i++) {
             if (mCategories.get(i).getId() == category.getId()) {
-                    mCategories.get(i).setCompleted(category.isCompleted());
+                    mCategories.get(i).setComplete(category.isComplete());
             }
         }
         // If mSubCategories is not null then it checks if the SubCategories have already been
@@ -365,16 +362,27 @@ public class CategoriesActivity extends Activity {
         }
         // Updates view.
         mAdapter.notifyDataSetChanged();
-        String lastPictureUri = null;
-        for (SubCategory sc : subCategories){
-            if (sc.getPictureUri() != null){
-                lastPictureUri = sc.getPictureUri();
+        int count = 0;
+        for (Category category1 : mCategories){
+            if (category1.isComplete()){
+                count++;
+                if (count == mCategories.size()-1){
+                    statusCurrent = Status.CATEGORY_COMPLETE;
+                    mAdapter.updateStatus(statusCurrent);
+                    String lastPictureUri;
+                    for (SubCategory sc : mSubCategories) {
+                        if (sc.getPictureUri() != null) {
+                            lastPictureUri = sc.getPictureUri();
+                            picturesReady = false;
+                            processPictureWhenReady(lastPictureUri);
+                        }
+                    }
+                    if (statusCurrent != Status.SAVING_PICTURE && picturesReady){
+                        statusCurrent = Status.CAN_SEND;
+                        mAdapter.updateStatus(statusCurrent);
+                    }
+                }
             }
-        }
-        if (lastPictureUri != null){
-            processPictureWhenReady(lastPictureUri);
-        } else {
-            picturesReady = true;
         }
     }
 
@@ -437,96 +445,24 @@ public class CategoriesActivity extends Activity {
                                 Log.e(TAG, result.toString());
                                 // Calls statusComplete() after it receives a result as to let the user
                                 // know the operation was completed.
-                                statusUpdate(STATUS_COMPLETE);
+                                statusCurrent = Status.UPLOAD_COMPLETE;
+                                mAdapter.updateStatus(statusCurrent);
                             } else {
-                                statusUpdate(STATUS_INCOMPLETE);
+                                statusCurrent = Status.FAIL_SEND;
+                                mAdapter.updateStatus(statusCurrent);
                             }
+                            mCardScroller.setFocusable(true);
+                            mGestureDetector = createGestureDetector(getApplicationContext());
+                            isSent = true;
                         } else {
-                            statusUpdate(STATUS_COULDNOTCONNECT);
+                            statusCurrent = Status.FAIL_CONNECT;
+                            mAdapter.updateStatus(statusCurrent);
+                            mCardScroller.setFocusable(true);
+                            mGestureDetector = createGestureDetector(getApplicationContext());
+                            isSent = true;
                         }
                     }
                 });
-    }
-
-    /**
-     * Updates the last card in the view to the the wanted setup.
-     *
-     * @param updateCode the STATUS id you want to show.
-     */
-    private void statusUpdate(int updateCode) {
-        int position = mCategories.size()-1;
-
-        String title = null;
-        String footer = null;
-        Drawable check = null;
-        boolean load = false;
-        int color = -1;
-        int spinnerId = -1;
-        switch (updateCode) {
-            case STATUS_COMPLETE:
-                title = getResources().getString(R.string.complete);
-                footer = getResources().getString(R.string.send_complete);
-                check = getResources().getDrawable(R.drawable.check);
-                color = getResources().getColor(R.color.green);
-                isSent = true;
-                break;
-            case STATUS_INCOMPLETE:
-                title = getResources().getString(R.string.incomplete);
-                footer = getResources().getString(R.string.send_failed);
-                check = getResources().getDrawable(R.drawable.stop);
-                color = getResources().getColor(R.color.red);
-                break;
-            case STATUS_COULDNOTCONNECT:
-                title = getResources().getString(R.string.could_not_connect);
-                footer = getResources().getString(R.string.request_failed);
-                check = getResources().getDrawable(R.drawable.stop);
-                color = getResources().getColor(R.color.red);
-                break;
-            case STATUS_LOAD:
-                title = getResources().getString(R.string.upload_list);
-                footer = getResources().getString(R.string.please_wait);
-                check = getResources().getDrawable(R.drawable.progress_bar_green);
-                spinnerId = R.id.sendProgressSpinner;
-                load = true;
-                break;
-            case STATUS_SAVINGPICTURE:
-                title = getResources().getString(R.string.saving_picture);
-                footer = getResources().getString(R.string.please_wait);
-                check = getResources().getDrawable(R.drawable.progress_bar_yellow);
-                spinnerId = R.id.pictureProgressSpinner;
-                load = true;
-                break;
-            case STATUS_CANSEND:
-                title = getResources().getString(R.string.checklist_finish);
-                footer = getResources().getString(R.string.tap_to_send);
-                check = getResources().getDrawable(R.drawable.upload);
-                color = getResources().getColor(R.color.green);
-                break;
-        }
-        if (load){
-            TextView tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.title);
-            tv.setText(title);
-            tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.footer);
-            tv.setText(footer);
-            mCardScroller.getChildAt(position).findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
-            mCardScroller.getChildAt(position).findViewById(R.id.check).setVisibility(View.GONE);
-            ProgressBar spinner = (ProgressBar) mCardScroller.getChildAt(position)
-                    .findViewById(spinnerId);
-            spinner.setVisibility(View.VISIBLE);
-            spinner.setIndeterminateDrawable(check);
-        } else {
-            TextView tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.title);
-            tv.setText(title);
-            tv = (TextView) mCardScroller.getChildAt(position).findViewById(R.id.footer);
-            tv.setText(footer);
-            mCardScroller.getChildAt(position).findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
-            mCardScroller.getChildAt(position).findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
-            ImageView iv = (ImageView) mCardScroller.getChildAt(position).findViewById(R.id.check);
-            iv.setVisibility(View.VISIBLE);
-            iv.setImageDrawable(check);
-            iv.setColorFilter(color);
-            mGestureDetector = createGestureDetector(this);
-        }
     }
 
     /**
@@ -576,8 +512,11 @@ public class CategoriesActivity extends Activity {
 
         if (pictureFile.exists()) {
             picturesReady = true;
-            statusUpdate(STATUS_CANSEND);
+            statusCurrent = Status.CAN_SEND;
+            mAdapter.updateStatus(statusCurrent);
         } else {
+            statusCurrent = Status.SAVING_PICTURE;
+            mAdapter.updateStatus(statusCurrent);
             // The file does not exist yet. Before starting the file observer, you
             // can update your UI to let the user know that the application is
             // waiting for the picture (for example, by displaying the thumbnail

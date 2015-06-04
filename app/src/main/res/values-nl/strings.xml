@@ -4,6 +4,13 @@
     <string name="app_name">Checklist Prototype</string>
     <string name="voice_trigger">Load Checklist</string>
 
+    <!-- RATINGS -->
+    <string name="rating_aa" translatable="false">A+</string>
+    <string name="rating_a" translatable="false">A</string>
+    <string name="rating_b" translatable="false">B</string>
+    <string name="rating_c" translatable="false">C</string>
+    <string name="rating_d" translatable="false">D</string>
+
     <!-- FINISH -->
     <string name="checklist_finish">You finished the checklist!</string>
     <string name="checklist_not_finish">The checklist is not complete!</string>
@@ -28,20 +35,28 @@
     <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
 
     <!-- UTILITIES -->
+    <string name="random_time" translatable="false">12:34</string>
+    <string name="random_number" translatable="false">2</string>
+    <string name="random_word" translatable="false">Trees</string>
+    <string name="unknown" translatable="false">"?"</string>
+    <string name="left_arrow" translatable="false">‹</string>
+    <string name="right_arrow" translatable="false">›</string>
+    <string name="slash_divider" translatable="false">/</string>
     <string name="example_text">There are little stickers.</string>
-    <string name="saving_picture">Saving picture.</string>
+    <string name="saving_picture">Saving pictures.</string>
     <string name="please_wait">Please wait.</string>
     <string name="upload_list">Uploading list.</string>
 
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
     <string name="title_summary">Summary</string>
-    <string name="title_location">Checklist for area/location</string>
+    <string name="title_location">Checklist for \narea/location</string>
     <string name="title_categories">Categories</string>
     <string name="title_rating">Rating</string>
     <string name="title_rating_detailed">Rating Detailed</string>
 
     <!-- IMAGE DESCRIPTIONS -->
+    <string name="map_location_description" translatable="false">map location snapshot</string>
     <string name="warning_sign_description">Warning sign.</string>
 
     <!-- JSON RESPONSES -->
