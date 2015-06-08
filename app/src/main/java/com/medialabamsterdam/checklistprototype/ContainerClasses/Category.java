@@ -25,7 +25,7 @@ public class Category implements Parcelable {
     private int id;
     private int categoryByLocationId;
     private String name;
-    private boolean remove;
+    private boolean skip;
     private boolean complete;
 
     /**
@@ -34,13 +34,13 @@ public class Category implements Parcelable {
      * @param id                   this Category's ID
      * @param categoryByLocationId the ID that relates this Category to a Location.
      * @param name                 this Category's name.
-     * @param remove               if this Category should be removed from the listing.
+     * @param skip               if this Category should be removed from the listing.
      */
-    public Category(int id, int categoryByLocationId, String name, boolean remove) {
+    public Category(int id, int categoryByLocationId, String name, boolean skip) {
         this.id = id;
         this.categoryByLocationId = categoryByLocationId;
         this.name = name;
-        this.remove = remove;
+        this.skip = skip;
         this.complete = false; // Set to true if this Category has been fully graded.
     }
 
@@ -53,7 +53,7 @@ public class Category implements Parcelable {
         this.id = in.readInt();
         this.categoryByLocationId = in.readInt();
         this.name = in.readString();
-        this.remove = in.readByte() != 0;
+        this.skip = in.readByte() != 0;
         this.complete = in.readByte() != 0;
     }
 
@@ -71,12 +71,12 @@ public class Category implements Parcelable {
         return name;
     }
 
-    public boolean isRemove() {
-        return remove;
+    public boolean isSkip() {
+        return skip;
     }
 
-    public void setRemove(boolean remove) {
-        this.remove = remove;
+    public void setSkip(boolean skip) {
+        this.skip = skip;
     }
 
     public boolean isComplete() {
@@ -101,7 +101,7 @@ public class Category implements Parcelable {
         out.writeInt(id);
         out.writeInt(categoryByLocationId);
         out.writeString(name);
-        out.writeByte((byte) (remove ? 1 : 0));
+        out.writeByte((byte) (skip ? 1 : 0));
         out.writeByte((byte) (complete ? 1 : 0));
     }
 
@@ -111,7 +111,7 @@ public class Category implements Parcelable {
                 "id= " + id +
                 ", categoryByLocationId= " + categoryByLocationId +
                 ", name= '" + name + '\'' +
-                ", remove= " + remove +
+                ", skip= " + skip +
                 ", complete= " + complete +
                 '}';
     }

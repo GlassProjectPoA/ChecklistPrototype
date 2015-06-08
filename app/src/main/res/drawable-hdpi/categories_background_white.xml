@@ -4,4 +4,4 @@
     android:height="128px"
     android:gravity="center"
     android:src="@drawable/check_circle_white"
-    android:tileMode="disabled"></bitmap>
+    android:tileMode="disabled"/>

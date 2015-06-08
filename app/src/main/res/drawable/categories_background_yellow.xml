@@ -3,5 +3,5 @@
     android:width="128px"
     android:height="128px"
     android:gravity="center"
-    android:src="@drawable/check_circle_green"
+    android:src="@drawable/check_circle_yellow"
     android:tileMode="disabled"/>

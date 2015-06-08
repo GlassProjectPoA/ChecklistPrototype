@@ -55,7 +55,7 @@ public class CategoriesActivity extends Activity {
     private SparseIntArray _grades;
     private volatile boolean picturesReady = true;
     private volatile Status statusCurrent;
-    private Slider.Determinate mDeterminate;
+    private Slider.GracePeriod mGracePeriod;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -78,6 +78,8 @@ public class CategoriesActivity extends Activity {
         mCardScroller.setHorizontalScrollBarEnabled(false);
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+        checkIfCompleteOrCanSend();
+
     }
 
     //region onPause/Resume and onInstance
@@ -116,13 +118,15 @@ public class CategoriesActivity extends Activity {
 
         //Create a base listener for generic gestures
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
+            public static final int MAX_SLIDER_VALUE = 2;
+
             @Override
             public boolean onGesture(Gesture gesture) {
                 int position = mCardScroller.getSelectedItemPosition();
                 int maxPositions = mAdapter.getCount() - 1;
                 int completion = 0;
                 for (Category category : mCategories) {
-                    if (category.isComplete()) completion++;
+                    if (category.isComplete() || category.isSkip()) completion++;
                 }
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
@@ -152,7 +156,7 @@ public class CategoriesActivity extends Activity {
                                 } else {
                                     int i = 0;
                                     for (Category category : mCategories) {
-                                        if (!category.isComplete()) {
+                                        if (!category.isComplete() || !category.isSkip()) {
                                             mCardScroller.setSelection(i);
                                             break;
                                         }
@@ -177,6 +181,9 @@ public class CategoriesActivity extends Activity {
                         break;
                     case LONG_PRESS:
                         Log.e(TAG, "LONG_PRESS called.");
+                        Slider mSlider = Slider.from(mCardScroller);
+                        mGracePeriod = mSlider.startGracePeriod(mGracePeriodListener);
+                        break;
                 }
                 return false;
             }
@@ -184,8 +191,41 @@ public class CategoriesActivity extends Activity {
         return gestureDetector;
     }
 
+    private final Slider.GracePeriod.Listener mGracePeriodListener =
+            new Slider.GracePeriod.Listener() {
+
+                @Override
+                public void onGracePeriodEnd() {
+                    // Play a SUCCESS sound to indicate the end of the grace period.
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(Sounds.SUCCESS);
+                    if (mCategories.get(mCardScroller.getSelectedItemPosition()).isSkip()){
+                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(false);
+                    } else {
+                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    checkIfCompleteOrCanSend();
+                    mGracePeriod = null;
+                }
+
+                @Override
+                public void onGracePeriodCancel() {
+                    // Play a DIMISS sound to indicate the cancellation of the grace period.
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(Sounds.DISMISSED);
+                    mGracePeriod = null;
+                }
+            };
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
+//        Log.e(TAG, event.toString());
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (mGracePeriod != null) {
+                mGracePeriod.cancel();
+            }
+        }
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //endregion
@@ -366,9 +406,13 @@ public class CategoriesActivity extends Activity {
         }
         // Updates view.
         mAdapter.notifyDataSetChanged();
+        checkIfCompleteOrCanSend();
+    }
+
+    private void checkIfCompleteOrCanSend() {
         int count = 0;
-        for (Category category1 : mCategories){
-            if (category1.isComplete()){
+        for (Category category : mCategories){
+            if (category.isComplete() || category.isSkip()){
                 count++;
                 if (count == mCategories.size()-1){
                     statusCurrent = Status.CATEGORY_COMPLETE;

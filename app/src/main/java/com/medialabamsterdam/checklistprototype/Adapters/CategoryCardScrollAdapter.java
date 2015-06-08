@@ -185,12 +185,24 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         }
         // Makes the circle that is shown in the Category card green if the Category is marked
         // as complete.
+        String footer;
         if (c.isComplete()) {
             LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
             ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_green));
             tv = (TextView) card.findViewById(R.id.order);
             tv.setTextColor(mContext.getResources().getColor(R.color.green));
+            footer = mContext.getResources().getString(R.string.category_complete);
+        } else if (c.isSkip()) {
+            LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
+            ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_yellow));
+            tv = (TextView) card.findViewById(R.id.order);
+            tv.setTextColor(mContext.getResources().getColor(R.color.yellow));
+            footer = mContext.getResources().getString(R.string.category_skipped);
+        } else {
+            footer = mContext.getResources().getString(R.string.tap_to_grade);
         }
+        tv = (TextView) card.findViewById(R.id.footer);
+        tv.setText(footer);
         return card;
     }
 
