@@ -10,7 +10,9 @@ import android.os.FileObserver;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -79,7 +81,6 @@ public class CategoriesActivity extends Activity {
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
         checkIfCompleteOrCanSend();
-
     }
 
     //region onPause/Resume and onInstance
@@ -183,6 +184,13 @@ public class CategoriesActivity extends Activity {
                         Log.e(TAG, "LONG_PRESS called.");
                         Slider mSlider = Slider.from(mCardScroller);
                         mGracePeriod = mSlider.startGracePeriod(mGracePeriodListener);
+                        mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                        TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.overlaytext);
+                        if (!mCategories.get(mCardScroller.getSelectedItemPosition()).isSkip()) {
+                            tv.setText(R.string.skip);
+                        } else {
+                            tv.setText(R.string.unskip);
+                        }
                         break;
                 }
                 return false;
@@ -206,6 +214,7 @@ public class CategoriesActivity extends Activity {
                     }
                     mAdapter.notifyDataSetChanged();
                     checkIfCompleteOrCanSend();
+                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
                     mGracePeriod = null;
                 }
 
@@ -214,6 +223,7 @@ public class CategoriesActivity extends Activity {
                     // Play a DIMISS sound to indicate the cancellation of the grace period.
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.DISMISSED);
+                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
                     mGracePeriod = null;
                 }
             };
@@ -451,14 +461,23 @@ public class CategoriesActivity extends Activity {
             @Override
             protected Void doInBackground(Void... voids) {
                 JsonArray jsonArray = new JsonArray();
-                for (SubCategory sc : mSubCategories) {
-                    JsonObject object = new JsonObject();
-                    object.addProperty("code", sc.getCode());
-                    object.addProperty("rating", Utils.getStringFromRating(sc.getGrade()));
-                    if (sc.getPictureUri() != null) {
-                        object.addProperty("image", Utils.imgToString(sc.getPictureUri()));
+                ArrayList<Integer> categoriesToSkip = new ArrayList<>();
+                for (Category category : mCategories){
+                    if (category.isSkip())
+                    {
+                        categoriesToSkip.add(category.getId());
                     }
-                    jsonArray.add(object);
+                }
+                for (SubCategory sc : mSubCategories) {
+                    if (!categoriesToSkip.contains(sc.getParentId())) {
+                        JsonObject object = new JsonObject();
+                        object.addProperty("code", sc.getCode());
+                        object.addProperty("rating", Utils.getStringFromRating(sc.getGrade()));
+                        if (sc.getPictureUri() != null) {
+                            object.addProperty("image", Utils.imgToString(sc.getPictureUri()));
+                        }
+                        jsonArray.add(object);
+                    }
                 }
 
                 json = new JsonObject();
