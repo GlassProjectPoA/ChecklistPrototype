@@ -31,4 +31,5 @@ public interface Constants {
     boolean LOAD_ALTERNATE_LANGUAGE = false; // Set true if loading another language.
     boolean IGNORE_INSTRUCTIONS = true; // Set true to ignore instructions panel.
 
+    String WEB_SERVICE_URL = "http://glass-dev.twisk-interactive.nl/";
 }

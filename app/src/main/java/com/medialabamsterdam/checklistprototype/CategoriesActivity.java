@@ -16,6 +16,7 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
+import com.google.android.glass.widget.Slider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -54,6 +55,7 @@ public class CategoriesActivity extends Activity {
     private SparseIntArray _grades;
     private volatile boolean picturesReady = true;
     private volatile Status statusCurrent;
+    private Slider.Determinate mDeterminate;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -173,6 +175,8 @@ public class CategoriesActivity extends Activity {
                         Log.e(TAG, "SWIPE_DOWN called.");
                         sendResult();
                         break;
+                    case LONG_PRESS:
+                        Log.e(TAG, "LONG_PRESS called.");
                 }
                 return false;
             }
@@ -207,7 +211,7 @@ public class CategoriesActivity extends Activity {
      */
     private void getGrades() {
         Ion.with(this)
-                .load("http://glass.twisk-interactive.nl/subcategories/grades/" + locationIndex)
+                .load(Constants.WEB_SERVICE_URL + "subcategories/grades/" + locationIndex)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -433,7 +437,7 @@ public class CategoriesActivity extends Activity {
     private void sendData(JsonObject json) {
         // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)
-                .load("http://glass.twisk-interactive.nl/checklist")
+                .load(Constants.WEB_SERVICE_URL + "checklist/")
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
