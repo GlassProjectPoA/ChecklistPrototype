@@ -37,6 +37,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "CheckListDB";
     private static final int DATABASE_VERSION = 1;
     private final Context mContext;
+    private SQLiteDatabase myDataBase;
 
     /**
      * Constructor
@@ -472,6 +473,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
+        if (myDataBase != null)
+            myDataBase.close();
         super.close();
     }
 

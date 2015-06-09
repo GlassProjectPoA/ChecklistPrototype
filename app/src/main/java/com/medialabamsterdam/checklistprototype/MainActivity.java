@@ -48,6 +48,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     private final static boolean OK_GLASS = false;
+    private final static boolean DEMO = true;
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
 
@@ -87,6 +88,7 @@ public class MainActivity extends Activity {
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         setContentView(mCardScroller);
+        mGestureDetector = createGestureDetector(this);
 
         locationLoader();
     }
@@ -212,6 +214,9 @@ public class MainActivity extends Activity {
     private int handleLocationUtils() {
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
+            if (DEMO){
+
+            }
         }
         mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
