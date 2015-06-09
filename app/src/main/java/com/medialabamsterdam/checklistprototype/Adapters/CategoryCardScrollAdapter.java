@@ -1,6 +1,7 @@
 package com.medialabamsterdam.checklistprototype.Adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,16 +118,14 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
                 case UPLOADING:
                     title = mContext.getResources().getString(R.string.upload_list);
                     footer = mContext.getResources().getString(R.string.please_wait);
-                    check = mContext.getResources().getDrawable(R.drawable.progress_bar_green);
-                    spinnerId = R.id.sendProgressSpinner;
+                    color = mContext.getResources().getColor(R.color.green);
                     load = true;
                     hideArrow = true;
                     break;
                 case SAVING_PICTURE:
                     title = mContext.getResources().getString(R.string.saving_picture);
                     footer = mContext.getResources().getString(R.string.please_wait);
-                    check = mContext.getResources().getDrawable(R.drawable.progress_bar_yellow);
-                    spinnerId = R.id.pictureProgressSpinner;
+                    color = mContext.getResources().getColor(R.color.yellow);
                     load = true;
                     hideArrow = true;
                     break;
@@ -151,12 +150,11 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
             }
             if (load) {
                 card.findViewById(R.id.check).setVisibility(View.GONE);
-                ProgressBar spinner = (ProgressBar) card.findViewById(spinnerId);
+                ProgressBar spinner = (ProgressBar) card.findViewById(R.id.progressBar_check);
                 spinner.setVisibility(View.VISIBLE);
-                spinner.setIndeterminateDrawable(check);
+                spinner.getIndeterminateDrawable().mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
             } else {
-                card.findViewById(R.id.pictureProgressSpinner).setVisibility(View.GONE);
-                card.findViewById(R.id.sendProgressSpinner).setVisibility(View.GONE);
+                card.findViewById(R.id.progressBar_check).setVisibility(View.GONE);
                 ImageView iv = (ImageView) card.findViewById(R.id.check);
                 iv.setVisibility(View.VISIBLE);
                 iv.setImageDrawable(check);

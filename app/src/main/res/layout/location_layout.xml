@@ -1,82 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/glass_card_footer_margin"
     android:layout_marginLeft="@dimen/glass_card_margin"
     android:layout_marginRight="@dimen/glass_card_margin"
-    android:layout_marginTop="@dimen/glass_card_margin"
-    android:orientation="vertical">
+    android:layout_marginTop="@dimen/glass_card_margin" >
 
     <LinearLayout
-        android:id="@+id/info_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="3"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="50dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/location_layout">
 
         <LinearLayout
+            android:id="@+id/info_container"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical|end"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingRight="10dp">
+            android:paddingTop="50dp">
 
-            <ImageView
-                android:id="@+id/map_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/map_icon" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <ImageView
+                    android:id="@+id/map_icon"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/map_icon" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/info_text_container"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.9"
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:id="@+id/location_code"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="left|bottom"
+                    android:text="74nn"
+                    android:textSize="48dp" />
+
+                <TextView
+                    android:id="@+id/area_code"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="top|left"
+                    android:text="112A"
+                    android:textSize="28sp" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/info_text_container"
+        <TextView
+            android:id="@+id/instructions"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.9"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
-
-            <TextView
-                android:id="@+id/location_code"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="left|bottom"
-                android:text="74nn"
-                android:textSize="48dp" />
-
-            <TextView
-                android:id="@+id/area_code"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="top|left"
-                android:text="112A"
-                android:textSize="28sp" />
-
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@array/tap_two_to_refresh"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/instructions"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center"
-        android:text="@array/tap_two_to_refresh"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+        android:id="@+id/loader_layout">
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/checklist_loading"
+            android:id="@+id/textView"
+            android:layout_gravity="center"
+            android:layout_margin="20dp" />
+
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Large"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:indeterminate="true"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</FrameLayout>

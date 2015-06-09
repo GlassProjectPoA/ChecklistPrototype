@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
@@ -82,8 +85,9 @@ public class MainActivity extends Activity {
         mAdapter = new MyCardScrollAdapter(mCards);
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
-        mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+
+        locationLoader();
     }
 
     //region onResume/Pause onInstance
@@ -164,6 +168,42 @@ public class MainActivity extends Activity {
     }
     //endregion
 
+
+    private void locationLoader() {
+
+        mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.VISIBLE);
+        mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.GONE);
+        mGestureDetector = null;
+
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                while (mActualLocation == null){
+                    handleLocationUtils();
+                    try {
+                        Thread.currentThread();
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                hideLoader();
+            }
+        }.execute();
+    }
+
+    private void hideLoader() {
+        mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.GONE);
+        mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.VISIBLE);
+        mGestureDetector = createGestureDetector(this);
+    }
+
     /**
      * Handles LocationUtils, starting it then querying for location updates and then stopping it
      * when we receive a location.
@@ -186,7 +226,7 @@ public class MainActivity extends Activity {
         } else {
             //TODO remove test location
             Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
-/*          HVBO location*/
+/*          HVBO location
             mActualLocation = new Location("");
             mActualLocation.setLatitude(52.381234);
             mActualLocation.setLongitude(4.895540);/**/
@@ -194,10 +234,10 @@ public class MainActivity extends Activity {
             mActualLocation = new Location("");
             mActualLocation.setLatitude(52.388266);
             mActualLocation.setLongitude(4.820238);/**/
-            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
-                    (float) mActualLocation.getLongitude());
-            return findArea(mLocationPoint);
-//            return Sounds.ERROR;
+//            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
+//                    (float) mActualLocation.getLongitude());
+//            return findArea(mLocationPoint);
+            return Sounds.ERROR;
         }
     }
 
@@ -319,6 +359,8 @@ public class MainActivity extends Activity {
         mCards = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
         View card = inflater.inflate(R.layout.location_layout, null);
+        ProgressBar spinner = (ProgressBar) card.findViewById(R.id.progressBar);
+        spinner.getIndeterminateDrawable().mutate().setColorFilter(getResources().getColor(R.color.yellow), PorterDuff.Mode.MULTIPLY);
         mCards.add(card);
     }
 }
