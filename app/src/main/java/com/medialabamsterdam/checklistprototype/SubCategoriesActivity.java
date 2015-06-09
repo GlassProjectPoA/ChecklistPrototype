@@ -289,7 +289,7 @@ public class SubCategoriesActivity extends Activity {
                             startDetails();
                             am.playSoundEffect(Sounds.TAP);
                         }
-                        break;
+                        return true;
                     case SWIPE_LEFT:
                         Log.e(TAG, "SWIPE_LEFT called.");
                         animateScroll(false);

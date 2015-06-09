@@ -51,7 +51,7 @@ public class SubCategory implements Parcelable {
         this.id = id;
         this.name = name;
         this.remove = remove;
-        this.grade = 0;
+        this.grade = 1;
         this.code = code;
     }
 
