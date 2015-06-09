@@ -214,10 +214,18 @@ public class MainActivity extends Activity {
     private int handleLocationUtils() {
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
-            if (DEMO){
-
-            }
         }
+
+        //Load DEMO area/location
+        if (DEMO){
+            mActualLocation = new Location("");
+            mActualLocation.setLatitude(52.369398);
+            mActualLocation.setLongitude(4.901293);
+            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
+                    (float) mActualLocation.getLongitude());
+            return findArea(mLocationPoint);
+        }
+
         mActualLocation = mLocationUtils.getLocation();
         if (mActualLocation != null) {
             Log.e(TAG, mActualLocation.toString());
@@ -230,6 +238,7 @@ public class MainActivity extends Activity {
         } else {
             //TODO remove test location
             Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
+
 /*          HVBO location
             mActualLocation = new Location("");
             mActualLocation.setLatitude(52.381234);

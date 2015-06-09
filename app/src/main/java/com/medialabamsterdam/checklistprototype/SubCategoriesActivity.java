@@ -80,6 +80,7 @@ public class SubCategoriesActivity extends Activity {
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+        getGrades(false);
     }
 
     /**
@@ -280,7 +281,7 @@ public class SubCategoriesActivity extends Activity {
                             if (_grades != null) {
                                 checkData();
                             } else {
-                                getGrades();
+                                getGrades(true);
                             }
                             am.playSoundEffect(Sounds.DISALLOWED);
                         } else {
@@ -332,7 +333,7 @@ public class SubCategoriesActivity extends Activity {
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
-    private void getGrades() {
+    private void getGrades(final boolean sendResult) {
         Ion.with(this)
                 .load("http://glass.twisk-interactive.nl/subcategories/grades/" + locationIndex)
                 .asJsonObject()
@@ -353,16 +354,18 @@ public class SubCategoriesActivity extends Activity {
                                     _grades.put(code, grade);
                                 }
                                 // Calls the checkData() method to determine if any grade needs a picture.
-                                checkData();
+                                if (sendResult) {
+                                    checkData();
+                                }
                             } else {
                                 //statusUpdate(FAIL_CONNECT);
                                 //TODO REMOVE
-                                checkData();
+//                                checkData();
                             }
                         } else {
                             //statusUpdate(FAIL_CONNECT);
                             //TODO REMOVE
-                            checkData();
+//                            checkData();
                         }
                     }
                 });

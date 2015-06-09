@@ -482,7 +482,7 @@ public class CategoriesActivity extends Activity {
                 json.addProperty("location_id", locationIndex);
                 json.add("data", jsonArray);
 
-                Log.e(TAG, json.toString());
+                Log.v(TAG, json.toString());
                 return null;
             }
 

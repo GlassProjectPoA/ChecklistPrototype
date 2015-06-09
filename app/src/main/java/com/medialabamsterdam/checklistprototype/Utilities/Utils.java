@@ -163,6 +163,7 @@ public class Utils {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+
         byte[] imageBytes0 = byteArrayOutputStream.toByteArray();
 
         return Base64.encodeToString(imageBytes0, Base64.DEFAULT);
