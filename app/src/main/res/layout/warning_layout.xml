@@ -45,24 +45,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:gravity="left|bottom"
                 android:paddingLeft="40dp"
                 android:paddingRight="20dp"
                 android:text="Furniture"
-                android:textSize="28sp"
-                android:gravity="left|bottom" />
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/subcategory_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
+                android:gravity="top|left"
                 android:paddingLeft="40dp"
                 android:paddingRight="20dp"
                 android:text="Natural dirt"
                 android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:gravity="top|left" />
+                android:textStyle="bold" />
 
         </LinearLayout>
 

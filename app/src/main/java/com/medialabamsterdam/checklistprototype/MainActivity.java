@@ -74,8 +74,7 @@ public class MainActivity extends Activity {
         handleLocationUtils();
 
         // Changes the color of some text in the view.
-        Utils.ChangeTextColor(this, mCards.get(0), R.id.footer, R.array.tap_to_start, R.color.green);
-        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.blue);
+        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.yellow);
 
         //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
