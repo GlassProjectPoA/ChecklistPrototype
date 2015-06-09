@@ -15,24 +15,26 @@
     <string name="checklist_finish">You finished the checklist!</string>
     <string name="checklist_not_finish">The checklist is not complete!</string>
     <string name="category_finish">You finished this category!</string>
+    <string name="checklist_skip">You skipped some items!</string>
 
     <!-- INSTRUCTIONS -->
     <string name="tap_to_save">Tap to save grades</string>
     <string name="tap_to_send">Tap to send the list</string>
     <string name="tap_to_not_complete">Tap to see missing category</string>
-    <string-array name="tap_to_start">
-        <item>Tap to start</item>
-        <item>start</item>
-    </string-array>
     <string name="tap_to_grade">Tap to start grading</string>
     <string name="tap_to_continue">Tap to continue</string>
     <string name="tap_for_info">Tap for grading info</string>
+    <string name="tap_to_check">Tap to check for errors.</string>
+    <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
+    <string name="tap_to_skip">Tap if you wish to skip them.</string>
+
+    <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
+
     <string-array name="tap_two_to_refresh">
         <item>Tap with two fingers to refresh</item>
         <item>refresh</item>
     </string-array>
-    <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
-    <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
+
 
     <!-- UTILITIES -->
     <string name="random_time" translatable="false">12:34</string>
@@ -64,20 +66,20 @@
     <string name="send_complete">The checklist has been saved.</string>
     <string name="incomplete">Incomplete!</string>
     <string name="send_failed">Failed to save the checklist.</string>
+    <string name="could_not_connect">Couldn\'t Connect!</string>
+    <string name="request_failed">Request failed.</string>
 
     <!-- WARNING TEXT -->
     <string name="warning_text">The state of this item is lower than acceptable. Please take a picture now.</string>
     <string name="title_activity_warning">Warning Activity</string>
 
-    <!-- NOT ORDERED -->
-    <string name="hello_world">Hello world!</string>
-    <string name="could_not_connect">Couldn\'t Connect!</string>
-    <string name="request_failed">Request failed.</string>
-    <string name="tap_to_check">Tap to check for errors.</string>
-    <string name="checklist_skip">You skipped some items!</string>
-    <string name="tap_to_skip">Tap if you wish to skip them.</string>
+    <!-- SKIP TEXT -->
     <string name="category_skipped">Category skipped</string>
     <string name="category_complete">Category complete</string>
     <string name="skip">Skipping Category</string>
     <string name="unskip">Unskipping Category</string>
+
+    <!-- NOT ORDERED -->
+    <string name="checklist_loading">Checklist is being loaded</string>
+
 </resources>
