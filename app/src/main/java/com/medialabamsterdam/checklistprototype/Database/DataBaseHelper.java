@@ -339,8 +339,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
-        for (SubCategory sc : subCategoryList){
-            if (sc.isRemove()){
+        for (SubCategory sc : subCategoryList) {
+            if (sc.isRemove()) {
                 subCategoryList.remove(sc);
             }
         }

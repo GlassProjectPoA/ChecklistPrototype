@@ -4,7 +4,7 @@ import android.provider.BaseColumns;
 
 /**
  * Contract class for the Database where we store all the database's constants.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

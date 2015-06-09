@@ -158,7 +158,7 @@ public class DetailsActivity extends Activity {
         }
     }
 
-    //region Boring Stuff
+    //<editor-fold desc="onResume / onPause">
     @Override
     protected void onResume() {
         super.onResume();
@@ -170,9 +170,9 @@ public class DetailsActivity extends Activity {
         mCardScroller.deactivate();
         super.onPause();
     }
-    //endregion
+    //</editor-fold>
 
-    //region Gesture Detector
+    //<editor-fold desc="Gesture Detector">
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -210,5 +210,5 @@ public class DetailsActivity extends Activity {
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
-    //endregion
+    //</editor-fold>
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * CardScrollAdapter used to display the Detail cards at the DetailActivity.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -72,7 +72,7 @@ public class DetailCardScrollAdapter extends CardScrollAdapter {
         // Inflates the card layout.
         card = inflater.inflate(R.layout.details_layout, null);
 
-        if (Constants.LOAD_ALTERNATE_LANGUAGE){
+        if (Constants.LOAD_ALTERNATE_LANGUAGE) {
             // Set the description text related to the grade selected.
             tv = (TextView) card.findViewById(R.id.description_text);
             tv.setText(mDetail.getDescription_nl()[position]);

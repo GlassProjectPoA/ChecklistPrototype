@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * CardScrollAdapter used to display the Category cards at the CategoryActivity.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

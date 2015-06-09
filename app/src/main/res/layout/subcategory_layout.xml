@@ -69,11 +69,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
+            android:gravity="center_horizontal"
             android:singleLine="true"
             android:text="@string/title_categories"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/blue"
-            android:gravity="center_horizontal" />
+            android:textColor="@color/blue" />
 
     </LinearLayout>
 

@@ -52,11 +52,11 @@
             style="@android:style/Widget.ProgressBar.Large"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:indeterminate="true"
             android:layout_gravity="center"
-            android:visibility="gone"
+            android:layout_margin="30dp"
             android:layout_weight="1"
-            android:layout_margin="30dp" />
+            android:indeterminate="true"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/check"

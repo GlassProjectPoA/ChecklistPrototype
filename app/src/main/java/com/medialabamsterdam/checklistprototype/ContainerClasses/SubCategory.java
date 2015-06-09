@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 /**
  * This class represents a SubCategory with all it's possible parameters.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

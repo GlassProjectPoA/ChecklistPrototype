@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * CardScrollAdapter used to display the many Ratings descriptions at the DetailActivity.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

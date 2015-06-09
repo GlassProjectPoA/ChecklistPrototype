@@ -186,7 +186,7 @@ public class SubCategoriesActivity extends Activity {
      *
      * @param requestCode the request code.
      * @param resultCode  the result code.
-     * @param data      the result intent.
+     * @param data        the result intent.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -212,11 +212,11 @@ public class SubCategoriesActivity extends Activity {
     }
 
     private void saveDetailData(Intent detailData) {
-            int position = detailData.getIntExtra(Constants.EXTRA_POSITION, 1);
-            int rating = detailData.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
-            mSubCategories.get(position).setGrade(rating);
-            mCardScroller.setSelection(position);
-            mAdapter.notifyDataSetChanged();
+        int position = detailData.getIntExtra(Constants.EXTRA_POSITION, 1);
+        int rating = detailData.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
+        mSubCategories.get(position).setGrade(rating);
+        mCardScroller.setSelection(position);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -235,7 +235,7 @@ public class SubCategoriesActivity extends Activity {
         finish();
     }
 
-    //region Boring Stuff
+    //<editor-fold desc="onResume / onPause">
     @Override
     protected void onResume() {
         super.onResume();
@@ -261,9 +261,9 @@ public class SubCategoriesActivity extends Activity {
         mCategory = savedInstanceState.getParcelable(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
-    //endregion
+    //</editor-fold>
 
-    //region Gesture Detector
+    //<editor-fold desc="Gesture Detector">
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
         //Create a base listener for generic gestures
@@ -277,11 +277,11 @@ public class SubCategoriesActivity extends Activity {
                     case TAP:
                         Log.e(TAG, "TAP called.");
                         if (position == maxPositions) {
-                                if (_grades != null) {
-                                    checkData();
-                                } else {
-                                    getGrades();
-                                }
+                            if (_grades != null) {
+                                checkData();
+                            } else {
+                                getGrades();
+                            }
                             am.playSoundEffect(Sounds.DISALLOWED);
                         } else {
                             startDetails();
@@ -323,12 +323,12 @@ public class SubCategoriesActivity extends Activity {
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
-    //endregion
+    //</editor-fold>
 
     /**
      * This method grabs grades from the server in order to compare them with the grades from user
      * input.
-     * <p/>
+     * <p>
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
@@ -374,7 +374,7 @@ public class SubCategoriesActivity extends Activity {
      */
     private void checkData() {
         int count = 0;
-        if (_grades == null){
+        if (_grades == null) {
             _grades = new SparseIntArray();
             _grades.put(1, 1);
             Log.e(TAG, "Loaded default ratings");
@@ -382,16 +382,15 @@ public class SubCategoriesActivity extends Activity {
         for (SubCategory sc : mSubCategories) {
             // If any SubCategory has a grade below accepted AND has no picture URI related to it
             // the code will call WarningActivity to prompt the user to take a picture.
-            if (sc.getName() == null){
+            if (sc.getName() == null) {
                 count++;
-            } else
-            if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode(), 1)) {
+            } else if (sc.getPictureUri() == null && sc.getGrade() > _grades.get(sc.getCode(), 1)) {
                 Intent intent = new Intent(this, WarningActivity.class);
-                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_NAME, sc.getName());
-                        intent.putExtra(Constants.EXTRA_CATEGORY_ID, sc.getParentId());
-                        intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, sc.getId());
-                        startActivityForResult(intent, WARNING_REQUEST);
-                        break;
+                intent.putExtra(Constants.EXTRA_SUBCATEGORY_NAME, sc.getName());
+                intent.putExtra(Constants.EXTRA_CATEGORY_ID, sc.getParentId());
+                intent.putExtra(Constants.EXTRA_SUBCATEGORY_ID, sc.getId());
+                startActivityForResult(intent, WARNING_REQUEST);
+                break;
             } else {
                 // If no SubCategory is below accepted grade, the code will call sendData() to send
                 // the checklist to the server.

@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Generic CardScrollAdapter to use on regular views.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 /**
  * This class represents a Category with all it's possible parameters.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -34,7 +34,7 @@ public class Category implements Parcelable {
      * @param id                   this Category's ID
      * @param categoryByLocationId the ID that relates this Category to a Location.
      * @param name                 this Category's name.
-     * @param skip               if this Category should be removed from the listing.
+     * @param skip                 if this Category should be removed from the listing.
      */
     public Category(int id, int categoryByLocationId, String name, boolean skip) {
         this.id = id;

@@ -61,7 +61,7 @@ public class WarningActivity extends Activity {
         subCategoryId = intent.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
         if (intent.hasExtra(Constants.EXTRA_CATEGORY_NAME)) {
             categoryName = intent.getStringExtra(Constants.EXTRA_CATEGORY_NAME);
-        }else {
+        } else {
             categoryName = "SubCategory -";
         }
         subCategoryName = intent.getStringExtra(Constants.EXTRA_SUBCATEGORY_NAME);
@@ -78,7 +78,7 @@ public class WarningActivity extends Activity {
         setContentView(mCardScroller);
     }
 
-    //region onPause/Resume and onInstance
+    //<editor-fold desc="onResume / onPause">
     @Override
     protected void onResume() {
         super.onResume();
@@ -90,9 +90,9 @@ public class WarningActivity extends Activity {
         mCardScroller.deactivate();
         super.onPause();
     }
-    //endregion
+    //</editor-fold>
 
-    //region Gesture Detector
+    //<editor-fold desc="Gesture Detector">
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -119,7 +119,7 @@ public class WarningActivity extends Activity {
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
-    //endregion
+    //</editor-fold>
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

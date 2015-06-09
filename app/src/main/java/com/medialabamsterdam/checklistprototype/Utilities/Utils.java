@@ -146,11 +146,10 @@ public class Utils {
     }
 
     /**
-     *
      * @param path
      * @return
      */
-    public static String imgToString (String path){
+    public static String imgToString(String path) {
 
         BitmapFactory.Options options0 = new BitmapFactory.Options();
         options0.inSampleSize = 2;

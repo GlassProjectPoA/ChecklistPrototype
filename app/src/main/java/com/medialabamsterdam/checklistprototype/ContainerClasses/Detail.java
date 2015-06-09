@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * This class represents a Detail with all it's possible parameters.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

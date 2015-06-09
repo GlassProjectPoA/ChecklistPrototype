@@ -59,6 +59,34 @@ public class CategoriesActivity extends Activity {
     private volatile boolean picturesReady = true;
     private volatile Status statusCurrent;
     private Slider.GracePeriod mGracePeriod;
+    private final Slider.GracePeriod.Listener mGracePeriodListener =
+            new Slider.GracePeriod.Listener() {
+
+                @Override
+                public void onGracePeriodEnd() {
+                    // Play a SUCCESS sound to indicate the end of the grace period.
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(Sounds.SUCCESS);
+                    if (mCategories.get(mCardScroller.getSelectedItemPosition()).isSkip()) {
+                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(false);
+                    } else {
+                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(true);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    checkIfCompleteOrCanSend();
+                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
+                    mGracePeriod = null;
+                }
+
+                @Override
+                public void onGracePeriodCancel() {
+                    // Play a DISMISS sound to indicate the cancellation of the grace period.
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(Sounds.DISMISSED);
+                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
+                    mGracePeriod = null;
+                }
+            };
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -84,7 +112,7 @@ public class CategoriesActivity extends Activity {
         checkIfCompleteOrCanSend();
     }
 
-    //region onPause/Resume and onInstance
+    //<editor-fold desc="onPause/Resume and onInstance">
     @Override
     protected void onResume() {
         super.onResume();
@@ -112,9 +140,9 @@ public class CategoriesActivity extends Activity {
         mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
-    //endregion
+    //</editor-fold>
 
-    //region Gesture Detector
+    //<editor-fold desc="Gesture Detector">
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -199,35 +227,6 @@ public class CategoriesActivity extends Activity {
         return gestureDetector;
     }
 
-    private final Slider.GracePeriod.Listener mGracePeriodListener =
-            new Slider.GracePeriod.Listener() {
-
-                @Override
-                public void onGracePeriodEnd() {
-                    // Play a SUCCESS sound to indicate the end of the grace period.
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.SUCCESS);
-                    if (mCategories.get(mCardScroller.getSelectedItemPosition()).isSkip()){
-                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(false);
-                    } else {
-                        mCategories.get(mCardScroller.getSelectedItemPosition()).setSkip(true);
-                    }
-                    mAdapter.notifyDataSetChanged();
-                    checkIfCompleteOrCanSend();
-                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
-                    mGracePeriod = null;
-                }
-
-                @Override
-                public void onGracePeriodCancel() {
-                    // Play a DISMISS sound to indicate the cancellation of the grace period.
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(Sounds.DISMISSED);
-                    mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
-                    mGracePeriod = null;
-                }
-            };
-
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
 //        Log.e(TAG, event.toString());
@@ -238,9 +237,8 @@ public class CategoriesActivity extends Activity {
         }
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
-    //endregion
+    //</editor-fold>
 
-    //region onActivityResult
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == WARNING_REQUEST && resultCode == RESULT_OK) {
@@ -250,12 +248,11 @@ public class CategoriesActivity extends Activity {
             saveSubcategoryData(data);
         }
     }
-    //endregion
 
     /**
      * This method grabs grades from the server in order to compare them with the grades from user
      * input.
-     * <p/>
+     * <p>
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
@@ -343,7 +340,7 @@ public class CategoriesActivity extends Activity {
         int count = 0;
         CheckDataLoop:
         for (SubCategory sc : mSubCategories) {
-            if (_grades == null){
+            if (_grades == null) {
                 _grades = new SparseIntArray();
                 _grades.put(1, 1);
                 Log.e(TAG, "Loaded default ratings");
@@ -386,7 +383,7 @@ public class CategoriesActivity extends Activity {
         Category category = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
         for (int i = 0; i < mCategories.size(); i++) {
             if (mCategories.get(i).getId() == category.getId()) {
-                    mCategories.get(i).setComplete(category.isComplete());
+                mCategories.get(i).setComplete(category.isComplete());
             }
         }
         // If mSubCategories is not null then it checks if the SubCategories have already been
@@ -421,10 +418,10 @@ public class CategoriesActivity extends Activity {
 
     private void checkIfCompleteOrCanSend() {
         int count = 0;
-        for (Category category : mCategories){
-            if (category.isComplete() || category.isSkip()){
+        for (Category category : mCategories) {
+            if (category.isComplete() || category.isSkip()) {
                 count++;
-                if (count == mCategories.size()-1){
+                if (count == mCategories.size() - 1) {
                     statusCurrent = Status.CATEGORY_COMPLETE;
                     mAdapter.updateStatus(statusCurrent);
                     String lastPictureUri;
@@ -435,7 +432,7 @@ public class CategoriesActivity extends Activity {
                             processPictureWhenReady(lastPictureUri);
                         }
                     }
-                    if (statusCurrent != Status.SAVING_PICTURE && picturesReady){
+                    if (statusCurrent != Status.SAVING_PICTURE && picturesReady) {
                         statusCurrent = Status.CAN_SEND;
                         mAdapter.updateStatus(statusCurrent);
                     }
@@ -446,7 +443,7 @@ public class CategoriesActivity extends Activity {
 
     /**
      * This method sends all the data from the checklist to the server.
-     * <p/>
+     * <p>
      * This uses Json and the Ion library.
      * https://github.com/koush/ion
      */
@@ -456,15 +453,15 @@ public class CategoriesActivity extends Activity {
         mGestureDetector = null;
 
         // Put all data we have to send in a JsonArray.
-        new AsyncTask<Void, Void, Void>(){
+        new AsyncTask<Void, Void, Void>() {
             JsonObject json;
+
             @Override
             protected Void doInBackground(Void... voids) {
                 JsonArray jsonArray = new JsonArray();
                 ArrayList<Integer> categoriesToSkip = new ArrayList<>();
-                for (Category category : mCategories){
-                    if (category.isSkip())
-                    {
+                for (Category category : mCategories) {
+                    if (category.isSkip()) {
                         categoriesToSkip.add(category.getId());
                     }
                 }

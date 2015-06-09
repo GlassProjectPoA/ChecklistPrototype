@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 /**
  * This class represents a Location as stored on the Database.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -31,7 +31,7 @@ public class Locations implements Parcelable {
 
     /**
      * Locations default constructor.
-     * <p/>
+     * <p>
      * Coordinates are stored as a string "##.######,##.######".
      * (latitude),(longitude)
      *

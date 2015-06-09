@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * CardScrollAdapter used to display the SubCategory cards at the SubCategoryActivity.
- * <p/>
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

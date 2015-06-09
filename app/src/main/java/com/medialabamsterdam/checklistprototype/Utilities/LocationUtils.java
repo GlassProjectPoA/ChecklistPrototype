@@ -16,15 +16,15 @@ import java.util.List;
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 20/04/2015.
- * <p/>
+ * <p>
  * This class is meant to manage the GPS and acquire the device's location.
  */
 public class LocationUtils {
 
     private final LocationManager mLocationManager;
-    private Location mLocation;
     final private LocationListener mLocationListener;
     final private List<String> providers;
+    private Location mLocation;
 
     public LocationUtils(Context context) {
         // Sets the criteria to use when querying for GPS data.

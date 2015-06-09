@@ -29,7 +29,7 @@ public class Area implements Parcelable {
 
     /**
      * Area default constructor.
-     * <p/>
+     * <p>
      * Coordinates are stored as a string "##.######,##.######".
      * (latitude),(longitude)
      *

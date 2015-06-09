@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
         locationLoader();
     }
 
-    //region onResume/Pause onInstance
+    //<editor-fold desc="onResume / onPause">
     @Override
     protected void onResume() {
         super.onResume();
@@ -119,9 +119,9 @@ public class MainActivity extends Activity {
         mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
     }
-    //endregion
+    //</editor-fold>
 
-    //region Gesture Detector
+    //<editor-fold desc="Gesture Detector">
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -154,9 +154,8 @@ public class MainActivity extends Activity {
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
-    //endregion
+    //</editor-fold>
 
-    //region onActivityResult
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
@@ -167,7 +166,6 @@ public class MainActivity extends Activity {
             }
         }
     }
-    //endregion
 
 
     private void locationLoader() {
@@ -176,10 +174,10 @@ public class MainActivity extends Activity {
         mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.GONE);
         mGestureDetector = null;
 
-        new AsyncTask<Void, Void, Void>(){
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                while (mActualLocation == null){
+                while (mActualLocation == null) {
                     handleLocationUtils();
                     try {
                         Thread.currentThread();
@@ -273,7 +271,7 @@ public class MainActivity extends Activity {
                 // which area we are.
             }
         }
-        if (mPossibleAreas.size() > 0){
+        if (mPossibleAreas.size() > 0) {
             return findLocation(point, mPossibleAreas);
         }
         // Sets Area text to "?" if not inside any recorded area.
