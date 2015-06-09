@@ -497,7 +497,7 @@ public class CategoriesActivity extends Activity {
     private void sendData(JsonObject json) {
         // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)
-                .load(Constants.WEB_SERVICE_URL + "checklist/")
+                .load(Constants.WEB_SERVICE_URL + "checklist")
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
