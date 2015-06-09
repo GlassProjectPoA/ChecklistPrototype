@@ -3,17 +3,15 @@ package com.medialabamsterdam.checklistprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -251,14 +249,14 @@ public class SubCategoriesActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         savedInstanceState.putParcelable(Constants.PARCELABLE_CATEGORY, mCategory);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCategory = savedInstanceState.getParcelable(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
@@ -368,32 +366,6 @@ public class SubCategoriesActivity extends Activity {
                         }
                     }
                 });
-    }
-
-    /**
-     * Changes the view to let the user know the data is sent. If the user clicks again he will
-     * be sent to the starting screen of the app (MainActivity).
-     */
-    private void statusUpdate(int updateCode) {
-        String title = null;
-        String footer = null;
-        Drawable check = null;
-        int color = -1;
-        switch (updateCode) {
-            case STATUS_COULDNOTCONNECT:
-                title = getResources().getString(R.string.could_not_connect);
-                footer = getResources().getString(R.string.request_failed);
-                check = getResources().getDrawable(R.drawable.stop);
-                color = getResources().getColor(R.color.red);
-                break;
-        }
-            TextView tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.title);
-            tv.setText(title);
-        tv = (TextView) mCardScroller.getSelectedView().findViewById(R.id.footer);
-            tv.setText(footer);
-            ImageView iv = (ImageView) mCardScroller.getSelectedView().findViewById(R.id.check);
-            iv.setImageDrawable(check);
-            iv.setColorFilter(color);
     }
 
     /**

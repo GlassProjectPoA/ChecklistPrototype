@@ -37,7 +37,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "CheckListDB";
     private static final int DATABASE_VERSION = 1;
     private final Context mContext;
-    private SQLiteDatabase myDataBase;
 
     /**
      * Constructor
@@ -457,7 +456,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         InputStream insertsStream = context.getResources().openRawResource(resourceId);
         BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
 
-        // Iterate through lines (assuming each insert has its own line and theres no other stuff)
+        // Iterate through lines (assuming each insert has its own line and there's no other stuff)
         while (insertReader.ready()) {
             String insertStmt = insertReader.readLine();
             db.execSQL(insertStmt);
@@ -473,12 +472,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
-
-        if (myDataBase != null)
-            myDataBase.close();
-
         super.close();
-
     }
 
     @Override

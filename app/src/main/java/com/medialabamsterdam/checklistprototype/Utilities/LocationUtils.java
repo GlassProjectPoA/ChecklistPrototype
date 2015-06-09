@@ -23,8 +23,8 @@ public class LocationUtils {
 
     private final LocationManager mLocationManager;
     private Location mLocation;
-    private LocationListener mLocationListener;
-    private List<String> providers;
+    final private LocationListener mLocationListener;
+    final private List<String> providers;
 
     public LocationUtils(Context context) {
         // Sets the criteria to use when querying for GPS data.

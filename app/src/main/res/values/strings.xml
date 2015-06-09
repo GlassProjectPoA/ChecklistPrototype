@@ -15,7 +15,6 @@
     <string name="checklist_finish">You finished the checklist!</string>
     <string name="checklist_not_finish">The checklist is not complete!</string>
     <string name="category_finish">You finished this category!</string>
-    <string name="checklist_skip">You skipped some items!</string>
 
     <!-- INSTRUCTIONS -->
     <string name="tap_to_save">Tap to save grades</string>
@@ -26,7 +25,6 @@
     <string name="tap_for_info">Tap for grading info</string>
     <string name="tap_to_check">Tap to check for errors.</string>
     <string name="tap_two_to_confirm_grade">Tap with two fingers to confirm the selected grade</string>
-    <string name="tap_to_skip">Tap if you wish to skip them.</string>
 
     <string name="swipe_two_to_grade">Swipe with two fingers to change the grade</string>
 
@@ -37,13 +35,11 @@
 
 
     <!-- UTILITIES -->
-    <string name="random_time" translatable="false">12:34</string>
     <string name="random_number" translatable="false">2</string>
     <string name="random_word" translatable="false">Trees</string>
     <string name="unknown" translatable="false">"?"</string>
     <string name="left_arrow" translatable="false">‹</string>
     <string name="right_arrow" translatable="false">›</string>
-    <string name="slash_divider" translatable="false">/</string>
     <string name="example_text">There are little stickers.</string>
     <string name="saving_picture">Saving pictures.</string>
     <string name="please_wait">Please wait.</string>
@@ -51,7 +47,6 @@
 
     <!-- TITLES -->
     <string name="title_instructions">Grading Instructions</string>
-    <string name="title_summary">Summary</string>
     <string name="title_location">Checklist for \narea/location</string>
     <string name="title_categories">Categories</string>
     <string name="title_rating">Rating</string>

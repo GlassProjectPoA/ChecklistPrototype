@@ -123,10 +123,6 @@ public class SubCategory implements Parcelable {
         return remove;
     }
 
-    public void setRemove(boolean remove) {
-        this.remove = remove;
-    }
-
     public String getPictureUri() {
         return pictureUri;
     }

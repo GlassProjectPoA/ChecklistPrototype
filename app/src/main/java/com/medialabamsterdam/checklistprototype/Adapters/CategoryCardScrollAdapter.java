@@ -91,7 +91,6 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
             boolean load = false;
             boolean hideArrow = false;
             int color = -1;
-            int spinnerId = -1;
 
             switch (mStatus) {
                 case UPLOAD_COMPLETE:

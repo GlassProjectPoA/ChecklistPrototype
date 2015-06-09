@@ -49,7 +49,7 @@ public class Category implements Parcelable {
      *
      * @param in Parcel.
      */
-    public Category(Parcel in) {
+    private Category(Parcel in) {
         this.id = in.readInt();
         this.categoryByLocationId = in.readInt();
         this.name = in.readString();

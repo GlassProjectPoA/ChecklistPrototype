@@ -22,12 +22,12 @@ public class Locations implements Parcelable {
             return new Locations[size];
         }
     };
-    private int locationId;
-    private String name;
-    private String topRight;
-    private String topLeft;
-    private String botLeft;
-    private String botRight;
+    final private int locationId;
+    final private String name;
+    final private String topRight;
+    final private String topLeft;
+    final private String botLeft;
+    final private String botRight;
 
     /**
      * Locations default constructor.

@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
@@ -97,7 +98,7 @@ public class CategoriesActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         savedInstanceState.putSerializable("status", statusCurrent);
@@ -105,7 +106,7 @@ public class CategoriesActivity extends Activity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         statusCurrent = (Status) savedInstanceState.get("status");
         mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
@@ -119,7 +120,6 @@ public class CategoriesActivity extends Activity {
 
         //Create a base listener for generic gestures
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
-            public static final int MAX_SLIDER_VALUE = 2;
 
             @Override
             public boolean onGesture(Gesture gesture) {
@@ -165,7 +165,7 @@ public class CategoriesActivity extends Activity {
                                     }
                                 }
                                 // If CardScroller is not at the last position it will either start
-                                // SubCategoriesActiviry or InstructionsActivity based on Settings.
+                                // SubCategoriesActivity or InstructionsActivity based on Settings.
                             } else {
                                 if (Constants.IGNORE_INSTRUCTIONS) {
                                     startSubCategories();
@@ -220,7 +220,7 @@ public class CategoriesActivity extends Activity {
 
                 @Override
                 public void onGracePeriodCancel() {
-                    // Play a DIMISS sound to indicate the cancellation of the grace period.
+                    // Play a DISMISS sound to indicate the cancellation of the grace period.
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     am.playSoundEffect(Sounds.DISMISSED);
                     mCardScroller.getSelectedView().findViewById(R.id.overlay).setVisibility(View.GONE);
@@ -570,7 +570,7 @@ public class CategoriesActivity extends Activity {
     }
 
     /**
-     * Receives the path of a picture in order to watch if it was writen.
+     * Receives the path of a picture in order to watch if it was written.
      *
      * @param picturePath the path of the last picture taken.
      */

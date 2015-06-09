@@ -9,6 +9,7 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -46,7 +47,7 @@ import java.util.Locale;
  */
 public class MainActivity extends Activity {
 
-    public final static boolean OK_GLASS = false;
+    private final static boolean OK_GLASS = false;
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
 
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-//        defineLocale();
+        defineLocale();
 
         // Defines if using voice commands or not.
         if (OK_GLASS) {
@@ -106,14 +107,14 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    protected void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_CATEGORY, mCategories);
         savedInstanceState.putParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY, mSubCategories);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_CATEGORY);
         mSubCategories = savedInstanceState.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);

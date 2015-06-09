@@ -21,11 +21,11 @@ public class Area implements Parcelable {
         }
     };
 
-    private int id;
-    private String name;
-    private String topLeft;
-    private String botRight;
-    private int code;
+    final private int id;
+    final private String name;
+    final private String topLeft;
+    final private String botRight;
+    final private int code;
 
     /**
      * Area default constructor.

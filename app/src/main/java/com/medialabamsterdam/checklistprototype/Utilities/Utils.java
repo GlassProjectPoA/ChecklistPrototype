@@ -161,10 +161,10 @@ public class Utils {
 
         Bitmap bmp = BitmapFactory.decodeFile(path);
 
-        ByteArrayOutputStream baos0 = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos0);
-        byte[] imageBytes0 = baos0.toByteArray();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        byte[] imageBytes0 = byteArrayOutputStream.toByteArray();
 
         return Base64.encodeToString(imageBytes0, Base64.DEFAULT);
     }
