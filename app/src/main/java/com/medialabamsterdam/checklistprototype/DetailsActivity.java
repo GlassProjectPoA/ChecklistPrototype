@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
@@ -55,6 +57,8 @@ public class DetailsActivity extends Activity {
         mDetailedAdapter = new DetailCardScrollAdapter(this, mDetail);
         mDetailedExtendedAdapter = new DetailExtendedCardScrollAdapter(this, mDetail);
         mCardScroller.setAdapter(mDetailedAdapter);
+        mCardScroller.setFocusable(false);
+        mCardScroller.setHorizontalScrollBarEnabled(false);
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
@@ -87,6 +91,71 @@ public class DetailsActivity extends Activity {
             extended = false;
         }
         mCardScroller.activate();
+    }
+
+    /**
+     * Animates the CardScroller based on user input in order for us to use the TWO_SWIPE gesture
+     * to change grades instead of changing cards.
+     *
+     * @param right true if animating right, false if left.
+     */
+    private void animateScroll(boolean right) {
+        final int pos = mCardScroller.getSelectedItemPosition();
+        final long time = 100;
+        int size = 4;
+        // Animates the current card to leave view to the right.
+        if (right && pos < size) {
+            final Animation animOutRight = new TranslateAnimation(0, -640, 0, 0);
+            animOutRight.setDuration(time);
+            final Animation animInRight = new TranslateAnimation(640, 0, 0, 0);
+            animInRight.setDuration(time);
+
+            // Creates an Animation Listener that when onAnimationEnd is called it loads the
+            // next card from the right.
+            Animation.AnimationListener al = new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCardScroller.setSelection(pos + 1);
+                    mCardScroller.startAnimation(animInRight);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            };
+            animOutRight.setAnimationListener(al);
+            mCardScroller.startAnimation(animOutRight);
+            // Animates the current card to leave view to the left.
+        } else if (!right && pos > 0) {
+            Animation animOutLeft = new TranslateAnimation(0, 640, 0, 0);
+            animOutLeft.setDuration(time);
+            final Animation animInLeft = new TranslateAnimation(-640, 0, 0, 0);
+            animInLeft.setDuration(time);
+
+            // Creates an Animation Listener that when onAnimationEnd is called it loads the
+            // next card from the right.
+            Animation.AnimationListener al = new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mCardScroller.setSelection(pos - 1);
+                    mCardScroller.startAnimation(animInLeft);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            };
+            animOutLeft.setAnimationListener(al);
+            mCardScroller.startAnimation(animOutLeft);
+        }
     }
 
     //region Boring Stuff
@@ -122,6 +191,14 @@ public class DetailsActivity extends Activity {
                         Log.e(TAG, "SWIPE_UP called.");
                         changeAdapter();
                         break;
+                    case TWO_SWIPE_LEFT:
+                        Log.e(TAG, "SWIPE_LEFT called.");
+                        animateScroll(false);
+                        return true;
+                    case TWO_SWIPE_RIGHT:
+                        Log.e(TAG, "SWIPE_RIGHT called.");
+                        animateScroll(true);
+                        return true;
                 }
                 return false;
             }

@@ -29,7 +29,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="There is no litter"
-            android:textSize="40sp" />
+            android:textSize="40sp"
+            android:maxLines="2" />
 
         <View
             android:id="@+id/bar"
