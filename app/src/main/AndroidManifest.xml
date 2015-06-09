@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_location" >
             <intent-filter>
                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
@@ -26,27 +26,27 @@
         </activity>
         <activity
             android:name=".CategoriesActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_categories" >
         </activity>
         <activity
             android:name=".InstructionsActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_instructions" >
         </activity>
         <activity
             android:name=".SubCategoriesActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_rating" >
         </activity>
         <activity
             android:name=".DetailsActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_rating_detailed" >
         </activity>
         <activity
             android:name=".WarningActivity"
-            android:icon="@drawable/ic_glass_logo"
+            android:icon="@drawable/logo"
             android:label="@string/title_activity_warning" >
         </activity>
     </application>
