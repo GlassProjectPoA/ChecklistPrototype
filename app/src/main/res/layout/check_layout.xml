@@ -60,8 +60,8 @@
             android:visibility="gone" />
 
         <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
             android:id="@+id/sendProgressSpinner"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"

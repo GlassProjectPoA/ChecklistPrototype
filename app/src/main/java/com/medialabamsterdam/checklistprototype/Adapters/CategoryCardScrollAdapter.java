@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,7 +45,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         this.mCards.add(new Category());
     }
 
-    public void updateStatus(Status status){
+    public void updateStatus(Status status) {
         this.mStatus = status;
         this.notifyDataSetChanged();
     }
@@ -150,7 +149,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
                     color = mContext.getResources().getColor(R.color.red);
                     break;
             }
-            if (load){
+            if (load) {
                 card.findViewById(R.id.check).setVisibility(View.GONE);
                 ProgressBar spinner = (ProgressBar) card.findViewById(spinnerId);
                 spinner.setVisibility(View.VISIBLE);
@@ -163,7 +162,7 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
                 iv.setImageDrawable(check);
                 iv.setColorFilter(color);
             }
-            if (hideArrow){
+            if (hideArrow) {
                 card.findViewById(R.id.left_arrow).setVisibility(View.INVISIBLE);
             }
             tv = (TextView) card.findViewById(R.id.title);
@@ -177,32 +176,40 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
             tv.setText(c.getName());
             tv = (TextView) card.findViewById(R.id.order);
             tv.setText(Integer.toString(position + 1));
+
+            // Makes the circle that is shown in the Category card green if the Category is marked
+            // as complete.
+            String footer;
+            ImageView iv;
+            Drawable statusDrawable;
+            int color;
+
+            if (c.isComplete()) {
+                statusDrawable = mContext.getResources().getDrawable(R.drawable.category_complete);
+                color = mContext.getResources().getColor(R.color.green);
+                footer = mContext.getResources().getString(R.string.category_complete);
+            } else if (c.isSkip()) {
+                statusDrawable = mContext.getResources().getDrawable(R.drawable.category_default);
+                color = mContext.getResources().getColor(R.color.yellow);
+                footer = mContext.getResources().getString(R.string.category_skipped);
+            } else {
+                statusDrawable = mContext.getResources().getDrawable(R.drawable.category_default);
+                color = mContext.getResources().getColor(R.color.white);
+                footer = mContext.getResources().getString(R.string.tap_to_grade);
+            }
+            iv = (ImageView) card.findViewById(R.id.category_status);
+            iv.setImageDrawable(statusDrawable);
+            iv.setColorFilter(color);
+            tv = (TextView) card.findViewById(R.id.order);
+            tv.setTextColor(color);
+            tv = (TextView) card.findViewById(R.id.footer);
+            tv.setText(footer);
         }
         // Makes left arrow invisible if the card is the first one.
         if (position == 0) {
             tv = (TextView) card.findViewById(R.id.left_arrow);
             tv.setVisibility(View.INVISIBLE);
         }
-        // Makes the circle that is shown in the Category card green if the Category is marked
-        // as complete.
-        String footer;
-        if (c.isComplete()) {
-            LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
-            ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_green));
-            tv = (TextView) card.findViewById(R.id.order);
-            tv.setTextColor(mContext.getResources().getColor(R.color.green));
-            footer = mContext.getResources().getString(R.string.category_complete);
-        } else if (c.isSkip()) {
-            LinearLayout ll = (LinearLayout) card.findViewById(R.id.bg_img_container);
-            ll.setBackground(mContext.getResources().getDrawable(R.drawable.categories_background_yellow));
-            tv = (TextView) card.findViewById(R.id.order);
-            tv.setTextColor(mContext.getResources().getColor(R.color.yellow));
-            footer = mContext.getResources().getString(R.string.category_skipped);
-        } else {
-            footer = mContext.getResources().getString(R.string.tap_to_grade);
-        }
-        tv = (TextView) card.findViewById(R.id.footer);
-        tv.setText(footer);
         return card;
     }
 
