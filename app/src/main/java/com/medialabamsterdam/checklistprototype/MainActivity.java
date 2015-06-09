@@ -48,9 +48,11 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     private final static boolean OK_GLASS = false;
-    private final static boolean DEMO = true;
+
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
+
+    private boolean DEMO = false;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -145,6 +147,14 @@ public class MainActivity extends Activity {
                     case TWO_LONG_PRESS:
                         am.playSoundEffect(handleLocationUtils());
                         return true;
+                    case THREE_LONG_PRESS:
+                        if (DEMO) {
+                            DEMO = false;
+                        } else {
+                            DEMO = true;
+                        }
+                        handleLocationUtils();
+                        am.playSoundEffect(Sounds.SELECTED);
                 }
                 return false;
             }
