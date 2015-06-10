@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case TWO_LONG_PRESS:
+                        showLoader();
                         am.playSoundEffect(handleLocationUtils());
                         return true;
                     case THREE_LONG_PRESS:
@@ -190,7 +191,12 @@ public class MainActivity extends Activity {
             @Override
             protected Void doInBackground(Void... voids) {
                 while (mActualLocation == null) {
-                    handleLocationUtils();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            handleLocationUtils();
+                        }
+                    });
                     try {
                         Thread.currentThread();
                         Thread.sleep(500);
@@ -213,6 +219,12 @@ public class MainActivity extends Activity {
         mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.GONE);
         mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.VISIBLE);
         mGestureDetector = createGestureDetector(this);
+    }
+
+    private void showLoader() {
+        mActualLocation = null;
+        mLocationUtils.restart();
+        locationLoader();
     }
 
     /**
