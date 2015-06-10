@@ -18,6 +18,8 @@
             android:label="@string/title_location">
             <intent-filter>
                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <meta-data
@@ -27,23 +29,23 @@
         <activity
             android:name=".CategoriesActivity"
             android:icon="@drawable/logo"
-            android:label="@string/title_categories"></activity>
+            android:label="@string/title_categories"/>
         <activity
             android:name=".InstructionsActivity"
             android:icon="@drawable/logo"
-            android:label="@string/title_instructions"></activity>
+            android:label="@string/title_instructions"/>
         <activity
             android:name=".SubCategoriesActivity"
             android:icon="@drawable/logo"
-            android:label="@string/title_rating"></activity>
+            android:label="@string/title_rating"/>
         <activity
             android:name=".DetailsActivity"
             android:icon="@drawable/logo"
-            android:label="@string/title_rating_detailed"></activity>
+            android:label="@string/title_rating_detailed"/>
         <activity
             android:name=".WarningActivity"
             android:icon="@drawable/logo"
-            android:label="@string/title_activity_warning"></activity>
+            android:label="@string/title_activity_warning"/>
     </application>
 
 </manifest>
