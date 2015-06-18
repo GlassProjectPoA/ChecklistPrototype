@@ -42,8 +42,6 @@ public class SubCategoriesActivity extends Activity {
     private static final int RATING_DETAIL_REQUEST = 1652;
     private final static int WARNING_REQUEST = 9575;
 
-    private final static int STATUS_COULDNOTCONNECT = 2;
-
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
     private ArrayList<SubCategory> mSubCategories;
@@ -335,7 +333,7 @@ public class SubCategoriesActivity extends Activity {
      */
     private void getGrades(final boolean sendResult) {
         Ion.with(this)
-                .load("http://glass.twisk-interactive.nl/subcategories/grades/" + locationIndex)
+                .load(Constants.WEB_SERVICE_URL + "subcategories/grades/" + locationIndex)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -358,14 +356,22 @@ public class SubCategoriesActivity extends Activity {
                                     checkData();
                                 }
                             } else {
+                                if (sendResult) {
+                                    if(locationIndex == 1289){
+                                        checkData();
+                                    }
+                                }
                                 //statusUpdate(FAIL_CONNECT);
-                                //TODO REMOVE
-//                                checkData();
+                                //TODO FIX MESSAGE
                             }
                         } else {
+                            if (sendResult) {
+                                if(locationIndex == 1289){
+                                    checkData();
+                                }
+                            }
                             //statusUpdate(FAIL_CONNECT);
-                            //TODO REMOVE
-//                            checkData();
+                            // TODO FIX MESSAGE
                         }
                     }
                 });

@@ -146,8 +146,10 @@ public class Utils {
     }
 
     /**
-     * @param path
-     * @return
+     * Converts an image to a Base64 string in order send it through JSON.
+     *
+     * @param path the system path to the picture.
+     * @return the picture converted into a Base64 String.
      */
     public static String imgToString(String path) {
 

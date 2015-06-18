@@ -52,6 +52,10 @@ public class MainActivity extends Activity {
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
 
+    public boolean isDEMO() {
+        return DEMO;
+    }
+
     private boolean DEMO = false;
 
     private CardScrollView mCardScroller;
@@ -163,6 +167,30 @@ public class MainActivity extends Activity {
         return gestureDetector;
     }
 
+    private GestureDetector createGestureDetectorLoading(final Context context) {
+        GestureDetector gestureDetector = new GestureDetector(context);
+
+        //Create a base listener for generic gestures
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
+            @Override
+            public boolean onGesture(Gesture gesture) {
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                switch (gesture) {
+                    case THREE_LONG_PRESS:
+                        if (DEMO) {
+                            DEMO = false;
+                        } else {
+                            DEMO = true;
+                        }
+                        handleLocationUtils();
+                        am.playSoundEffect(Sounds.SELECTED);
+                }
+                return false;
+            }
+        });
+        return gestureDetector;
+    }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
@@ -185,7 +213,7 @@ public class MainActivity extends Activity {
 
         mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.VISIBLE);
         mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.GONE);
-        mGestureDetector = null;
+        mGestureDetector = createGestureDetectorLoading(this);
 
         new AsyncTask<Void, Void, Void>() {
             @Override
