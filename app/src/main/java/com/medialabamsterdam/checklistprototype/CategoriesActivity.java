@@ -475,7 +475,7 @@ public class CategoriesActivity extends Activity {
                 }
 
                 json = new JsonObject();
-                json.addProperty("user_id", 1);
+                json.addProperty("user_id", Constants.USER_ID);
                 json.addProperty("location_id", locationIndex);
                 json.add("data", jsonArray);
 

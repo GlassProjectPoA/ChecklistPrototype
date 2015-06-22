@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- APP -->
-    <string name="app_name">Checklist Prototype</string>
-    <string name="voice_trigger">Load Checklist</string>
+    <string name="app_name" translatable="false">Gradr</string>
+    <string name="voice_trigger" translatable="false">Load Gradr</string>
 
     <!-- RATINGS -->
     <string name="rating_aa" translatable="false">A+</string>

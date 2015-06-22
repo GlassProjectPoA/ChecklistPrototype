@@ -23,6 +23,9 @@ public interface Constants {
     String PARCELABLE_SUBCATEGORY = "PARCELABLE_SUBCATEGORY";
     String PARCELABLE_CATEGORY = "PARCELABLE_CATEGORY";
 
+    String WEB_SERVICE_URL = "http://glass-dev.twisk-interactive.nl/";
+    int USER_ID = 1;
+
     /**
      * Settings.
      * Currently only works with "nl" as alternate language.
@@ -30,6 +33,4 @@ public interface Constants {
     String ALTERNATE_LANGUAGE = "nl";
     boolean LOAD_ALTERNATE_LANGUAGE = false; // Set true if loading another language.
     boolean IGNORE_INSTRUCTIONS = true; // Set true to ignore instructions panel.
-
-    String WEB_SERVICE_URL = "http://glass-dev.twisk-interactive.nl/";
 }

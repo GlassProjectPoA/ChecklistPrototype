@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- APP -->
-    <string name="app_name">Checklist Prototype</string>
-    <string name="voice_trigger">Load Checklist</string>
-
     <!-- FINISH -->
     <string name="checklist_finish">Checklist is afgerond!</string>
     <string name="checklist_not_finish">Checklist is incompleet!</string>
@@ -28,7 +24,7 @@
 
     <!-- UTILITIES -->
     <string name="example_text">Er zijn weinig stickers.</string>
-    <string name="saving_picture">Foto's opslaan.</string>
+    <string name="saving_picture">Foto\'s opslaan.</string>
     <string name="please_wait">Geduld AUB.</string>
     <string name="upload_list">Lijst verzenden.</string>
 
