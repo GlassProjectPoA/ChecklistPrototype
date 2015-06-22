@@ -54,7 +54,7 @@
 
     <!-- IMAGE DESCRIPTIONS -->
     <string name="map_location_description" translatable="false">map location snapshot</string>
-    <string name="warning_sign_description">Warning sign.</string>
+    <string name="warning_sign_description" translatable="false">Warning sign.</string>
 
     <!-- JSON RESPONSES -->
     <string name="complete">Complete!</string>

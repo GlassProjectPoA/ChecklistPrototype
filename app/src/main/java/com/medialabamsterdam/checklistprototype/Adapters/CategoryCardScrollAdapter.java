@@ -46,6 +46,12 @@ public class CategoryCardScrollAdapter extends CardScrollAdapter {
         this.mCards.add(new Category());
     }
 
+    /**
+     * This method is called from an Activity in order to update the contents of the last card as
+     * to give feedback to the user.
+     *
+     * @param status one of the values contained in the Status enum.
+     */
     public void updateStatus(Status status) {
         this.mStatus = status;
         this.notifyDataSetChanged();

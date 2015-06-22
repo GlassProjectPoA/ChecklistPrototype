@@ -85,16 +85,17 @@ public class MainActivity extends Activity {
         handleLocationUtils();
 
         // Changes the color of some text in the view.
-        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh, R.color.yellow);
+        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh,
+                R.color.yellow);
 
         //Regular CardScroller/Adapter procedure.
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mCardScroller = new CardScrollView(this);
-        mAdapter = new MyCardScrollAdapter(mCards);
-        mCardScroller.setAdapter(mAdapter);
-        mCardScroller.setFocusable(false);
-        setContentView(mCardScroller);
-        mGestureDetector = createGestureDetector(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keeps screen on
+        mCardScroller = new CardScrollView(this); // Starts mCardScroller so we can interact with the app
+        mAdapter = new MyCardScrollAdapter(mCards); // Initialize the adapter used to display information
+        mCardScroller.setAdapter(mAdapter); // Sets the adapter to be displayed by the CardScroller
+        mCardScroller.setFocusable(false); // Disables the card scroll "effects"
+        setContentView(mCardScroller); // Sets the contentview of the application
+        mGestureDetector = createGestureDetector(this); // Sets the gesture detector
 
         locationLoader();
     }
@@ -130,6 +131,7 @@ public class MainActivity extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Gesture Detector">
+    // Gesture detector used when we have a location
     private GestureDetector createGestureDetector(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -139,7 +141,7 @@ public class MainActivity extends Activity {
             public boolean onGesture(Gesture gesture) {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
-                    case TAP:
+                    case TAP: // If we have a location, open categories.
                         Log.e(TAG, "TAP called.");
                         if (mActualLocation != null) {
                             openCategories();
@@ -148,11 +150,11 @@ public class MainActivity extends Activity {
                             am.playSoundEffect(Sounds.DISALLOWED);
                         }
                         break;
-                    case TWO_LONG_PRESS:
-                        showLoader();
+                    case TWO_LONG_PRESS: // Refresh location.
+                        locationLoader();
                         am.playSoundEffect(handleLocationUtils());
                         return true;
-                    case THREE_LONG_PRESS:
+                    case THREE_LONG_PRESS: // Toggle Demo mode.
                         if (DEMO) {
                             DEMO = false;
                         } else {
@@ -166,7 +168,7 @@ public class MainActivity extends Activity {
         });
         return gestureDetector;
     }
-
+    // Gesture detector used when we are in the "loading screen"
     private GestureDetector createGestureDetectorLoading(final Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
@@ -176,7 +178,7 @@ public class MainActivity extends Activity {
             public boolean onGesture(Gesture gesture) {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
-                    case THREE_LONG_PRESS:
+                    case THREE_LONG_PRESS: // Toggle Demo mode.
                         if (DEMO) {
                             DEMO = false;
                         } else {
@@ -199,6 +201,8 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Saves all data from CategoryActivity if the user is in the same location as where he
+        // started the grading.
         if (requestCode == CATEGORY_RATING_REQUEST && resultCode == RESULT_OK) {
             handleLocationUtils();
             if (data.getIntExtra(Constants.EXTRA_LOCATION, 0) == locationIndex) {
@@ -208,12 +212,18 @@ public class MainActivity extends Activity {
         }
     }
 
-
+    /**
+     * Display the loader while are waiting for a location.
+     * It calls handleLocationUtils() on the background in order to not lock the UI thread.
+     * Automatically hides the loader when we have a location.
+     */
     private void locationLoader() {
+        mActualLocation = null;
+        mLocationUtils.restart();
 
         mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.VISIBLE);
         mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.GONE);
-        mGestureDetector = createGestureDetectorLoading(this);
+        mGestureDetector = createGestureDetectorLoading(this); // gesture detector on loading screen
 
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -243,16 +253,13 @@ public class MainActivity extends Activity {
         }.execute();
     }
 
+    /**
+     * Hides the loader screen and activates regular gestures.
+     */
     private void hideLoader() {
         mCards.get(0).findViewById(R.id.loader_layout).setVisibility(View.GONE);
         mCards.get(0).findViewById(R.id.location_layout).setVisibility(View.VISIBLE);
         mGestureDetector = createGestureDetector(this);
-    }
-
-    private void showLoader() {
-        mActualLocation = null;
-        mLocationUtils.restart();
-        locationLoader();
     }
 
     /**
@@ -262,6 +269,7 @@ public class MainActivity extends Activity {
      * @return returns an int related to a sound effect in order to give sound feedback to user.
      */
     private int handleLocationUtils() {
+        // Starts mLocationUtils in case it was not initialized.
         if (mLocationUtils == null) {
             mLocationUtils = new LocationUtils(this);
         }
@@ -286,20 +294,7 @@ public class MainActivity extends Activity {
             // Calls the findArea() method in order to check which area are we in.
             return findArea(mLocationPoint);
         } else {
-            //TODO remove test location
             Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
-
-/*          HVBO location
-            mActualLocation = new Location("");
-            mActualLocation.setLatitude(52.381234);
-            mActualLocation.setLongitude(4.895540);/**/
-/*          63vv location
-            mActualLocation = new Location("");
-            mActualLocation.setLatitude(52.388266);
-            mActualLocation.setLongitude(4.820238);/**/
-//            Point mLocationPoint = new Point((float) mActualLocation.getLatitude(),
-//                    (float) mActualLocation.getLongitude());
-//            return findArea(mLocationPoint);
             return Sounds.ERROR;
         }
     }

@@ -208,7 +208,7 @@ public class CategoriesActivity extends Activity {
                         Log.e(TAG, "SWIPE_DOWN called.");
                         sendResult();
                         break;
-                    case LONG_PRESS:
+                    case LONG_PRESS: //Skips the category
                         Log.e(TAG, "LONG_PRESS called.");
                         Slider mSlider = Slider.from(mCardScroller);
                         mGracePeriod = mSlider.startGracePeriod(mGracePeriodListener);
@@ -229,7 +229,6 @@ public class CategoriesActivity extends Activity {
 
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-//        Log.e(TAG, event.toString());
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mGracePeriod != null) {
                 mGracePeriod.cancel();
@@ -282,14 +281,13 @@ public class CategoriesActivity extends Activity {
                                 statusCurrent = Status.FAIL_CONNECT;
                                 mAdapter.updateStatus(statusCurrent);
                                 mAdapter.notifyDataSetChanged();
-                                //TODO REMOVE
-                                checkData();
+//                                checkData();
                             }
                         } else {
                             statusCurrent = Status.FAIL_CONNECT;
                             mAdapter.updateStatus(statusCurrent);
                             mAdapter.notifyDataSetChanged();
-                            checkData();
+//                            checkData();
                         }
                     }
                 });
@@ -364,9 +362,7 @@ public class CategoriesActivity extends Activity {
                 // the checklist to the server.
                 count++;
                 if (mSubCategories.size() == count) {
-                    //TODO YOLO
                     prepareJson();
-                    //break;
                 }
             }
         }
@@ -416,6 +412,10 @@ public class CategoriesActivity extends Activity {
         checkIfCompleteOrCanSend();
     }
 
+    /**
+     * Checks if the categories have all been either graded or skipped. Then checks if there are
+     * pictures still being processed before allowing the used to send the checklist to the server.
+     */
     private void checkIfCompleteOrCanSend() {
         int count = 0;
         for (Category category : mCategories) {
@@ -442,17 +442,14 @@ public class CategoriesActivity extends Activity {
     }
 
     /**
-     * This method sends all the data from the checklist to the server.
-     * <p>
-     * This uses Json and the Ion library.
-     * https://github.com/koush/ion
+     * This method prepares all the data from the checklist to send to the server.
      */
     private void prepareJson() {
         // Disables scrolling and tapping on the device, so we don't send data twice.
         mCardScroller.setFocusable(false);
         mGestureDetector = null;
 
-        // Put all data we have to send in a JsonArray.
+        // Put all unskipped data we have to send in a JsonArray.
         new AsyncTask<Void, Void, Void>() {
             JsonObject json;
 
@@ -494,6 +491,14 @@ public class CategoriesActivity extends Activity {
         }.execute();
     }
 
+    /**
+     * This method sends a JsonObject to the server. It also notifies the UI of the results.
+     * <p>
+     * This uses Json and the Ion library.
+     * https://github.com/koush/ion
+     *
+     * @param json object to be sent
+     */
     private void sendData(JsonObject json) {
         // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)

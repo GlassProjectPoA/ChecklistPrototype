@@ -27,6 +27,8 @@ import java.util.ArrayList;
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 01/04/2015.
+ *
+ * THIS CLASS ISN'T REALLY USED ANYMORE
  */
 public class InstructionsActivity extends Activity {
     private final static String TAG = "INSTRUCTIONS";

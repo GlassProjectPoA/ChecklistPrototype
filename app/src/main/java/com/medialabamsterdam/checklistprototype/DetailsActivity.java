@@ -182,20 +182,20 @@ public class DetailsActivity extends Activity {
             public boolean onGesture(Gesture gesture) {
                 AudioManager am = (AudioManager) DetailsActivity.this.getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
-                    case TAP:
+                    case TAP: // Send selected grade back to parent activity
                         Log.e(TAG, "TAP called.");
                         sendResult();
                         am.playSoundEffect(Sounds.DISALLOWED);
                         break;
-                    case SWIPE_UP:
+                    case SWIPE_UP: // Toogles between adapters in order to show the many details
                         Log.e(TAG, "SWIPE_UP called.");
                         changeAdapter();
                         break;
-                    case TWO_SWIPE_LEFT:
+                    case TWO_SWIPE_LEFT: // Changes grade
                         Log.e(TAG, "SWIPE_LEFT called.");
                         animateScroll(false);
                         return true;
-                    case TWO_SWIPE_RIGHT:
+                    case TWO_SWIPE_RIGHT: // Changes grade
                         Log.e(TAG, "SWIPE_RIGHT called.");
                         animateScroll(true);
                         return true;

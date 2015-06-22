@@ -197,6 +197,11 @@ public class SubCategoriesActivity extends Activity {
         }
     }
 
+    /**
+     * Saves the picture path from the received intent.
+     *
+     * @param picturePathData Intent received from WarningActivity.
+     */
     private void savePicture(Intent picturePathData) {
         int categoryId = picturePathData.getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
         int subCategoryId = picturePathData.getIntExtra(Constants.EXTRA_SUBCATEGORY_ID, 0);
@@ -210,6 +215,11 @@ public class SubCategoriesActivity extends Activity {
         checkData();
     }
 
+    /**
+     * Saves the grade from the received intent.
+     *
+     * @param detailData Intent received from DetailsActivity.
+     */
     private void saveDetailData(Intent detailData) {
         int position = detailData.getIntExtra(Constants.EXTRA_POSITION, 1);
         int rating = detailData.getIntExtra(Constants.EXTRA_GRADE_DETAIL, 0);
@@ -274,7 +284,8 @@ public class SubCategoriesActivity extends Activity {
                 int maxPositions = mAdapter.getCount() - 1;
                 switch (gesture) {
                     case TAP:
-                        Log.e(TAG, "TAP called.");
+                        Log.e(TAG, "TAP called."); // If user in last card, saves data.
+                                                    // Start DetailsActivity otherwise.
                         if (position == maxPositions) {
                             if (_grades != null) {
                                 checkData();
@@ -287,25 +298,25 @@ public class SubCategoriesActivity extends Activity {
                             am.playSoundEffect(Sounds.TAP);
                         }
                         return true;
-                    case SWIPE_LEFT:
+                    case SWIPE_LEFT: // Display next subcategory
                         Log.e(TAG, "SWIPE_LEFT called.");
                         animateScroll(false);
                         return true;
-                    case SWIPE_RIGHT:
+                    case SWIPE_RIGHT: // Display previous subcategory
                         Log.e(TAG, "SWIPE_RIGHT called.");
                         animateScroll(true);
                         return true;
-                    case SWIPE_DOWN:
+                    case SWIPE_DOWN: // Finish activity and send data back to parent
                         Log.e(TAG, "SWIPE_DOWN called.");
                         finish();
                         return true;
-                    case TWO_SWIPE_LEFT:
+                    case TWO_SWIPE_LEFT: // Changes grade of current SubCategory
                         Log.e(TAG, "TWO_SWIPE_LEFT called.");
                         if (position != maxPositions) {
                             changeRating(false);
                         }
                         return true;
-                    case TWO_SWIPE_RIGHT:
+                    case TWO_SWIPE_RIGHT: // Changes grade of current SubCategory
                         Log.e(TAG, "TWO_SWIPE_RIGHT called.");
                         if (position != maxPositions) {
                             changeRating(true);
@@ -407,9 +418,7 @@ public class SubCategoriesActivity extends Activity {
             }
         }
         if (mSubCategories.size() == count) {
-            //TODO YOLO
             sendResult();
-            //break;
         }
     }
 }
