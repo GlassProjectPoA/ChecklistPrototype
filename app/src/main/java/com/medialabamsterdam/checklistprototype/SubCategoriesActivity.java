@@ -281,14 +281,17 @@ public class SubCategoriesActivity extends Activity {
                     case TAP:
                         Log.e(TAG, "TAP called."); // If user in last card, saves data.
                         // Start DetailsActivity otherwise.
-                        if (position == maxPositions) {
-                            goToStart();
-                            am.playSoundEffect(Sounds.DISALLOWED);
-                        } else {
+                        if (position != maxPositions) {
                             prepareJson();
                             animateScroll(true);
                         }
                         return true;
+                    case TWO_TAP:
+                        Log.e(TAG, "TWO_TAP called."); // If user in last card, saves data.
+                        if (position == maxPositions) {
+                            goToStart();
+                            am.playSoundEffect(Sounds.DISALLOWED);
+                        }
                     case SWIPE_DOWN: // Finish activity and send data back to parent
                         Log.e(TAG, "SWIPE_DOWN called.");
                         finish();
