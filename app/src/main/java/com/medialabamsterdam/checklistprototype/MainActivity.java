@@ -52,11 +52,7 @@ public class MainActivity extends Activity {
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
 
-    public boolean isDEMO() {
-        return DEMO;
-    }
-
-    private boolean DEMO = false;
+    private boolean DEMO = true;
 
     private CardScrollView mCardScroller;
     private GestureDetector mGestureDetector;
@@ -83,10 +79,6 @@ public class MainActivity extends Activity {
 
         createLocationCard();
         handleLocationUtils();
-
-        // Changes the color of some text in the view.
-        Utils.ChangeTextColor(this, mCards.get(0), R.id.instructions, R.array.tap_two_to_refresh,
-                R.color.yellow);
 
         //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keeps screen on
@@ -151,16 +143,8 @@ public class MainActivity extends Activity {
                         }
                         break;
                     case TWO_LONG_PRESS: // Refresh location.
-                        locationLoader();
-                        am.playSoundEffect(handleLocationUtils());
                         return true;
                     case THREE_LONG_PRESS: // Toggle Demo mode.
-                        if (DEMO) {
-                            DEMO = false;
-                        } else {
-                            DEMO = true;
-                        }
-                        handleLocationUtils();
                         am.playSoundEffect(Sounds.SELECTED);
                 }
                 return false;
@@ -179,12 +163,6 @@ public class MainActivity extends Activity {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 switch (gesture) {
                     case THREE_LONG_PRESS: // Toggle Demo mode.
-                        if (DEMO) {
-                            DEMO = false;
-                        } else {
-                            DEMO = true;
-                        }
-                        handleLocationUtils();
                         am.playSoundEffect(Sounds.SELECTED);
                 }
                 return false;
@@ -368,9 +346,13 @@ public class MainActivity extends Activity {
                     areaCode = area.getCode();
                     locationIndex = locations.getLocationId();
                     TextView tv = (TextView) mCards.get(0).findViewById(R.id.location_code);
-                    tv.setText(locations.getName());
+                    tv.setText("Gradr Game");
+                    tv.setTextSize(24);
                     tv = (TextView) mCards.get(0).findViewById(R.id.area_code);
-                    tv.setText(area.getName());
+                    tv.setText("MediaLab Amsterdam");
+                    tv.setTextSize(20);
+                    tv = (TextView) mCards.get(0).findViewById(R.id.instructions);
+                    tv.setText("Tap to start");
                     // Loads the Categories based on the given location.
                     mCategories = new ArrayList<>(DataBaseHelper.readCategory(this, areaIndex, locationIndex));
                     return Sounds.SUCCESS;
@@ -387,11 +369,7 @@ public class MainActivity extends Activity {
      * Starts the CategoriesActivity.
      */
     private void openCategories() {
-        Intent intent = new Intent(this, CategoriesActivity.class);
-        intent.putParcelableArrayListExtra(Constants.EXTRA_CATEGORY, mCategories);
-        intent.putParcelableArrayListExtra(Constants.EXTRA_SUBCATEGORY, mSubCategories);
-        intent.putExtra(Constants.EXTRA_LOCATION, locationIndex);
-        intent.putExtra(Constants.EXTRA_AREA_CODE, areaCode);
+        Intent intent = new Intent(this, SubCategoriesActivity.class);
         startActivityForResult(intent, CATEGORY_RATING_REQUEST);
     }
 

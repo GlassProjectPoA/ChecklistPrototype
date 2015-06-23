@@ -55,6 +55,11 @@ public class SubCategory implements Parcelable {
         this.code = code;
     }
 
+    public SubCategory(int id) {
+        this.id = id;
+        this.grade = 0;
+    }
+
     /**
      * Parcelable Constructor.
      *

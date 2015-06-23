@@ -59,7 +59,8 @@
                     android:layout_weight="1"
                     android:gravity="left|bottom"
                     android:text="74nn"
-                    android:textSize="48sp" />
+                    android:textSize="48sp"
+                    android:textColor="@color/yellow" />
 
                 <TextView
                     android:id="@+id/area_code"

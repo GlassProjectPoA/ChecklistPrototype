@@ -17,18 +17,18 @@ import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollView;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.medialabamsterdam.checklistprototype.Adapters.SubCategoryCardScrollAdapter;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.Category;
 import com.medialabamsterdam.checklistprototype.ContainerClasses.SubCategory;
-import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by
@@ -54,31 +54,26 @@ public class SubCategoriesActivity extends Activity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        //Get data from intent sent from CategoriesActivity.
-        Intent intent = getIntent();
-        mCategory = intent.getParcelableExtra(Constants.PARCELABLE_CATEGORY);
-        locationIndex = intent.getIntExtra(Constants.EXTRA_LOCATION, 0);
-        int areaCode = intent.getIntExtra(Constants.EXTRA_AREA_CODE, 0);
+        mSubCategories = new ArrayList<>();
 
-        //Checks if there is a SubCategory parcelable in the Intent or Bundle and loads it.
-        if (intent.hasExtra(Constants.PARCELABLE_SUBCATEGORY)) {
-            mSubCategories = intent.getParcelableArrayListExtra(Constants.PARCELABLE_SUBCATEGORY);
-        } else if (bundle == null || !bundle.containsKey(Constants.PARCELABLE_SUBCATEGORY)) {
-            mSubCategories = new ArrayList<>(DataBaseHelper.readSubCategory(this, mCategory.getId(), mCategory.getCategoryByLocationId(), areaCode));
-        } else {
-            mSubCategories = bundle.getParcelableArrayList(Constants.PARCELABLE_SUBCATEGORY);
-        }
+        List<SubCategory> scl = new ArrayList<>();
+        scl.add(new SubCategory(1));
+        scl.add(new SubCategory(2));
+        scl.add(new SubCategory(3));
+        scl.add(new SubCategory(4));
+        scl.add(new SubCategory(5));
+
+        mSubCategories.addAll(scl);
 
         //Regular CardScroller/Adapter procedure.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
-        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, mCategory.getName());
+        mAdapter = new SubCategoryCardScrollAdapter(this, mSubCategories, "yolo");
         mCardScroller.setAdapter(mAdapter);
         mCardScroller.setFocusable(false);
         mCardScroller.activate();
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
-        getGrades(false);
     }
 
     /**
@@ -285,26 +280,14 @@ public class SubCategoriesActivity extends Activity {
                 switch (gesture) {
                     case TAP:
                         Log.e(TAG, "TAP called."); // If user in last card, saves data.
-                                                    // Start DetailsActivity otherwise.
+                        // Start DetailsActivity otherwise.
                         if (position == maxPositions) {
-                            if (_grades != null) {
-                                checkData();
-                            } else {
-                                getGrades(true);
-                            }
+                            goToStart();
                             am.playSoundEffect(Sounds.DISALLOWED);
                         } else {
-                            startDetails();
-                            am.playSoundEffect(Sounds.TAP);
+                            prepareJson();
+                            animateScroll(true);
                         }
-                        return true;
-                    case SWIPE_LEFT: // Display next subcategory
-                        Log.e(TAG, "SWIPE_LEFT called.");
-                        animateScroll(false);
-                        return true;
-                    case SWIPE_RIGHT: // Display previous subcategory
-                        Log.e(TAG, "SWIPE_RIGHT called.");
-                        animateScroll(true);
                         return true;
                     case SWIPE_DOWN: // Finish activity and send data back to parent
                         Log.e(TAG, "SWIPE_DOWN called.");
@@ -329,64 +312,18 @@ public class SubCategoriesActivity extends Activity {
         return gestureDetector;
     }
 
+    private void goToStart() {
+        mCardScroller.deactivate();
+        Intent result = new Intent();
+        setResult(Activity.RESULT_OK, result);
+        finish();
+    }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
     }
     //</editor-fold>
-
-    /**
-     * This method grabs grades from the server in order to compare them with the grades from user
-     * input.
-     * <p>
-     * This uses Json and the Ion library.
-     * https://github.com/koush/ion
-     */
-    private void getGrades(final boolean sendResult) {
-        Ion.with(this)
-                .load(Constants.WEB_SERVICE_URL + "subcategories/grades/" + locationIndex)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) e.printStackTrace();
-                        if (result != null) {
-                            // Saves all acceptable grades from given location in _grades.
-                            if (result.has("grades")) {
-                                Log.e(TAG, result.toString());
-                                JsonArray jsonArray = result.getAsJsonArray("grades");
-                                _grades = new SparseIntArray();
-                                for (int i = 0; i < jsonArray.size(); i++) {
-                                    int code = jsonArray.get(i).getAsJsonObject().get("code").getAsInt();
-                                    int grade = Utils.getRatingFromString(jsonArray.get(i)
-                                            .getAsJsonObject().get("accepted_grade").getAsString());
-                                    _grades.put(code, grade);
-                                }
-                                // Calls the checkData() method to determine if any grade needs a picture.
-                                if (sendResult) {
-                                    checkData();
-                                }
-                            } else {
-                                if (sendResult) {
-                                    if(locationIndex == 1289){
-                                        checkData();
-                                    }
-                                }
-                                //statusUpdate(FAIL_CONNECT);
-                                //TODO FIX MESSAGE
-                            }
-                        } else {
-                            if (sendResult) {
-                                if(locationIndex == 1289){
-                                    checkData();
-                                }
-                            }
-                            //statusUpdate(FAIL_CONNECT);
-                            // TODO FIX MESSAGE
-                        }
-                    }
-                });
-    }
 
     /**
      * This method checks if any SubCategory has a grade below the accepted. And calls
@@ -420,5 +357,49 @@ public class SubCategoriesActivity extends Activity {
         if (mSubCategories.size() == count) {
             sendResult();
         }
+    }
+
+    /**
+     * This method prepares all the data from the checklist to send to the server.
+     */
+    private void prepareJson() {
+        // Disables scrolling and tapping on the device, so we don't send data twice.
+        int position = mCardScroller.getSelectedItemPosition();
+        int grade = mSubCategories.get(position).getGrade();
+        JsonObject json = new JsonObject();
+
+        json = new JsonObject();
+        json.addProperty("id", position);
+        json.addProperty("grade", Utils.getStringFromRating(grade));
+
+        Log.v(TAG, json.toString());
+        sendData(json);
+    }
+
+    /**
+     * This method sends a JsonObject to the server. It also notifies the UI of the results.
+     * <p>
+     * This uses Json and the Ion library.
+     * https://github.com/koush/ion
+     *
+     * @param json object to be sent
+     */
+    private void sendData(JsonObject json) {
+        // Send the data to the server.
+        Future<JsonObject> jsonObjectFuture = Ion.with(this)
+                .load(Constants.WEB_SERVICE_URL + "checklist")
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) e.printStackTrace();
+                        if (result != null) {
+                            if (result.get("status").getAsString().equals("OK")) {
+                                Log.e(TAG, result.toString());
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -37,6 +37,7 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
      */
     public SubCategoryCardScrollAdapter(Context context, List<SubCategory> subCategories,
                                         String parentCategoryName) {
+
         mCards = subCategories;
         mContext = context;
         mParentCategoryName = parentCategoryName;
@@ -77,19 +78,19 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
             //Create Check card at the end of the array
             card = inflater.inflate(R.layout.check_layout, null);
             tv = (TextView) card.findViewById(R.id.footer);
-            tv.setText(R.string.tap_to_save);
+            tv.setText("You finished the game!");
             tv = (TextView) card.findViewById(R.id.title);
-            tv.setText(R.string.category_finish);
+            tv.setText("Congratulations!");
             ImageView iv = (ImageView) card.findViewById(R.id.check);
             iv.setImageResource(R.drawable.check);
-            iv.setColorFilter(mContext.getResources().getColor(R.color.blue));
+            iv.setColorFilter(mContext.getResources().getColor(R.color.green));
         } else {
             // If it's not the last on the array, create the appropriate card to show.
             card = inflater.inflate(R.layout.subcategory_layout, null);
             tv = (TextView) card.findViewById(R.id.category_title);
-            tv.setText(sc.getName());
+            tv.setText("Picture "+sc.getId());
             tv = (TextView) card.findViewById(R.id.category);
-            tv.setText(mParentCategoryName);
+            tv.setText("yolo");
             // Gets the SubCategory's grade and changes the texts and colors of the card accordingly.
             int rate = sc.getGrade();
             switch (rate) {
@@ -121,11 +122,6 @@ public class SubCategoryCardScrollAdapter extends CardScrollAdapter {
                     card.findViewById(R.id.bar_d).setVisibility(View.VISIBLE);
                     break;
             }
-        }
-        // Makes left arrow invisible if the card is the first one.
-        if (position == 0) {
-            tv = (TextView) card.findViewById(R.id.left_arrow);
-            tv.setVisibility(View.INVISIBLE);
         }
         return card;
     }
