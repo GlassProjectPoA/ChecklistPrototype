@@ -370,8 +370,6 @@ public class SubCategoriesActivity extends Activity {
         int position = mCardScroller.getSelectedItemPosition();
         int grade = mSubCategories.get(position).getGrade();
         JsonObject json = new JsonObject();
-
-        json = new JsonObject();
         json.addProperty("id", position);
         json.addProperty("grade", Utils.getStringFromRating(grade));
 
