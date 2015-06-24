@@ -388,7 +388,7 @@ public class SubCategoriesActivity extends Activity {
     private void sendData(JsonObject json) {
         // Send the data to the server.
         Future<JsonObject> jsonObjectFuture = Ion.with(this)
-                .load(Constants.WEB_SERVICE_URL + "checklist")
+                .load(Constants.WEB_SERVICE_URL + "newgrade")
                 .setJsonObjectBody(json)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
@@ -396,9 +396,7 @@ public class SubCategoriesActivity extends Activity {
                     public void onCompleted(Exception e, JsonObject result) {
                         if (e != null) e.printStackTrace();
                         if (result != null) {
-                            if (result.get("status").getAsString().equals("OK")) {
-                                Log.e(TAG, result.toString());
-                            }
+                            Log.e(TAG, result.toString());
                         }
                     }
                 });
