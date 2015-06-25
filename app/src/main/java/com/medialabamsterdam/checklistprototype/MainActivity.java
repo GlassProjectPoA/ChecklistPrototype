@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * This class handles the start of the application, as well as loading the Location and Area the user
+ * is inside.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -51,10 +54,6 @@ public class MainActivity extends Activity {
 
     private final static String TAG = "MAIN";
     private static final int CATEGORY_RATING_REQUEST = 7980;
-
-    public boolean isDEMO() {
-        return DEMO;
-    }
 
     private boolean DEMO = false;
 

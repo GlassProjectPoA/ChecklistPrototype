@@ -1,7 +1,7 @@
 package com.medialabamsterdam.checklistprototype.Polygon_contains_Point;
 
 /**
- * Line is defined by starting point and ending point on 2D dimension.<br>
+ * Line is defined by starting point and ending point on 2D dimension.<p>
  *
  * @author Roman Kushnarenko (sromku@gmail.com)
  */

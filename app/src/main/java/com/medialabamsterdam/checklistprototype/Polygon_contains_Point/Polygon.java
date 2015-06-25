@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The 2D polygon. <br>
+ * The 2D polygon. <p>
  *
  * @author Roman Kushnarenko (sromku@gmail.com)
- * @see {@link Builder}
  */
 public class Polygon {
     private final BoundingBox _boundingBox;

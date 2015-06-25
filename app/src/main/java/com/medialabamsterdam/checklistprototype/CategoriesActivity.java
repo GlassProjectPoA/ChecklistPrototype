@@ -36,6 +36,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
+ * This class handles everything that happens in the Category view of the application as well as
+ * sending the grading data to the server.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

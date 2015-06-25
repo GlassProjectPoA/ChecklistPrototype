@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class is responsible for every database operation used by this application.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -55,7 +57,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * This function is used to query data from the Area Table, returns all Areas.
      *
      * @param context the activity's context.
-     * @return a List<Area>.
+     * @return a List-Area-.
      */
     public static List<Area> readArea(Context context) {
         List<Area> areaList = new ArrayList<>();
@@ -91,7 +93,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @param context   the activity's context.
      * @param areaIndex the _id of the Area that you want to query the locations.
-     * @return a List<Locations>.
+     * @return a List-Location-.
      */
     public static List<Locations> readLocations(Context context, int areaIndex) {
         List<Locations> locationList = new ArrayList<>();

@@ -22,6 +22,9 @@ import com.medialabamsterdam.checklistprototype.Database.DataBaseHelper;
 import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 
 /**
+ * This class handles everything that happens in the Details view of the application, including the
+ * layout swap that happens when user swipe up.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

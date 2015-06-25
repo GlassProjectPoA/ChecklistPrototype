@@ -31,6 +31,9 @@ import com.medialabamsterdam.checklistprototype.Utilities.Utils;
 import java.util.ArrayList;
 
 /**
+ * This class handles everything that happens in the Category view, including the check in case
+ * one of the gradings need a picture.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
@@ -368,7 +371,7 @@ public class SubCategoriesActivity extends Activity {
                                 }
                             } else {
                                 if (sendResult) {
-                                    if(locationIndex == 1289){
+                                    if (locationIndex == 1289) {
                                         checkData();
                                     }
                                 }
@@ -377,7 +380,7 @@ public class SubCategoriesActivity extends Activity {
                             }
                         } else {
                             if (sendResult) {
-                                if(locationIndex == 1289){
+                                if (locationIndex == 1289) {
                                     checkData();
                                 }
                             }

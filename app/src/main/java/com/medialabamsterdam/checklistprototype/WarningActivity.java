@@ -25,6 +25,9 @@ import com.medialabamsterdam.checklistprototype.Utilities.Constants;
 import java.util.ArrayList;
 
 /**
+ * This class is used to display a warning when one of the SubCategories has a grade below the accepted
+ * it then sends a take picture intent and returns the picture URI.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

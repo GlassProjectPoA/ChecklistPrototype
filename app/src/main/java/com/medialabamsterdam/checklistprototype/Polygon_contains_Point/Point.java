@@ -1,9 +1,9 @@
 package com.medialabamsterdam.checklistprototype.Polygon_contains_Point;
 
 /**
- * Point on 2D landscape
+ * Point on 2D landscape <p>
  *
- * @author Roman Kushnarenko (sromku@gmail.com)</br>
+ * @author Roman Kushnarenko (sromku@gmail.com)
  */
 public class Point {
     public final double x;

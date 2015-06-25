@@ -1,6 +1,8 @@
 package com.medialabamsterdam.checklistprototype.Utilities;
 
 /**
+ * This enum is used to manage all the "user feedback" stages
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com

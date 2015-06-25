@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class is meant to manage the GPS and acquire the device's location.
+ * <p>
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
  * on 20/04/2015.
- * <p>
- * This class is meant to manage the GPS and acquire the device's location.
  */
 public class LocationUtils {
 

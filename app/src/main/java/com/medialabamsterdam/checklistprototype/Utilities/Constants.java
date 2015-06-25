@@ -1,6 +1,9 @@
 package com.medialabamsterdam.checklistprototype.Utilities;
 
 /**
+ * Contains constants that are used by more than one class or constants that define important features
+ * of the application.
+ *
  * Created by
  * Jose Carlos Quintas Junior
  * juniorquintas@gmail.com
