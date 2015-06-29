@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
                         } else {
                             DEMO = true;
                         }
-                        handleLocationUtils();
+                        locationLoader();
                         am.playSoundEffect(Sounds.SELECTED);
                 }
                 return false;
@@ -293,7 +293,7 @@ public class MainActivity extends Activity {
             // Calls the findArea() method in order to check which area are we in.
             return findArea(mLocationPoint);
         } else {
-            Log.e(TAG, " \nCouldn't find location.\nUsing test Location");
+            Log.e(TAG, " \nCouldn't find location.");
             return Sounds.ERROR;
         }
     }
